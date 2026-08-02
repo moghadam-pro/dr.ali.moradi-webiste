@@ -63,6 +63,11 @@ an initial creative direction, subject to final copy approval:
 - Application
 - Back to Life
 
+The supplied earlier designs are explicitly not visual references for the new UI.
+Their copy and embedded photographs may be used as source material only. The new
+visual system must be independently designed while retaining blue as the approved
+primary color direction.
+
 ## Key audiences
 
 - Patients and their families
@@ -98,4 +103,3 @@ an initial creative direction, subject to final copy approval:
 
 This document is derived from the supplied project-call transcript and its discovery
 summary. Statements must be validated by the client before public release.
-

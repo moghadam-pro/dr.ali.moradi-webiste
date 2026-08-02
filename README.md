@@ -29,6 +29,8 @@ payment, or an internal appointment-booking system.
 
 - [Project discovery](docs/project-discovery.md)
 - [MVP requirements](docs/mvp-requirements.md)
+- [Source content inventory](docs/source-content-inventory.md)
+- [Visual and image constraints](docs/visual-image-constraints.md)
 - [Delivery roadmap](docs/roadmap.md)
 
 ## Working process
@@ -36,4 +38,3 @@ payment, or an internal appointment-booking system.
 Each approved milestone is developed, reviewed, documented, and committed as a
 separate logical step. This keeps the Git history readable and suitable for client
 handoff.
-
