@@ -252,13 +252,32 @@ The following supplied wording should not be published verbatim until it is reco
 - `Top Researcher`: this is subjective unless tied to a named award and year. Prefer `Research Leadership` or a verified metric.
 - Any number of publications, books, patents, awards, or procedures: display only after source reconciliation and include an `as of` date where appropriate.
 
-Suggested provisional hero credential line:
+Approved working hero credential line for the first design iteration:
 
 > Hand & Upper Extremity Surgeon<br>
-> Research, Innovation, and Education in Hand Reconstruction<br>
+> Advancing Hand Care through Research and Innovation<br>
 > PhD in Orthotics and Prosthetics
 
-The final line should be shorter after the homepage message hierarchy is approved.
+This wording is intentionally provisional. It communicates specialty and positioning without claiming a current Harvard University role. It will be replaced or refined after Dr. Moradi's review.
+
+## Working appointment details
+
+- The only approved external booking destination is `https://nobat.ir/9705`.
+- The website must not introduce or imply any other booking platform or internal booking workflow.
+- Scheduled in-person booking should receive the main external booking CTA.
+- Emergency and online appointment modes remain provisional content patterns until their exact actions are confirmed. If they point to the same approved destination during the prototype, their labels must make that temporary behavior clear internally and must not imply a separate service endpoint.
+- Urgent in-person attendance is currently stated as Saturday, Monday, and Wednesday, from 15:45 to 18:30. The public Persian content should use `شنبه، دوشنبه و چهارشنبه، ساعت ۱۵:۴۵ تا ۱۸:۳۰`; English and Arabic translations must preserve the local clinic schedule and timezone context.
+
+## Working evidence metrics
+
+Use the latest currently available figures for the first design iteration:
+
+- 150+ peer-reviewed articles
+- 4 books
+- 30 national patents
+- 8 US patents
+
+These are working figures and will be revised if Dr. Moradi supplies an updated correction.
 
 ## MVP page priority
 
@@ -289,10 +308,10 @@ The final line should be shorter after the homepage message hierarchy is approve
 
 ## Content decisions still needed
 
-1. Confirm the exact, legally and academically accurate hero credentials.
-2. Provide the final external URL for each appointment pathway.
-3. Replace `even-numbered days` with named weekdays and confirm timezone and holiday exceptions.
-4. Confirm the latest publication, book, national patent, and US patent counts and their effective date.
+1. Review and revise the working hero credential line with Dr. Moradi.
+2. Confirm the final action and copy for emergency and online appointment modes; the only approved booking URL remains `https://nobat.ir/9705`.
+3. Confirm timezone and holiday exceptions for Saturday, Monday, and Wednesday urgent attendance, 15:45–18:30.
+4. Reconcile the working publication, book, national patent, and US patent counts when a newer source is supplied.
 5. Decide whether Research Team and Our Team are one shared team or distinct clinical and research teams.
 6. Identify which conditions have approved patient-facing copy for MVP.
 7. Confirm whether `Blog` should be called `News`, `Insights`, or `News & Insights`; `News` is the provisional recommendation.
