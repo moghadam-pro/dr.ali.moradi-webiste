@@ -6,9 +6,10 @@ coherent digital presence.
 
 ## Project status
 
-The project is currently in the discovery and information-architecture phase.
-Production UI and page implementation will start after the content, visual
-references, and open product decisions are confirmed.
+The first interactive demo is implemented. It includes a complete English-first
+homepage, functional internal navigation, Persian and Arabic routes, responsive
+layouts, scroll reveals, loading states, an external appointment pathway, and a
+validated demo contact form.
 
 ## Product principles
 
@@ -30,6 +31,28 @@ compiled output.
 It will not include a custom CMS, ecommerce, payment, or an internal
 appointment-booking system.
 
+## Run the demo
+
+Requirements: Node.js 22.13 or newer.
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+## Production build
+
+```bash
+npm run build
+npm run start
+```
+
+The demo is self-contained. It does not read from or write to the current
+`dralimoradi.com` host. Appointment actions use only the approved external URL:
+`https://nobat.ir/9705`.
+
 ## Documentation
 
 - [Project discovery](docs/project-discovery.md)
@@ -41,6 +64,8 @@ appointment-booking system.
 - [CV content summary](docs/cv-content-summary.md)
 - [Innovation source links](docs/innovation-links.md)
 - [Media library audit](docs/media-library-audit.md)
+- [Certificates and clinical assets audit](docs/certificates-and-clinical-assets-audit.md)
+- [Content strategy and sitemap](docs/content-strategy-and-sitemap.md)
 - [Technical direction](docs/technical-direction.md)
 - [Delivery roadmap](docs/roadmap.md)
 

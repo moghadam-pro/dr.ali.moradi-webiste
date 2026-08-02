@@ -88,3 +88,23 @@ unchanged after the new English lockup is adopted.
 - Define focal points and alt text per usage, not per file globally.
 - Confirm image rights and patient consent before any identifiable clinical use.
 - Avoid using multiple near-identical portraits on the same page.
+
+## First-demo derivatives
+
+- `public/media/edited/dr-moradi-hero-v1.png`
+  - Source: `DSC00720.JPG`
+  - Purpose: homepage hero portrait
+  - Processing: EXIF/orientation normalization, identity-preserving professional
+    retouch, simplified blue-gray studio environment, tonal matching, and responsive
+    crop preparation
+  - Integrity rule: the source master remains unchanged; future revisions must keep
+    Dr. Moradi's identity, age, facial structure, hands, clothing, and lapel badge
+    consistent with the source
+- `public/og.png`
+  - Purpose: 1200 x 630 social preview
+  - Uses the approved first-demo portrait treatment and the exact English message:
+    `Dr. Ali Moradi` / `Hand Surgery · Research · Innovation`
+
+No clinical before-and-after images are used in the first demo. See
+`certificates-and-clinical-assets-audit.md` for the consent and sensitive-content
+gate that applies to those files.
