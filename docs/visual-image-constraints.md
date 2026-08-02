@@ -22,6 +22,13 @@ and entrepreneur. It should avoid falling back to a generic clinic-template look
 Desktop is the primary design canvas, but every component and composition must be
 defined for tablet and mobile rather than merely scaled down.
 
+## Typography direction
+
+- Use Manrope for English interfaces and content.
+- Use Vazirmatn for Persian and Arabic interfaces and content.
+- Treat typography, line length, rhythm, and density independently for LTR and RTL
+  rather than forcing identical text geometry across languages.
+
 ## Doctor likeness requirement
 
 When generating or editing any image containing Dr. Ali Moradi:
@@ -49,4 +56,3 @@ production-quality image generation and responsive crops.
 The four earlier design screenshots are intentionally not committed as approved UI
 assets. If retained in the repository later, they must live in a clearly labeled
 reference-only location and must not be shipped with the production website.
-

@@ -46,15 +46,18 @@
 
 **Exit criterion:** the complete responsive UI direction is approved.
 
-## Milestone 5 — Static implementation
+## Milestone 5 — Interactive implementation
 
-- Build semantic HTML templates
-- Build maintainable CSS and responsive rules
-- Add minimal vanilla JavaScript interactions
+- Build semantic, component-based page templates
+- Build maintainable styles and responsive rules
+- Implement navigation, page transitions, loading states, motion, and interactions
+- Implement forms with validation and accessible feedback
 - Integrate multilingual sample or approved content
 - Add accessibility and SEO foundations
+- Produce a portable static production build
 
-**Exit criterion:** all agreed pages work across target screen sizes and browsers.
+**Exit criterion:** all agreed pages, navigation, forms, states, and interactions work
+in the production build across target screen sizes and browsers.
 
 ## Milestone 6 — QA and handoff
 
@@ -72,4 +75,3 @@
 - Documentation updated alongside scope or implementation changes
 - No unverified client content presented as final
 - Tags may be created for approved milestone handoffs
-

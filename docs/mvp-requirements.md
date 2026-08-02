@@ -16,7 +16,7 @@
 
 ### Languages and direction
 
-- English (`ltr`)
+- English (`ltr`) — primary and default initial language
 - Persian (`rtl`)
 - Arabic (`rtl`)
 
@@ -28,8 +28,14 @@ in copy length, typography, and content availability.
 - Desktop-first layout
 - Full responsiveness across current mobile screen sizes
 - Semantic HTML
-- Pure, maintainable CSS
-- Minimal vanilla JavaScript when necessary
+- Component-based implementation with a static production build
+- Maintainable styling and typed application logic
+- Fully working navigation between all implemented pages in the compiled preview
+- Page-transition and route-loading feedback
+- Loading, empty, success, and error states where applicable
+- Purposeful motion and interaction
+- Scroll-triggered content reveals with reduced-motion support
+- Working forms with client-side validation and accessible error feedback
 - Keyboard-accessible interaction and visible focus states
 - Baseline metadata and semantic structure for SEO
 - File and component organization suitable for later WordPress theme conversion
@@ -45,9 +51,9 @@ in copy length, typography, and content availability.
 
 ## Appointment behavior
 
-Phase 1 explains appointment options and directs visitors to approved external
-services such as Nobat.ir. It does not store appointments or expose time-slot
-availability locally.
+Phase 1 explains appointment options and provides a clear external booking link.
+Appointment booking is entirely outside Dr. Moradi's website. The website does not
+store appointments, expose time-slot availability, or implement booking forms.
 
 The discovery call mentioned in-person, online, and emergency appointment paths.
 Their exact definitions, eligibility, schedules, and destination links remain open.
@@ -72,3 +78,11 @@ Their exact definitions, eligibility, schedules, and destination links remain op
 - Analytics, cookie, and privacy requirements
 - Hosting and deployment approach
 
+## Typography
+
+- English: Manrope
+- Persian: Vazirmatn
+- Arabic: Vazirmatn
+
+Font loading must avoid layout shift, include suitable fallbacks, and preserve
+readability across Latin, Persian, and Arabic content.

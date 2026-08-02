@@ -16,21 +16,28 @@ references, and open product decisions are confirmed.
 - Persian, English, and Arabic support
 - Correct RTL/LTR behavior per language
 - Semantic, accessible HTML with maintainable CSS
-- Minimal vanilla JavaScript only where interaction requires it
+- Purposeful, accessible interaction using typed JavaScript where needed
 - A structure that can be converted into a WordPress theme without a rewrite
 
 ## Phase 1 deliverable
 
-The first production deliverable will be a pure HTML/CSS website (with minimal
-vanilla JavaScript if required). It will not include a custom CMS, ecommerce,
-payment, or an internal appointment-booking system.
+The first production deliverable will be a deployable static build of a modern,
+interactive, multilingual website. The implementation is not limited to pure
+HTML/CSS. It may use a component framework, typed JavaScript, an animation library,
+and a build tool as long as navigation and all preview functionality work in the
+compiled output.
+
+It will not include a custom CMS, ecommerce, payment, or an internal
+appointment-booking system.
 
 ## Documentation
 
 - [Project discovery](docs/project-discovery.md)
 - [MVP requirements](docs/mvp-requirements.md)
 - [Source content inventory](docs/source-content-inventory.md)
+- [Approved website content audit](docs/approved-website-content-audit.md)
 - [Visual and image constraints](docs/visual-image-constraints.md)
+- [Technical direction](docs/technical-direction.md)
 - [Delivery roadmap](docs/roadmap.md)
 
 ## Working process
