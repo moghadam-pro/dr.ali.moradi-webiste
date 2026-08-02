@@ -37,6 +37,10 @@ appointment-booking system.
 - [Source content inventory](docs/source-content-inventory.md)
 - [Approved website content audit](docs/approved-website-content-audit.md)
 - [Visual and image constraints](docs/visual-image-constraints.md)
+- [Brand system](docs/brand-system.md)
+- [CV content summary](docs/cv-content-summary.md)
+- [Innovation source links](docs/innovation-links.md)
+- [Media library audit](docs/media-library-audit.md)
 - [Technical direction](docs/technical-direction.md)
 - [Delivery roadmap](docs/roadmap.md)
 
