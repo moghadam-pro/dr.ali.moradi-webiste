@@ -69,6 +69,7 @@ The demo is self-contained. It does not read from or write to the current
 - [Technical direction](docs/technical-direction.md)
 - [Delivery roadmap](docs/roadmap.md)
 - [Demo V1 implementation](docs/demo-v1-implementation.md)
+- [Demo server update](docs/demo-server-update.md)
 
 ## Working process
 
