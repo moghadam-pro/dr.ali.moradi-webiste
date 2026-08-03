@@ -286,7 +286,7 @@ function HomePage({ locale, t }: { locale: Locale; t: (typeof copy)[Locale] }) {
       </div>
       <div className="hero-visual">
         <div className="portrait-frame">
-          <Image src="/media/edited/dr-moradi-hero-v1.png" alt="Dr. Ali Moradi in a white medical coat" fill priority sizes="(max-width: 820px) 90vw, 45vw" />
+          <Image src="/media/edited/dr-moradi-hero-v1.png" alt="Dr. Ali Moradi in a white medical coat" fill priority unoptimized sizes="(max-width: 820px) 90vw, 45vw" />
           <div className="portrait-caption"><strong>Dr. Ali Moradi</strong><span>MD, PhD</span></div>
         </div>
         <div className="orbit orbit-one" /><div className="orbit orbit-two" />
