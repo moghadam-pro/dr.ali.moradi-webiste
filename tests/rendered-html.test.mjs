@@ -26,12 +26,26 @@ test("server-renders the completed homepage", async () => {
 });
 
 test("renders internal and localized routes", async () => {
-  for (const path of ["/clinical-care", "/research", "/innovation", "/education", "/about", "/news", "/contact", "/fa", "/ar"]) {
+  const localizedPages = ["clinical-care", "research", "innovation", "education", "about", "news", "contact"];
+  const paths = ["/", ...localizedPages.map((page) => `/${page}`), "/fa", "/ar", ...["fa", "ar"].flatMap((locale) => localizedPages.map((page) => `/${locale}/${page}`))];
+  for (const path of paths) {
     const response = await render(path);
     assert.equal(response.status, 200, path);
     const html = await response.text();
     assert.match(html, /Dr\. Ali Moradi/, path);
+    assert.doesNotMatch(html, /First-version content|ready for the next editorial pass|Your site is taking shape/i, path);
   }
+});
+
+test("ships the approved brand, social, and favicon metadata", async () => {
+  const response = await render();
+  const html = await response.text();
+  assert.match(html, /\/brand\/logo\.en\.svg/);
+  assert.match(html, /\/media\/edited\/dr-moradi-hero-v2\.jpg/);
+  assert.match(html, /social-banner\.jpg/);
+  assert.match(html, /site\.webmanifest/);
+  assert.match(html, /favicon-32x32\.png/);
+  assert.match(html, /#4293C2/i);
 });
 
 test("includes reduced-motion and responsive safeguards", async () => {
@@ -39,4 +53,6 @@ test("includes reduced-motion and responsive safeguards", async () => {
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /@media \(max-width: 560px\)/);
   assert.match(css, /@media \(max-width: 820px\)/);
+  assert.match(css, /overflow-x:\s*clip/);
+  assert.doesNotMatch(css, /#176f98/i);
 });

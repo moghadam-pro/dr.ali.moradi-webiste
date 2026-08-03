@@ -7,9 +7,9 @@ coherent digital presence.
 ## Project status
 
 The first interactive demo is implemented. It includes a complete English-first
-homepage, functional internal navigation, Persian and Arabic routes, responsive
-layouts, scroll reveals, loading states, an external appointment pathway, and a
-validated demo contact form.
+homepage, fully translated Persian and Arabic experiences, source-backed internal
+pages, responsive layouts, scroll reveals, loading states, the approved external
+appointment pathway, and a validated email contact workflow.
 
 ## Product principles
 
@@ -68,6 +68,7 @@ The demo is self-contained. It does not read from or write to the current
 - [Content strategy and sitemap](docs/content-strategy-and-sitemap.md)
 - [Technical direction](docs/technical-direction.md)
 - [Delivery roadmap](docs/roadmap.md)
+- [Demo V1 implementation](docs/demo-v1-implementation.md)
 
 ## Working process
 
