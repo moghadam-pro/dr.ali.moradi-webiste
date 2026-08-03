@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { pageSlugs } from "./site-content";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://dralimoradi.com";
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://dralimoradi.moghadam.pro";
   const pages = ["", ...pageSlugs, "contact"];
   const locales = ["", "fa", "ar"];
   return locales.flatMap((locale) => pages.map((page) => {

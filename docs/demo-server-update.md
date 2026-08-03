@@ -15,11 +15,11 @@ bash scripts/update-demo-server.sh
 
 The script:
 
-1. verifies Node.js 22 or newer;
+1. activates and verifies the CloudPanel Node.js 22 runtime;
 2. fast-forwards the approved demo branch;
 3. installs the locked dependencies;
 4. creates a production build;
-5. restarts the existing PM2 process;
+5. restarts the existing PM2 process as the `drmomin` site user;
 6. checks the local service on port `3006`.
 
 The PM2 process name is `dr-alimoradi-demo` and the tracked branch is
