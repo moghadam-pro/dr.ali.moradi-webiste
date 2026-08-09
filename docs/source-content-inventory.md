@@ -13,6 +13,32 @@ All copy is provisional. Medical claims, statistics, credentials, addresses, and
 appointment information require client verification and editorial review before
 publication or translation.
 
+## Approved homepage composition — 2026-08-10
+
+Figma file `Dr. AliMoradi - website v1.0.0`, node `2071:27750` (`home-1440w`),
+is now the authoritative visual and structural source for the homepage only.
+Earlier screenshots remain content references and must not be used as layout
+references.
+
+The approved desktop frame is 1440 × 5975.96 px with a 1320 px content shell.
+Its section order is:
+
+1. Header and 768 px hero
+2. Connected Practice journey
+3. Pathways (Clinical, Innovation, Research)
+4. Evidence metrics and Appointments
+5. Innovation stories
+6. Latest research and recognition
+7. About preview
+8. Expanded footer
+
+English is the initial/default language. The implementation font mapping is
+Inter for English, Vazirmatn for Persian, and Amiri for Arabic.
+
+The only approved appointment destination remains `https://nobat.ir/9705`.
+Homepage links that imply another booking or teleconsultation system must not be
+introduced.
+
 ## Candidate navigation and content areas
 
 - Product
@@ -194,4 +220,3 @@ and award wording all require approved source material.
 - Appointment copy that may imply an internal booking service
 - Medical and institutional claims without cited source material
 - Statistics without definitions or dates
-

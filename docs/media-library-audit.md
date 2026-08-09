@@ -108,3 +108,56 @@ unchanged after the new English lockup is adopted.
 No clinical before-and-after images are used in the first demo. See
 `certificates-and-clinical-assets-audit.md` for the consent and sensitive-content
 gate that applies to those files.
+
+## 2026-08-10 library update
+
+The new source group `/Users/moghadam/code/dr.moradi/new-pic` was reviewed and
+added to the working media catalogue. It contains 44 HEIC photographs, 32 Sony
+ARW masters, matching high-resolution JPEG exports, phone photographs, and short
+documentary media. Raw files remain outside Git.
+
+### Research-and-development laboratory series
+
+- `DSC03562-DSC03595` (JPEG + ARW pairs)
+- Dr. Moradi in an active prosthetics/robotics laboratory, reviewing prototypes,
+  discussing CAD and control work, and presenting devices
+- Strong candidates for Research, Innovation, Education, and editorial stories
+- `DSC03568`, `DSC03580`, `DSC03585`, `DSC03590`, and `DSC03595` provide the
+  clearest environmental narratives
+
+### Bionic-hand assembly series
+
+- `IMG_0153-IMG_0172` (HEIC)
+- Close documentary coverage of assembly, electronics, wiring, joints, and
+  mechanical adjustment of a bionic-hand prototype
+- Best suited to an Innovation case study, process gallery, or supporting detail
+  carousel; not a general clinical-care image
+
+### Dynamometer / mechanical prototype series
+
+- `IMG_0173-IMG_0189` (HEIC)
+- Close views of the turquoise-and-gold mechanical prototype being adjusted and
+  tested by hand
+- Suitable for Dynamometer or device-development detail content
+
+### Additional phone and social captures
+
+- `IMG_1985-IMG_2328`, `IMG_20260808_*`, and `2026-08-09 *`
+- Mixed documentation and screen captures; each item requires individual context,
+  rights, and resolution review before publication
+
+### New design and brand working files
+
+- `template/1.psd` and `template/1 copy.jpg`: editable and flattened journey-panel
+  composition used by the approved Figma homepage
+- `for-hero.png`: wide surgical portrait source; retained as an identity-sensitive
+  hero candidate and used only with non-destructive crop, tone, and opacity work
+- `logo.en.svg`, `logo.en-footer.svg`, `logo.fa-ar.svg`, and
+  `logo.fa-ar-footer.svg`: approved language-specific header/footer lockups
+
+## Homepage v2 derivatives
+
+The exact raster assets exported from Figma node `2071:27750` are committed under
+`handoff/homepage-v2/assets/images`. They cover the four connected-practice
+panels, appointment portrait, three innovation cards, three recognition cards,
+and About image. These exports are implementation assets, not replacement masters.
