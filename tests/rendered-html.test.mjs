@@ -24,6 +24,11 @@ test("server-renders the completed homepage", async () => {
   assert.match(html, /Clinic/);
   assert.match(html, /About me/);
   assert.match(html, /Where Surgery Goes Beyond Protocols/);
+  assert.match(html, /\/media\/connected-practice\/section\.connected-practice\.jpg/);
+  assert.match(html, /Explore Clinical Care/);
+  assert.match(html, /Explore Innovation/);
+  assert.match(html, /Explore Research/);
+  assert.doesNotMatch(html, /01 \/ PATHWAYS|03 \/ CLINICAL CARE/);
   assert.match(html, /https:\/\/nobat\.ir\/9705/);
   assert.match(html, /Hand &amp; Upper Extremity Surgeon/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);

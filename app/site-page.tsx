@@ -1,9 +1,9 @@
 "use client";
 
 import {
-  ArrowRight, BookOpen, BrainCircuit, CalendarDays, Check, ChevronDown, ChevronRight,
+  ArrowRight, BrainCircuit, CalendarDays, Check, ChevronDown, ChevronRight,
   Camera, CircleHelp, Clock3, ExternalLink, FileText, Hand, Languages, Lightbulb,
-  Mail, MapPin, Menu, Microscope, MoveUpRight, Phone, PlayCircle, Quote, Send,
+  Mail, MapPin, Menu, Microscope, Phone, PlayCircle, Quote, Send,
   ShieldCheck, Sparkles, Stethoscope, X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -11,7 +11,8 @@ import Image from "next/image";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { content, type InteriorPageData, type Locale, pageSlugs, type SiteCopy } from "./site-content";
 
-const pathIcons: LucideIcon[] = [Stethoscope, Microscope, Lightbulb, BookOpen];
+const pathIcons: LucideIcon[] = [Stethoscope, Lightbulb, Microscope];
+const pathCardSlugs = ["clinical-care", "innovation", "research"] as const;
 const facetIcons: LucideIcon[] = [Hand, BrainCircuit, Lightbulb, Microscope];
 const innovationImages = [
   "/media/innovation/external-fixator.jpg",
@@ -117,27 +118,21 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
     </section>
 
     <section id="pathways" className="pathways section-space section-shell">
-      <Reveal className="section-heading"><p className="section-index">{t.indexes[0]}</p><h2>{t.pathsTitle}</h2><p>{t.pathsBody}</p></Reveal>
+      <Reveal className="section-heading"><p className="section-index">{t.indexes[0]}</p><p>{t.pathsTitle}. {t.pathsBody}</p></Reveal>
       <div className="path-grid">
-        {t.pathCards.map(([title, text], index) => { const Icon = pathIcons[index]; const slug = pageSlugs[index]; return <Reveal className="path-card" key={slug}>
-          <div className="card-number">0{index + 1}</div><Icon className="path-icon-main" size={42} /><Icon className="path-icon-ghost" size={170} strokeWidth={1} aria-hidden="true" />
-          <h3>{title}</h3><p>{text}</p><a href={localizedHref(locale, slug)} aria-label={title}><DirectionalArrow rtl={rtl} size={19} /></a>
+        {t.pathCards.map(([title, text], index) => { const Icon = pathIcons[index]; const slug = pathCardSlugs[index]; return <Reveal className="path-card" key={slug}>
+          <Icon className="path-icon-main" size={42} /><Icon className="path-icon-ghost" size={170} strokeWidth={1} aria-hidden="true" />
+          <h3>{title}</h3><p>{text}</p><a className="button button-small" href={localizedHref(locale, slug)} aria-label={title}>{t.pathCtas[index]}<DirectionalArrow rtl={rtl} size={16} /></a>
         </Reveal>; })}
       </div>
     </section>
 
-    <section className="journey section-space"><div className="section-shell journey-grid">
-      <Reveal className="journey-copy"><p className="section-index light">{t.indexes[1]}</p><h2>{t.storyTitle}</h2><p>{t.storyBody}</p><a className="text-link light" href={localizedHref(locale, "innovation")}>{t.journeyLink}<DirectionalArrow rtl={rtl} /></a></Reveal>
-      <div className="journey-steps">{t.journey.map(([title, text], index) => <Reveal className="journey-step" key={title}><span>0{index + 1}</span><div><h3>{title}</h3><p>{text}</p></div></Reveal>)}</div>
-    </div></section>
-
-    <section className="expertise section-space section-shell">
-      <Reveal className="section-heading split-heading"><div><p className="section-index">{t.indexes[2]}</p><h2>{t.expertiseTitle}</h2></div><a className="text-link" href={localizedHref(locale, "clinical-care")}>{t.viewConditions}<DirectionalArrow rtl={rtl} /></a></Reveal>
-      <div className="expertise-grid">{t.conditions.map(([title, text], index) => <Reveal className="expertise-item" key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p><MoveUpRight size={19} /></Reveal>)}</div>
+    <section className="connected-practice" aria-label={t.storyTitle}>
+      <Image src="/media/connected-practice/section.connected-practice.jpg" alt={t.storyAlt} width={1440} height={784} unoptimized sizes="100vw" />
     </section>
 
     <section className="innovation section-space section-shell">
-      <Reveal className="section-heading"><p className="section-index">{t.indexes[3]}</p><h2>{t.innovationTitle}</h2><p>{t.innovationIntro}</p></Reveal>
+      <Reveal className="section-heading"><p className="section-index">{t.indexes[3]}</p><p>{t.innovationTitle}. {t.innovationIntro}</p></Reveal>
       <div className="innovation-grid">{t.innovations.map(([tag, title, text], index) => <Reveal className={`innovation-card innovation-${index + 1}`} key={title}>
         <div className="innovation-art"><Image src={innovationImages[index]} alt={title} fill unoptimized sizes="(max-width: 820px) 90vw, 31vw" /></div>
         <p className="card-tag">{tag}</p><h3>{title}</h3><p>{text}</p><a href={localizedHref(locale, "innovation")}>{t.readStory}<DirectionalArrow rtl={rtl} size={16} /></a>
@@ -145,12 +140,12 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
     </section>
 
     <section className="impact section-space"><div className="section-shell">
-      <Reveal className="section-heading split-heading"><div><p className="section-index light">{t.indexes[4]}</p><h2>{t.impactTitle}</h2></div><p className="as-of">{t.figuresNote}</p></Reveal>
+      <Reveal className="section-heading"><p className="section-index light">{t.indexes[4]}</p><p>{t.impactTitle}. {t.figuresNote}</p></Reveal>
       <div className="metrics">{t.metrics.map(([number, label]) => <Reveal className="metric" key={label}><strong>{number}</strong><span>{label}</span></Reveal>)}</div>
     </div></section>
 
     <section className="appointments section-space section-shell">
-      <Reveal className="section-heading"><p className="section-index">{t.indexes[5]}</p><h2>{t.appointmentTitle}</h2><p>{t.appointmentBody}</p></Reveal>
+      <Reveal className="section-heading"><p className="section-index">{t.indexes[5]}</p><p>{t.appointmentTitle}. {t.appointmentBody}</p></Reveal>
       <div className="appointment-grid">
         <Reveal className="appointment-card urgent"><div className="appointment-icon"><ShieldCheck /></div><p className="card-tag">{t.appointmentCards[0][0]}</p><h3>{t.appointmentCards[0][1]}</h3><p>{t.appointmentCards[0][2]}</p><div className="schedule"><CalendarDays size={18} /><span>{t.urgentDays}</span></div><div className="schedule"><Clock3 size={18} /><span>{t.urgentHours}</span></div><span className="pending-label">{t.urgentInstruction}</span></Reveal>
         <Reveal className="appointment-card featured"><div className="appointment-icon"><CalendarDays /></div><p className="card-tag">{t.appointmentCards[1][0]}</p><h3>{t.appointmentCards[1][1]}</h3><p>{t.appointmentCards[1][2]}</p><a className="button" href="https://nobat.ir/9705" target="_blank" rel="noreferrer">{t.continueNobat}<ExternalLink size={16} /></a><small>{t.opensBooking}</small></Reveal>
@@ -160,7 +155,7 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
     </section>
 
     <section className="news section-space section-shell">
-      <Reveal className="section-heading split-heading"><div><p className="section-index">{t.indexes[6]}</p><h2>{t.newsTitle}</h2></div><a className="text-link" href={localizedHref(locale, "news")}>{t.allUpdates}<DirectionalArrow rtl={rtl} /></a></Reveal>
+      <Reveal className="section-heading split-heading"><div><p className="section-index">{t.indexes[6]}</p><p>{t.newsTitle}</p></div><a className="text-link" href={localizedHref(locale, "news")}>{t.allUpdates}<DirectionalArrow rtl={rtl} /></a></Reveal>
       <div className="news-grid">{t.news.map(([tag, title, text], index) => <Reveal className="news-card" key={title}><div className="news-image"><Image src={newsImages[index]} alt={title} fill unoptimized sizes="(max-width: 820px) 90vw, 31vw" /></div><p className="card-tag">{tag}</p><h3>{title}</h3><p>{text}</p><a href={localizedHref(locale, "news")}>{t.readUpdate}<DirectionalArrow rtl={rtl} size={16} /></a></Reveal>)}</div>
     </section>
 
