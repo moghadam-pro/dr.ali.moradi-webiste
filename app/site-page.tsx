@@ -20,7 +20,6 @@ const innovationImages = [
 ];
 const newsImages = ["/media/news/best-paper.jpg", "/media/news/top-cited.jpg", "/media/news/cotarium-2025.jpg"];
 const languageNames = { en: "🇬🇧 English", fa: "🇮🇷 فارسی", ar: "🇸🇦 العربية" };
-const localeFlags = { en: "🇬🇧", fa: "🇮🇷", ar: "🇸🇦" };
 
 function localizedHref(locale: Locale, slug = "") {
   if (locale === "en") return slug ? `/${slug}` : "/";
@@ -52,24 +51,24 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
     return () => observer.disconnect();
   }, [locale, page, rtl]);
 
-  const nav = useMemo(() => pageSlugs.map((slug, index) => ({ slug, label: t.nav[index] })), [t.nav]);
+  const nav = useMemo(() => t.nav.map((label) => ({ label })), [t.nav]);
   const currentSlug = page === "home" ? "" : page;
   const headerLogo = locale === "en" ? "/brand/logo.en.svg" : "/brand/logo.fa-ar.svg";
 
   return (
-    <main className={rtl ? "rtl" : "ltr"}>
+    <main className={`${rtl ? "rtl" : "ltr"} locale-${locale}`}>
       <a className="skip-link" href="#content">{t.skip}</a>
       <header className="site-header">
         <a className="brand" href={localizedHref(locale)} aria-label={t.homeLabel}>
           <Image src={headerLogo} alt="Dr. Ali Moradi" width={153} height={50} priority />
         </a>
         <nav className="desktop-nav" aria-label={t.primaryNav}>
-          {nav.map((item) => <a key={item.slug} className={page === item.slug ? "active" : ""} href={localizedHref(locale, item.slug)}>{item.label}</a>)}
+          {nav.map((item) => <button className="nav-link" type="button" key={item.label}>{item.label}</button>)}
         </nav>
         <div className="header-actions">
           <div className="language-control">
             <button className="language-button" onClick={() => setLanguageOpen(!languageOpen)} aria-expanded={languageOpen} aria-label={t.chooseLanguage}>
-              <Languages size={18} /><span>{localeFlags[locale]} {locale.toUpperCase()}</span><ChevronDown size={14} />
+              <Languages size={18} /><span>{locale.toUpperCase()}</span><ChevronDown size={14} />
             </button>
             {languageOpen && <div className="language-menu">
               {(["en", "fa", "ar"] as Locale[]).map((lang) => <a className={locale === lang ? "selected" : ""} key={lang} href={localizedHref(lang, currentSlug)}>{languageNames[lang]}</a>)}
@@ -80,12 +79,12 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
         </div>
       </header>
       {menuOpen && <nav className="mobile-nav" aria-label={t.mobileNav}>
-        {nav.map((item) => <a key={item.slug} href={localizedHref(locale, item.slug)}>{item.label}<ChevronRight className={rtl ? "flip-icon" : ""} size={17} /></a>)}
+        {nav.map((item) => <button className="mobile-nav-link" type="button" key={item.label}>{item.label}<ChevronRight className={rtl ? "flip-icon" : ""} size={17} /></button>)}
         <a className="button" href="https://nobat.ir/9705" target="_blank" rel="noreferrer">{t.appointment}<ExternalLink size={16} /></a>
       </nav>}
 
       <div id="content">
-        {page === "home" ? <HomePage locale={locale} t={t} rtl={rtl} /> : page === "contact" ? <ContactPage locale={locale} t={t} rtl={rtl} /> : <InteriorPage locale={locale} page={page} t={t} rtl={rtl} />}
+        {page === "home" ? <HomePage locale={locale} t={t} rtl={rtl} /> : page === "contact" ? <ContactPage t={t} rtl={rtl} /> : <InteriorPage locale={locale} page={page} t={t} rtl={rtl} />}
       </div>
       <Footer locale={locale} t={t} />
     </main>
@@ -94,29 +93,27 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
 
 function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolean }) {
   return <>
-    <section className="hero section-shell">
-      <div className="hero-copy">
-        <p className="eyebrow"><span />{t.eyebrow}</p>
-        <h1>{t.heroTitle}</h1>
-        <p className="hero-body">{t.heroBody}</p>
-        <div className="hero-actions">
-          <a className="button" href={localizedHref(locale, "clinical-care")}>{t.heroPrimary}<DirectionalArrow rtl={rtl} /></a>
-          <a className="text-link" href="#pathways">{t.heroSecondary}<ChevronDown size={17} /></a>
+    <section className="hero">
+      <Image className="hero-background" src="/media/hero/hero-bg.png" alt={t.heroAlt} fill priority unoptimized sizes="100vw" />
+      <div className="hero-wash" aria-hidden="true" />
+      <div className="hero-orbits" aria-hidden="true">
+        <div className="orbit orbit-one" />
+        <div className="orbit orbit-two" />
+        <div className="hero-dot dot-one" />
+        <div className="hero-dot dot-two" />
+      </div>
+      <div className="hero-layout section-shell">
+        <div className="hero-copy">
+          <h1>{t.heroTitle}</h1>
+          <p className="eyebrow"><span />{t.eyebrow}</p>
+          <p className="hero-body">{t.heroBody}</p>
+        </div>
+        <div className="hero-note"><Quote size={36} /><span>{t.heroQuote}</span></div>
+        <div className="facet-bar section-shell" aria-label={t.pathsTitle}>
+          {t.facets.map(([top, bottom], index) => { const Icon = facetIcons[index]; return <div className="facet" key={top}><Icon size={27} /><span><small>{top}</small><strong>{bottom}</strong></span></div>; })}
         </div>
         <div className="credential-list">{t.credentials.map((item) => <span key={item}><Check size={15} />{item}</span>)}</div>
       </div>
-      <div className="hero-visual">
-        <div className="portrait-frame">
-          <Image src="/media/edited/dr-moradi-hero-v2.jpg" alt={t.heroAlt} fill priority unoptimized sizes="(max-width: 820px) 94vw, 48vw" />
-          <div className="portrait-caption"><strong>{locale === "en" ? "Dr. Ali Moradi" : locale === "fa" ? "دکتر علی مرادی" : "الدكتور علي مرادي"}</strong><span>{locale === "en" ? "MD, PhD" : locale === "fa" ? "پزشک و دکتری تخصصی" : "طبيب ودكتوراه"}</span></div>
-        </div>
-        <div className="orbit orbit-one" /><div className="orbit orbit-two" /><div className="hero-dot dot-one" /><div className="hero-dot dot-two" />
-        <div className="hero-note"><Quote size={19} /><span>{t.heroQuote}</span></div>
-      </div>
-    </section>
-
-    <section className="facet-bar section-shell" aria-label={t.pathsTitle}>
-      {t.facets.map(([top, bottom], index) => { const Icon = facetIcons[index]; return <div className="facet" key={top}><Icon size={27} /><span><small>{top}</small><strong>{bottom}</strong></span></div>; })}
     </section>
 
     <section id="pathways" className="pathways section-space section-shell">
@@ -189,7 +186,7 @@ function InteriorPage({ locale, page, t, rtl }: { locale: Locale; page: string; 
   </>;
 }
 
-function ContactPage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolean }) {
+function ContactPage({ t, rtl }: { t: SiteCopy; rtl: boolean }) {
   const [sent, setSent] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   function submit(event: FormEvent<HTMLFormElement>) {
@@ -231,10 +228,11 @@ function ContactPage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boo
 function Footer({ locale, t }: { locale: Locale; t: SiteCopy }) {
   const footerLogo = locale === "en" ? "/brand/logo.en-footer.svg" : "/brand/logo.fa-ar-footer.svg";
   const mapUrl = "https://www.google.com/maps/search/?api=1&query=Mashhad+Poursina+Building+Arya+Hospital";
+  const footerPages = t.pages as Record<string, InteriorPageData>;
   return <footer className="site-footer">
     <div className="section-shell footer-grid">
       <div className="footer-brand"><Image src={footerLogo} alt="Dr. Ali Moradi" width={153} height={50} /><p>{t.footer.bio}</p><a className="footer-book" href="https://nobat.ir/9705" target="_blank" rel="noreferrer">{t.footer.booking}<ExternalLink size={15} /></a></div>
-      <div><h3>{t.footer.explore}</h3>{pageSlugs.slice(0, 6).map((slug, index) => <a key={slug} href={localizedHref(locale, slug)}>{t.nav[index]}</a>)}</div>
+      <div><h3>{t.footer.explore}</h3>{pageSlugs.slice(0, 6).map((slug) => <a key={slug} href={localizedHref(locale, slug)}>{footerPages[slug].kicker}</a>)}</div>
       <div><h3>{t.footer.resources}</h3><a href={localizedHref(locale, "clinical-care")}>{t.footer.before}</a><a href={localizedHref(locale, "clinical-care")}>{t.footer.after}</a><a href={localizedHref(locale, "clinical-care")}>{t.footer.faq}</a><a href={localizedHref(locale, "education")}>{t.footer.rehab}</a></div>
       <div className="footer-contact"><h3>{t.footer.contact}</h3><a href="mailto:info@DrAliMoradi.com"><Mail />info@DrAliMoradi.com</a><a href="tel:+985132290968" dir="ltr"><Phone />+98 51 3229 0968</a><p><MapPin />{t.contact.office}</p><p><MapPin />{t.contact.clinic}</p><a href={mapUrl} target="_blank" rel="noreferrer"><MapPin />{t.footer.map}<ExternalLink size={13} /></a></div>
       <div className="footer-social"><h3>{t.footer.social}</h3><a href="https://www.instagram.com/dr_ali_moradi_handsurgeon" target="_blank" rel="noreferrer"><Camera />Instagram</a><a href="https://t.me/DrAliMoradi" target="_blank" rel="noreferrer"><Send />Telegram</a><a href="https://www.aparat.com/dr_ali_moradi_handsurgeon" target="_blank" rel="noreferrer"><PlayCircle />Aparat</a></div>

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 PROJECT_DIR="/home/drmomin/htdocs/dralimoradi.moghadam.pro"
-BRANCH="agent/catalog-source-content"
+BRANCH="${1:-main}"
 PROCESS_NAME="dr-alimoradi-demo"
 HEALTH_URL="http://127.0.0.1:3006/"
 SITE_USER="drmomin"

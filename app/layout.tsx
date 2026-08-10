@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import "@fontsource-variable/manrope";
+import "@fontsource-variable/inter";
 import "@fontsource-variable/vazirmatn";
+import "@fontsource/amiri/400.css";
+import "@fontsource/amiri/700.css";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://dralimoradi.moghadam.pro";

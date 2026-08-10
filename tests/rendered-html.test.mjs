@@ -20,6 +20,10 @@ test("server-renders the completed homepage", async () => {
   const html = await response.text();
   assert.match(html, /Dr\. Ali Moradi/);
   assert.match(html, /Advancing hand care through research and innovation/i);
+  assert.match(html, /Product/);
+  assert.match(html, /Clinic/);
+  assert.match(html, /About me/);
+  assert.match(html, /Where Surgery Goes Beyond Protocols/);
   assert.match(html, /https:\/\/nobat\.ir\/9705/);
   assert.match(html, /Hand &amp; Upper Extremity Surgeon/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
@@ -41,7 +45,7 @@ test("ships the approved brand, social, and favicon metadata", async () => {
   const response = await render();
   const html = await response.text();
   assert.match(html, /\/brand\/logo\.en\.svg/);
-  assert.match(html, /\/media\/edited\/dr-moradi-hero-v2\.jpg/);
+  assert.match(html, /\/media\/hero\/hero-bg\.png/);
   assert.match(html, /https:\/\/dralimoradi\.moghadam\.pro\/social-banner\.jpg\?v=20260803/);
   assert.match(html, /https:\/\/dralimoradi\.moghadam\.pro\/favicon\.ico\?v=20260803/);
   assert.match(html, /site\.webmanifest/);
@@ -55,5 +59,8 @@ test("includes reduced-motion and responsive safeguards", async () => {
   assert.match(css, /@media \(max-width: 560px\)/);
   assert.match(css, /@media \(max-width: 820px\)/);
   assert.match(css, /overflow-x:\s*clip/);
+  assert.match(css, /"Inter Variable"/);
+  assert.match(css, /"Vazirmatn Variable"/);
+  assert.match(css, /font-family:\s*Amiri/);
   assert.doesNotMatch(css, /#176f98/i);
 });
