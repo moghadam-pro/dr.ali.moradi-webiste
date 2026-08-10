@@ -20,6 +20,17 @@ const innovationImages = [
   "/media/innovation/magnetic-distractor.png",
 ];
 const newsImages = ["/media/news/best-paper.jpg", "/media/news/top-cited.jpg", "/media/news/cotarium-2025.jpg"];
+const connectedPracticeImages = [
+  "/media/connected-practice/01-injury.jpg",
+  "/media/connected-practice/02-innovation.jpg",
+  "/media/connected-practice/03-application.jpg",
+  "/media/connected-practice/04-life.jpg",
+];
+const connectedStepNumbers = {
+  en: ["01", "02", "03", "04"],
+  fa: ["۰۱", "۰۲", "۰۳", "۰۴"],
+  ar: ["٠١", "٠٢", "٠٣", "٠٤"],
+} as const;
 const languageNames = { en: "🇬🇧 English", fa: "🇮🇷 فارسی", ar: "🇸🇦 العربية" };
 
 function localizedHref(locale: Locale, slug = "") {
@@ -127,8 +138,20 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
       </div>
     </section>
 
-    <section className="connected-practice" aria-label={t.storyTitle}>
-      <Image src="/media/connected-practice/section.connected-practice.jpg" alt={t.storyAlt} width={1440} height={784} unoptimized sizes="100vw" />
+    <section className="journey section-space" aria-label={t.storyTitle}>
+      <div className="section-shell">
+        <Reveal className="section-heading split-heading journey-heading">
+          <div><p className="section-index light">{t.indexes[1]}</p><p>{t.storyBody}</p></div>
+          <a className="text-link light" href={localizedHref(locale, "innovation")}>{t.journeyLink}<DirectionalArrow rtl={rtl} /></a>
+        </Reveal>
+        <div className="connected-grid">
+          {t.journey.map(([overline, title], index) => <Reveal className="connected-card" key={title}>
+            <div className="connected-image"><Image src={connectedPracticeImages[index]} alt={title} fill unoptimized sizes="(max-width: 560px) 34vw, 22vw" /></div>
+            {index < 3 && <ArrowRight className="connected-arrow" size={58} strokeWidth={2.1} aria-hidden="true" />}
+            <div className="connected-meta"><span>{connectedStepNumbers[locale][index]}</span><div><small>{overline}</small><h3>{title}</h3></div></div>
+          </Reveal>)}
+        </div>
+      </div>
     </section>
 
     <section className="innovation section-space section-shell">

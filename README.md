@@ -55,7 +55,7 @@ without changing the approved visual or content architecture.
 - Hero CTA removed; appointment CTA remains in the header
 - Section labels use an orange rule and no numeric prefix
 - Pathways contains three routes: Clinical Care, Innovation, and Research
-- Connected Practice uses the approved full-width composite artwork
+- Connected Practice is rebuilt responsively from the four approved source images, with linked directional steps on desktop and mobile
 - The former homepage Clinical Care detail section has been removed
 - Desktop, tablet, mobile, LTR, and RTL layouts are maintained
 

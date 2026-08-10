@@ -24,7 +24,13 @@ test("server-renders the completed homepage", async () => {
   assert.match(html, /Clinic/);
   assert.match(html, /About me/);
   assert.match(html, /Where Surgery Goes Beyond Protocols/);
-  assert.match(html, /\/media\/connected-practice\/section\.connected-practice\.jpg/);
+  assert.match(html, /\/media\/connected-practice\/01-injury\.jpg/);
+  assert.match(html, /\/media\/connected-practice\/02-innovation\.jpg/);
+  assert.match(html, /\/media\/connected-practice\/03-application\.jpg/);
+  assert.match(html, /\/media\/connected-practice\/04-life\.jpg/);
+  assert.match(html, /From/);
+  assert.match(html, /Back to/);
+  assert.doesNotMatch(html, /section\.connected-practice\.jpg/);
   assert.match(html, /Explore Clinical Care/);
   assert.match(html, /Explore Innovation/);
   assert.match(html, /Explore Research/);
@@ -63,6 +69,8 @@ test("includes reduced-motion and responsive safeguards", async () => {
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /@media \(max-width: 560px\)/);
   assert.match(css, /@media \(max-width: 820px\)/);
+  assert.match(css, /\.connected-grid\s*\{[^}]*grid-template-columns:\s*1fr/);
+  assert.match(css, /\.connected-arrow[^}]*rotate\(90deg\)/);
   assert.match(css, /overflow-x:\s*clip/);
   assert.match(css, /"Inter Variable"/);
   assert.match(css, /"Vazirmatn Variable"/);
