@@ -36,4 +36,3 @@ payment, or an internal appointment-booking system.
 Each approved milestone is developed, reviewed, documented, and committed as a
 separate logical step. This keeps the Git history readable and suitable for client
 handoff.
-
