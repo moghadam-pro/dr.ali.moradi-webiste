@@ -18,8 +18,6 @@ backup/live-react-before-home-refresh-2026-08-10
 7c6f9bc9d8d190c481ece8c81568e91e210fedc5
 ```
 
-Online demo: [dralimoradi.moghadam.pro](https://dralimoradi.moghadam.pro/)
-
 Design source: [Dr. AliMoradi — website v1.0.0 on Figma](https://www.figma.com/design/UCIClfqLygF9UTERhXzawE/Dr.-AliMoradi---website-v1.0.0?node-id=2071-27750&t=BnaFPMxOBdiCwy18-1)
 
 ## Product principles
@@ -83,19 +81,6 @@ npm run start
 The demo is self-contained. It does not read from or write to the current
 `dralimoradi.com` host.
 
-## Demo-server update
-
-On the server, run the update script as the project owner so that the correct Node
-and PM2 environment is used:
-
-```bash
-cd /home/drmomin/htdocs/dralimoradi.moghadam.pro
-bash scripts/update-demo-server.sh main
-```
-
-The script installs dependencies, creates a production build, and updates the PM2
-process on port `3006`.
-
 ## Documentation
 
 - [Project discovery](docs/project-discovery.md)
@@ -112,7 +97,6 @@ process on port `3006`.
 - [Technical direction](docs/technical-direction.md)
 - [Delivery roadmap](docs/roadmap.md)
 - [Demo V1 implementation](docs/demo-v1-implementation.md)
-- [Demo server update](docs/demo-server-update.md)
 
 ## Working process
 

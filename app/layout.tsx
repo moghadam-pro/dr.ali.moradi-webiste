@@ -5,7 +5,7 @@ import "@fontsource/scheherazade-new/400.css";
 import "@fontsource/scheherazade-new/700.css";
 import "./globals.css";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://dralimoradi.moghadam.pro";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://dralimoradi.com";
 const assetVersion = "20260803";
 
 export const metadata: Metadata = {

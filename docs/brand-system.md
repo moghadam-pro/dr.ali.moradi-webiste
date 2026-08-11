@@ -4,7 +4,7 @@
 
 The source brand book is the 18-page PDF at:
 
-`/Users/moghadam/code/dr.moradi/branding/set-2_260520_205659.pdf`
+`branding/set-2_260520_205659.pdf`
 
 The one-page `Unknown.pdf` contains a clean all-vector logo lockup and was used to
 recover the mark geometry. The website does not use the old Persian wordmark or its

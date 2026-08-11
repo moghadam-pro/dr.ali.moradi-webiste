@@ -2,7 +2,7 @@
 
 ## Source library
 
-`/Users/moghadam/code/dr.moradi/pictures and videos`
+`pictures and videos/`
 
 The reviewed library contains 73 JPEG photographs, 8 HEIC photographs, and 13 MOV
 files (including the logo motion), approximately 753 MB in total.

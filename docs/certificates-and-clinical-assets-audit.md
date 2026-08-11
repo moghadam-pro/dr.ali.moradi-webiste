@@ -4,8 +4,8 @@
 
 New source folders reviewed on 2 August 2026:
 
-- `/Users/moghadam/code/dr.moradi/cert`
-- `/Users/moghadam/code/dr.moradi/before-after sample`
+- `cert/`
+- `before-after sample/`
 
 The source files remain outside the public repository. Only approved, optimized web derivatives should be committed.
 

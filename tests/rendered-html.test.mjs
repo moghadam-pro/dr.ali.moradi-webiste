@@ -57,8 +57,8 @@ test("ships the approved brand, social, and favicon metadata", async () => {
   const html = await response.text();
   assert.match(html, /\/brand\/logo\.en\.svg/);
   assert.match(html, /\/media\/hero\/hero-bg\.png/);
-  assert.match(html, /https:\/\/dralimoradi\.moghadam\.pro\/social-banner\.jpg\?v=20260803/);
-  assert.match(html, /https:\/\/dralimoradi\.moghadam\.pro\/favicon\.ico\?v=20260803/);
+  assert.match(html, /https:\/\/dralimoradi\.com\/social-banner\.jpg\?v=20260803/);
+  assert.match(html, /https:\/\/dralimoradi\.com\/favicon\.ico\?v=20260803/);
   assert.match(html, /site\.webmanifest/);
   assert.match(html, /favicon-32x32\.png/);
   assert.match(html, /#4293C2/i);
