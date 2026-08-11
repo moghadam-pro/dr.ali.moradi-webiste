@@ -74,6 +74,11 @@ test("includes reduced-motion and responsive safeguards", async () => {
   assert.match(css, /overflow-x:\s*clip/);
   assert.match(css, /"Inter Variable"/);
   assert.match(css, /"Vazirmatn Variable"/);
-  assert.match(css, /font-family:\s*Amiri/);
+  assert.match(css, /font-family:\s*"Scheherazade New"/);
+  assert.doesNotMatch(css, /font-family:\s*Amiri/);
+  assert.match(css, /\.rtl \.hero-background\s*\{[^}]*scaleX\(-1\)/);
+  assert.match(css, /\.hero-note\s*\{[^}]*min-height:\s*160px[^}]*padding:\s*18px[^}]*rgba\(6,43,62,\.6\)[^}]*blur\(2px\)/);
+  assert.doesNotMatch(css, /\.hero-note\s*\{[^}]*margin-bottom:\s*96px/);
+  assert.match(css, /@media \(max-width: 1120px\)[\s\S]*?\.path-grid\s*\{\s*grid-template-columns:\s*1fr/);
   assert.doesNotMatch(css, /#176f98/i);
 });

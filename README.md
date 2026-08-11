@@ -36,7 +36,7 @@ Design source: [Dr. AliMoradi — website v1.0.0 on Figma](https://www.figma.com
 - React 19 and TypeScript
 - Next-compatible App Router components compiled with Vinext/Vite
 - Shared content model for English, Persian, and Arabic
-- Locally bundled Inter, Vazirmatn, and Amiri fonts
+- Locally bundled Inter, Vazirmatn, and Scheherazade New fonts
 - Lucide icon components; the approved homepage icon choices must remain stable
 - Responsive CSS, loading states, scroll-reveal motion, and reduced-motion support
 - External appointment flow through `https://nobat.ir/9705` only
