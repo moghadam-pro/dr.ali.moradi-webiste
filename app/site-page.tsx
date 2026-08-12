@@ -2,7 +2,7 @@
 
 import {
   ArrowRight, BrainCircuit, CalendarDays, Check, ChevronDown, ChevronRight,
-  Camera, CircleHelp, Clock3, ExternalLink, FileText, Hand, Languages, Lightbulb,
+  Camera, Clock3, ExternalLink, FileText, Hand, Languages, Lightbulb,
   Mail, MapPin, Menu, Microscope, Phone, PlayCircle, Quote, Send,
   ShieldCheck, Sparkles, Stethoscope, X,
 } from "lucide-react";
@@ -19,7 +19,7 @@ const innovationImages = [
   "/media/innovation/bionic-hand.png",
   "/media/innovation/magnetic-distractor.png",
 ];
-const newsImages = ["/media/news/best-paper.jpg", "/media/news/top-cited.jpg", "/media/news/cotarium-2025.jpg"];
+const newsImages = ["/media/news/best-paper-meeting.jpg", "/media/news/top-cited.jpg", "/media/news/congress-recognition.jpg"];
 const connectedPracticeImages = [
   "/media/connected-practice/01-injury.jpg",
   "/media/connected-practice/02-innovation.jpg",
@@ -104,6 +104,8 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
 }
 
 function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolean }) {
+  const [openAppointment, setOpenAppointment] = useState(0);
+
   return <>
     <section className="hero">
       <Image className="hero-background" src="/media/hero/hero-bg.png" alt={t.heroAlt} fill priority unoptimized sizes="100vw" />
@@ -128,16 +130,6 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
       </div>
     </section>
 
-    <section id="pathways" className="pathways section-space section-shell">
-      <Reveal className="section-heading"><p className="section-index">{t.indexes[0]}</p><p>{t.pathsTitle}. {t.pathsBody}</p></Reveal>
-      <div className="path-grid">
-        {t.pathCards.map(([title, text], index) => { const Icon = pathIcons[index]; const slug = pathCardSlugs[index]; return <Reveal className="path-card" key={slug}>
-          <Icon className="path-icon-main" size={42} /><Icon className="path-icon-ghost" size={170} strokeWidth={1} aria-hidden="true" />
-          <h3>{title}</h3><p>{text}</p><a className="button button-small" href={localizedHref(locale, slug)} aria-label={title}>{t.pathCtas[index]}<DirectionalArrow rtl={rtl} size={16} /></a>
-        </Reveal>; })}
-      </div>
-    </section>
-
     <section className="journey section-space" aria-label={t.storyTitle}>
       <div className="section-shell">
         <Reveal className="section-heading split-heading journey-heading">
@@ -147,10 +139,20 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
         <div className="connected-grid">
           {t.journey.map(([overline, title], index) => <Reveal className="connected-card" key={title}>
             <div className="connected-image"><Image src={connectedPracticeImages[index]} alt={title} fill unoptimized sizes="(max-width: 560px) 34vw, 22vw" /></div>
-            {index < 3 && <ArrowRight className="connected-arrow" size={58} strokeWidth={2.1} aria-hidden="true" />}
+            {index < 3 && <ChevronRight className="connected-arrow" size={76} strokeWidth={1} aria-hidden="true" />}
             <div className="connected-meta"><span>{connectedStepNumbers[locale][index]}</span><div><small>{overline}</small><h3>{title}</h3></div></div>
           </Reveal>)}
         </div>
+      </div>
+    </section>
+
+    <section id="pathways" className="pathways section-space section-shell">
+      <Reveal className="section-heading"><p className="section-index">{t.indexes[0]}</p><p>{t.pathsTitle}. {t.pathsBody}</p></Reveal>
+      <div className="path-grid">
+        {t.pathCards.map(([title, text], index) => { const Icon = pathIcons[index]; const slug = pathCardSlugs[index]; return <Reveal className="path-card" key={slug}>
+          <Icon className="path-icon-main" size={42} /><Icon className="path-icon-ghost" size={170} strokeWidth={1} aria-hidden="true" />
+          <h3>{title}</h3><p>{text}</p><a className="button button-small" href={localizedHref(locale, slug)} aria-label={title}>{t.pathCtas[index]}<DirectionalArrow rtl={rtl} size={16} /></a>
+        </Reveal>; })}
       </div>
     </section>
 
@@ -163,16 +165,31 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
     </section>
 
     <section className="impact section-space"><div className="section-shell">
-      <Reveal className="section-heading"><p className="section-index light">{t.indexes[4]}</p><p>{t.impactTitle}. {t.figuresNote}</p></Reveal>
+      <Reveal className="section-heading"><p className="section-index">{t.indexes[4]}</p><p>{t.impactTitle}. {t.figuresNote}</p></Reveal>
       <div className="metrics">{t.metrics.map(([number, label]) => <Reveal className="metric" key={label}><strong>{number}</strong><span>{label}</span></Reveal>)}</div>
     </div></section>
 
     <section className="appointments section-space section-shell">
       <Reveal className="section-heading"><p className="section-index">{t.indexes[5]}</p><p>{t.appointmentTitle}. {t.appointmentBody}</p></Reveal>
-      <div className="appointment-grid">
-        <Reveal className="appointment-card urgent"><div className="appointment-icon"><ShieldCheck /></div><p className="card-tag">{t.appointmentCards[0][0]}</p><h3>{t.appointmentCards[0][1]}</h3><p>{t.appointmentCards[0][2]}</p><div className="schedule"><CalendarDays size={18} /><span>{t.urgentDays}</span></div><div className="schedule"><Clock3 size={18} /><span>{t.urgentHours}</span></div><span className="pending-label">{t.urgentInstruction}</span></Reveal>
-        <Reveal className="appointment-card featured"><div className="appointment-icon"><CalendarDays /></div><p className="card-tag">{t.appointmentCards[1][0]}</p><h3>{t.appointmentCards[1][1]}</h3><p>{t.appointmentCards[1][2]}</p><a className="button" href="https://nobat.ir/9705" target="_blank" rel="noreferrer">{t.continueNobat}<ExternalLink size={16} /></a><small>{t.opensBooking}</small></Reveal>
-        <Reveal className="appointment-card"><div className="appointment-icon"><CircleHelp /></div><p className="card-tag">{t.appointmentCards[2][0]}</p><h3>{t.appointmentCards[2][1]}</h3><p>{t.appointmentCards[2][2]}</p><span className="pending-label">{t.onlineNote}</span></Reveal>
+      <div className="appointment-layout">
+        <Reveal className="appointment-accordion">
+          {t.appointmentCards.map(([tag, title, text], index) => {
+            const isOpen = openAppointment === index;
+            return <div className={`appointment-item ${isOpen ? "is-open" : ""}`} key={title}>
+              <button className="appointment-trigger" type="button" onClick={() => setOpenAppointment(isOpen ? -1 : index)} aria-expanded={isOpen}>
+                <span><small>{tag}</small>{title}</span><ChevronDown size={20} strokeWidth={1.5} />
+              </button>
+              {isOpen && <div className="appointment-panel">
+                <p>{text}</p>
+                {index === 0 && <><a className="button" href="https://nobat.ir/9705" target="_blank" rel="noreferrer">{t.continueNobat}<ExternalLink size={16} /></a><small>{t.opensBooking}</small></>}
+                {index === 1 && <span className="pending-label">{t.onlineNote}</span>}
+                {index === 2 && <><div className="schedule"><CalendarDays size={18} /><span>{t.urgentDays}</span></div><div className="schedule"><Clock3 size={18} /><span>{t.urgentHours}</span></div><span className="pending-label">{t.urgentInstruction}</span></>}
+                {index === 3 && <span className="pending-label">{t.screeningNote}</span>}
+              </div>}
+            </div>;
+          })}
+        </Reveal>
+        <Reveal className="appointment-portrait"><Image src="/media/appointments/doctor.jpg" alt={t.appointmentPortraitAlt} fill unoptimized sizes="(max-width: 820px) 100vw, 42vw" /></Reveal>
       </div>
       <p className="medical-note"><ShieldCheck size={18} />{t.medicalNote}</p>
     </section>
@@ -183,8 +200,8 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
     </section>
 
     <section className="about-preview section-space"><div className="section-shell about-grid">
-      <Reveal className="about-monogram"><span>AM</span><div className="pulse-line" /></Reveal>
-      <Reveal className="about-copy"><p className="section-index light">{t.indexes[7]}</p><h2>{t.aboutTitle}</h2><p>{t.aboutBody}</p><div className="about-actions"><a className="button button-light" href={localizedHref(locale, "about")}>{t.meetDoctor}<DirectionalArrow rtl={rtl} /></a><a className="text-link light" href={localizedHref(locale, "research")}>{t.researchProfile}<FileText size={17} /></a></div></Reveal>
+      <Reveal className="about-copy"><p className="section-index light">{t.indexes[7]}</p><p>{t.aboutBody}</p><div className="about-actions"><a className="button button-light" href={localizedHref(locale, "about")}>{t.meetDoctor}<DirectionalArrow rtl={rtl} /></a><a className="text-link light" href={localizedHref(locale, "research")}>{t.researchProfile}<FileText size={17} /></a></div></Reveal>
+      <Reveal className="about-media"><div className="about-rings" aria-hidden="true" /><div className="pulse-line" aria-hidden="true" /><Image src="/media/about/office.jpg" alt={t.aboutImageAlt} fill unoptimized sizes="(max-width: 820px) 100vw, 42vw" /></Reveal>
     </div></section>
   </>;
 }

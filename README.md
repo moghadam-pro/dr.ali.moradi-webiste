@@ -56,6 +56,9 @@ without changing the approved visual or content architecture.
 - Section labels use an orange rule and no numeric prefix
 - Pathways contains three routes: Clinical Care, Innovation, and Research
 - Connected Practice is rebuilt responsively from the four approved source images, with linked directional steps on desktop and mobile
+- Connected Practice now precedes Pathways in the homepage narrative
+- Impact uses four light evidence cards, and Appointments uses a four-path accordion with the approved external booking route
+- Latest cards use fixed editorial heights and two-line content limits; About pairs the expanded profile copy with the private-office image
 - The former homepage Clinical Care detail section has been removed
 - Desktop, tablet, mobile, LTR, and RTL layouts are maintained
 
