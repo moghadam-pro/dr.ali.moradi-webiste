@@ -14,8 +14,8 @@ or write to the current `dralimoradi.com` host or its data.
 - English-first homepage at `/`
 - Fully translated Persian experience under `/fa`
 - Fully translated Arabic experience under `/ar`
-- Functional internal routes for Clinical Care, Research, Innovation, Education,
-  About, News, and Contact
+- Functional internal routes for Clinic, Research, Innovation, Education, About,
+  Blog, Contact, and 18 nested single-post pages
 - Locale-preserving navigation and language switching
 - Responsive desktop, tablet, and mobile layouts
 - Sticky desktop header and functional mobile menu
@@ -30,33 +30,47 @@ or write to the current `dralimoradi.com` host or its data.
 - Medical and emergency disclaimer
 - Complete favicon set, web manifest, browser tile configuration, canonical and
   language links, Open Graph metadata, Twitter card, robots file, and sitemap
-- Local Manrope and Vazirmatn font packages; no runtime font dependency
+- Local Inter, Vazirmatn, and Scheherazade New font packages; no runtime font dependency
+
+## Internal page system
+
+- Full-width image cover with a 400-pixel desktop maximum
+- White title and summary over a 40%-to-transparent primary-blue gradient
+- Cover height reduces as the visitor starts scrolling
+- Shared appointment suggestion and medical disclaimer before the footer
+- Clinic-specific services, private-office gallery, service scope, and FAQ
+- About, Research, Innovation, and Education use source-backed project content
+- Contact keeps validated mail-client handoff behavior
+- Blog archive uses 18 controlled cards; every post has a nested route, localized
+  content, metadata, canonical URL, and language alternatives
 
 ## Homepage sections
 
 1. Hero and working professional statement
 2. Four professional facets
-3. Audience pathways
-4. Interactive narrative: From injury to restored function
-5. Clinical expertise
-6. Selected innovation stories
-7. Working evidence metrics
-8. Appointment pathways
-9. Research and recognition updates
-10. About preview and complete footer
+3. Interactive narrative: From injury to restored function
+4. Audience pathways
+5. Selected innovation stories
+6. Working evidence metrics
+7. Appointment pathways
+8. Research and recognition updates
+9. About preview and complete footer
 
 ## Image production and supplied brand assets
 
-- Hero source: the approved `for-hero.png` supplied for this revision
-- Edited derivative: `public/media/edited/dr-moradi-hero-v2.jpg`
+- Current homepage hero: `public/media/hero/hero-bg-v2.jpg`
+- Generated Clinic cover: `public/media/pages/clinic-cover.jpg`; full prompt and
+  provenance are recorded in `docs/change-log-2026-08-17.md`
+- Legacy portrait source and derivative remain in the media library for approved
+  About-page use; they are no longer the homepage background
 - Social preview: `public/social-banner.jpg`, 1200 x 630
 - Locale-aware supplied SVG logo sets are used in the header and footer
 - The site icon package is installed under `public/icons`
 - Homepage innovation cards use approved local or source-backed product images
 - Homepage news cards use the supplied certificate archive rather than generic icons
 - Raw sources remain outside the repository and unchanged
-- The hero edit uses identity-preserving retouch, cool blue-gray tonal unification,
-  controlled highlights, and a simplified operating-room environment
+- The current homepage hero is the newly supplied laboratory composition and was
+  added without content reconstruction
 - Clinical before-and-after images are excluded from the demo pending patient
   consent and sensitive-content approval
 
@@ -69,7 +83,7 @@ The new certificate archive was reviewed and grouped into:
 - academic, editorial, and professional service
 - teaching and research awards
 
-Selected verified summaries are used across the News, Research, Innovation, About,
+Selected verified summaries are used across the Blog, Research, Innovation, About,
 and Education pages. Content that would overstate affiliations or clinical claims
 has been excluded.
 
@@ -77,7 +91,7 @@ has been excluded.
 
 - Production build succeeds
 - Lint completes without warnings or errors
-- Homepage server-render test passes
+- Homepage, Clinic, Blog archive, single-post, and localized server-render tests pass
 - English internal route tests pass
 - Persian and Arabic route tests pass
 - Reduced-motion and mobile-breakpoint checks pass

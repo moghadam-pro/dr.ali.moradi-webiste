@@ -551,3 +551,27 @@ Hostها حل شد. جزئیات خصوصی این سرور عمداً در Git 
 - [Media library audit](media-library-audit.md)
 - [CV content summary](cv-content-summary.md)
 - [Roadmap](roadmap.md)
+
+## ۱۸. اصلاحیه صفحات داخلی و وبلاگ — ۲۶ مرداد ۱۴۰۵ / ۱۷ اوت ۲۰۲۶
+
+در این مرحله کارفرما قاعده جدید همگام‌سازی را تعیین کرد: همه گفت‌وگوها، تصمیم‌ها
+و تغییرات باید در Git مستند شوند تا شروع کار روی هر سیستم دیگر با خواندن آخرین
+وضعیت `main` امکان‌پذیر باشد. سند کامل این مرحله در
+[Change Log 2026-08-17](change-log-2026-08-17.md) ثبت شده است.
+
+خلاصه تصمیم‌های جاری:
+
+- Product از منو حذف و شش مقصد Clinic، Innovation، Research، Education، About
+  me و Blog فعال شدند؛
+- Hero با عکس جدید و عنوان علمی و جایزه درخواستی اصلاح شد؛
+- یک الگوی مشترک کاور ۴۰۰ پیکسلی با گرادیان آبی و کاهش ارتفاع هنگام اسکرول برای
+  صفحات داخلی ساخته شد؛
+- صفحه Clinic با خدمات، مطب خصوصی، گالری، دامنه خدمات، FAQ و نوبت در سه زبان
+  ساخته شد؛
+- About، Contact، Innovation، Research و Education به Route و الگوی جدید متصل
+  شدند؛
+- آرشیو Blog با ۱۸ مطلب و ۱۸ صفحه Single Post در EN/FA/AR ساخته شد؛
+- Routeهای تو‌در‌تو، Metadata اختصاصی و Hreflang مقاله‌ها پیاده‌سازی شد؛
+- کاور Clinic با تکیه بر عکس واقعی مطب تولید و Prompt آن در Git ثبت شد؛
+- TypeScript، Lint، Production Build و پنج تست رندر/Route/Metadata/Responsive
+  همگی موفق هستند.

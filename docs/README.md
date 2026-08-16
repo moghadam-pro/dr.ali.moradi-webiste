@@ -7,6 +7,7 @@ history, then use the focused documents for implementation details.
 ## Primary handoff documents
 
 - [آرشیو ساختاریافته گفت‌وگو و تصمیم‌های پروژه](project-conversation-archive-fa.md)
+- [آخرین اصلاحیه و وضعیت اجرایی — 2026-08-17](change-log-2026-08-17.md)
 - [Project discovery](project-discovery.md)
 - [MVP requirements](mvp-requirements.md)
 - [Content strategy and sitemap](content-strategy-and-sitemap.md)
@@ -42,3 +43,5 @@ history, then use the focused documents for implementation details.
 - Public URLs may be documented. Server usernames, private filesystem paths,
   credentials, certificates, tokens, and host-specific deployment scripts must
   not be committed.
+- On a new system, pull `main`, read this index and the newest dated change log,
+  then run `npm test` before starting a new revision.

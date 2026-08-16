@@ -8,8 +8,10 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Image from "next/image";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { content, type InteriorPageData, type Locale, pageSlugs, type SiteCopy } from "./site-content";
+import { blogLabels, blogPosts, findBlogPost } from "./blog-content";
+import { clinicCopy, pageCoverImages } from "./page-extras";
 
 const pathIcons: LucideIcon[] = [Stethoscope, Lightbulb, Microscope];
 const pathCardSlugs = ["clinical-care", "innovation", "research"] as const;
@@ -32,6 +34,12 @@ const connectedStepNumbers = {
   ar: ["٠١", "٠٢", "٠٣", "٠٤"],
 } as const;
 const languageNames = { en: "🇬🇧 English", fa: "🇮🇷 فارسی", ar: "🇸🇦 العربية" };
+const navSlugs = ["clinical-care", "innovation", "research", "education", "about", "blog"] as const;
+const heroNames = {
+  en: ["Dr.", "Ali Moradi"],
+  fa: ["دکتر", "علی مرادی"],
+  ar: ["الدكتور", "علي مرادي"],
+} as const;
 
 function localizedHref(locale: Locale, slug = "") {
   if (locale === "en") return slug ? `/${slug}` : "/";
@@ -63,7 +71,7 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
     return () => observer.disconnect();
   }, [locale, page, rtl]);
 
-  const nav = useMemo(() => t.nav.map((label) => ({ label })), [t.nav]);
+  const nav = useMemo(() => t.nav.map((label, index) => ({ label, slug: navSlugs[index] })), [t.nav]);
   const currentSlug = page === "home" ? "" : page;
   const headerLogo = locale === "en" ? "/brand/logo.en.svg" : "/brand/logo.fa-ar.svg";
 
@@ -75,7 +83,7 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
           <Image src={headerLogo} alt="Dr. Ali Moradi" width={153} height={50} priority />
         </a>
         <nav className="desktop-nav" aria-label={t.primaryNav}>
-          {nav.map((item) => <button className="nav-link" type="button" key={item.label}>{item.label}</button>)}
+          {nav.map((item) => <a className="nav-link" href={localizedHref(locale, item.slug)} key={item.slug}>{item.label}</a>)}
         </nav>
         <div className="header-actions">
           <div className="language-control">
@@ -91,12 +99,17 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
         </div>
       </header>
       {menuOpen && <nav className="mobile-nav" aria-label={t.mobileNav}>
-        {nav.map((item) => <button className="mobile-nav-link" type="button" key={item.label}>{item.label}<ChevronRight className={rtl ? "flip-icon" : ""} size={17} /></button>)}
+        {nav.map((item) => <a className="mobile-nav-link" href={localizedHref(locale, item.slug)} key={item.slug}>{item.label}<ChevronRight className={rtl ? "flip-icon" : ""} size={17} /></a>)}
         <a className="button" href="https://nobat.ir/9705" target="_blank" rel="noreferrer">{t.appointment}<ExternalLink size={16} /></a>
       </nav>}
 
       <div id="content">
-        {page === "home" ? <HomePage locale={locale} t={t} rtl={rtl} /> : page === "contact" ? <ContactPage t={t} rtl={rtl} /> : <InteriorPage locale={locale} page={page} t={t} rtl={rtl} />}
+        {page === "home" ? <HomePage locale={locale} t={t} rtl={rtl} />
+          : page === "clinical-care" ? <ClinicPage locale={locale} t={t} />
+          : page === "contact" ? <ContactPage t={t} rtl={rtl} />
+          : page === "blog" || page === "news" ? <BlogArchive locale={locale} t={t} rtl={rtl} />
+          : page.startsWith("blog/") ? <BlogPostPage locale={locale} slug={page.slice(5)} t={t} rtl={rtl} />
+          : <InteriorPage locale={locale} page={page} t={t} rtl={rtl} />}
       </div>
       <Footer locale={locale} t={t} />
     </main>
@@ -108,7 +121,7 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
 
   return <>
     <section className="hero">
-      <Image className="hero-background" src="/media/hero/hero-bg.png" alt={t.heroAlt} fill priority unoptimized sizes="100vw" />
+      <Image className="hero-background" src="/media/hero/hero-bg-v2.jpg" alt={t.heroAlt} fill priority unoptimized sizes="100vw" />
       <div className="hero-wash" aria-hidden="true" />
       <div className="hero-orbits" aria-hidden="true">
         <div className="orbit orbit-one" />
@@ -118,7 +131,7 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
       </div>
       <div className="hero-layout section-shell">
         <div className="hero-copy">
-          <h1>{t.heroTitle}</h1>
+          <h1><span>{heroNames[locale][0]}</span> <strong>{heroNames[locale][1]}</strong></h1>
           <p className="eyebrow"><span />{t.eyebrow}</p>
           <p className="hero-body">{t.heroBody}</p>
         </div>
@@ -195,8 +208,8 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
     </section>
 
     <section className="news section-space section-shell">
-      <Reveal className="section-heading split-heading"><div><p className="section-index">{t.indexes[6]}</p><p>{t.newsTitle}</p></div><a className="text-link" href={localizedHref(locale, "news")}>{t.allUpdates}<DirectionalArrow rtl={rtl} /></a></Reveal>
-      <div className="news-grid">{t.news.map(([tag, title, text], index) => <Reveal className="news-card" key={title}><div className="news-image"><Image src={newsImages[index]} alt={title} fill unoptimized sizes="(max-width: 820px) 90vw, 31vw" /></div><p className="card-tag">{tag}</p><h3>{title}</h3><p>{text}</p><a href={localizedHref(locale, "news")}>{t.readUpdate}<DirectionalArrow rtl={rtl} size={16} /></a></Reveal>)}</div>
+      <Reveal className="section-heading split-heading"><div><p className="section-index">{t.indexes[6]}</p><p>{t.newsTitle}</p></div><a className="text-link" href={localizedHref(locale, "blog")}>{t.allUpdates}<DirectionalArrow rtl={rtl} /></a></Reveal>
+      <div className="news-grid">{t.news.map(([tag, title, text], index) => <Reveal className="news-card" key={title}><div className="news-image"><Image src={newsImages[index]} alt={title} fill unoptimized sizes="(max-width: 820px) 90vw, 31vw" /></div><p className="card-tag">{tag}</p><h3>{title}</h3><p>{text}</p><a href={localizedHref(locale, `blog/${blogPosts[[12, 15, 16][index]].slug}`)}>{t.readUpdate}<DirectionalArrow rtl={rtl} size={16} /></a></Reveal>)}</div>
     </section>
 
     <section className="about-preview section-space"><div className="section-shell about-grid">
@@ -206,18 +219,106 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
   </>;
 }
 
+function InteriorCover({ image, imageAlt, kicker, title, intro }: { image: string; imageAlt: string; kicker: string; title: string; intro: string }) {
+  const cover = useRef<HTMLElement>(null);
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => cover.current?.style.setProperty("--cover-shrink", `${Math.min(window.scrollY * .42, 120)}px`));
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => { cancelAnimationFrame(frame); window.removeEventListener("scroll", update); };
+  }, []);
+  return <section className="interior-cover" ref={cover}>
+    <Image src={image} alt={imageAlt} fill priority unoptimized sizes="100vw" />
+    <div className="interior-cover-gradient" aria-hidden="true" />
+    <div className="interior-cover-content section-shell"><p className="section-index light">{kicker}</p><h1>{title}</h1><p>{intro}</p></div>
+  </section>;
+}
+
+function PageAppointmentCta({ t }: { t: SiteCopy }) {
+  return <section className="page-appointment section-space section-shell"><Reveal className="next-step page-appointment-card">
+    <CalendarDays /><div><p>{t.pageAppointment}</p><h2>{t.appointmentTitle}</h2><span>{t.appointmentBody}</span></div>
+    <a className="button" href="https://nobat.ir/9705" target="_blank" rel="noreferrer">{t.continueNobat}<ExternalLink size={16} /></a>
+  </Reveal><p className="medical-note"><ShieldCheck size={18} />{t.medicalNote}</p></section>;
+}
+
 function InteriorPage({ locale, page, t, rtl }: { locale: Locale; page: string; t: SiteCopy; rtl: boolean }) {
   const pages = t.pages as Record<string, InteriorPageData>;
-  const data = pages[page] || pages["clinical-care"];
+  const normalizedPage = page === "news" ? "blog" : page;
+  const data = pages[normalizedPage] || pages.about;
+  const image = pageCoverImages[normalizedPage] || pageCoverImages.about;
   return <>
-    <section className="page-hero section-shell"><p className="eyebrow"><span />{data.kicker}</p><h1>{data.title}</h1><p>{data.intro}</p><div className="page-hero-orbit"><span /><span /></div></section>
+    <InteriorCover image={image} imageAlt={data.title} kicker={data.kicker} title={data.title} intro={data.intro} />
     <section className="page-content section-space section-shell">
       <aside><p>{t.onThisPage}</p>{data.sections.map((section, i) => <a key={section.title} href={`#section-${i}`}>{section.title}</a>)}<a href="https://nobat.ir/9705" target="_blank" rel="noreferrer">{t.pageAppointment}<ExternalLink size={14} /></a></aside>
       <div className="content-sections">
         {data.sections.map((section, i) => <Reveal className="content-section" key={section.title}><span className="section-count">0{i + 1}</span><div><h2 id={`section-${i}`}>{section.title}</h2><p>{section.text}</p>{section.items && <ul>{section.items.map(item => <li key={item}><Check size={17} />{item}</li>)}</ul>}</div></Reveal>)}
-        <Reveal className="next-step"><Sparkles /><div><p>{t.nextLabel}</p><h2>{data.ctaTitle}</h2><span>{data.ctaText}</span></div><a className="button" href={page === "clinical-care" ? "https://nobat.ir/9705" : localizedHref(locale, page === "news" ? "research" : "contact")} target={page === "clinical-care" ? "_blank" : undefined} rel={page === "clinical-care" ? "noreferrer" : undefined}>{page === "clinical-care" ? t.appointment : t.exploreMore}<DirectionalArrow rtl={rtl} size={16} /></a></Reveal>
+        <Reveal className="next-step"><Sparkles /><div><p>{t.nextLabel}</p><h2>{data.ctaTitle}</h2><span>{data.ctaText}</span></div><a className="button" href={localizedHref(locale, normalizedPage === "about" ? "research" : "contact")}>{t.exploreMore}<DirectionalArrow rtl={rtl} size={16} /></a></Reveal>
       </div>
     </section>
+    <PageAppointmentCta t={t} />
+  </>;
+}
+
+function ClinicPage({ locale, t }: { locale: Locale; t: SiteCopy }) {
+  const data = (t.pages as Record<string, InteriorPageData>)["clinical-care"];
+  const c = clinicCopy[locale];
+  const serviceIcons: LucideIcon[] = [Stethoscope, Sparkles, Hand];
+  const gallery = ["/media/about/office.jpg", "/media/pages/clinic-cover.jpg", "/media/pages/clinic-cover.jpg"];
+  return <>
+    <InteriorCover image={pageCoverImages["clinical-care"]} imageAlt={data.title} kicker={data.kicker} title={data.title} intro={data.intro} />
+    <section className="clinic-services section-space section-shell">
+      <Reveal className="section-heading"><p className="section-index">{c.servicesTitle}</p><p>{c.servicesIntro}</p></Reveal>
+      <div className="clinic-service-grid">{c.services.map((service, index) => { const Icon = serviceIcons[index]; return <Reveal className="clinic-service-card" key={service.title}><Icon size={32} /><h2>{service.title}</h2><p>{service.text}</p></Reveal>; })}</div>
+    </section>
+    <section className="clinic-office section-space"><div className="section-shell clinic-office-layout">
+      <Reveal className="clinic-office-copy"><p className="section-index">{c.officeTitle}</p>{c.officeText.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</Reveal>
+      <Reveal className="clinic-office-gallery">{gallery.map((src, index) => <div className={`office-shot office-shot-${index + 1}`} key={`${src}-${index}`}><Image src={src} alt={c.officeImages[index]} fill unoptimized sizes="(max-width: 820px) 44vw, 22vw" /></div>)}</Reveal>
+    </div></section>
+    <section className="clinic-scope section-space section-shell">
+      <Reveal className="clinic-type"><p className="section-index">{c.serviceTypeTitle}</p><p>{c.serviceTypeText}</p></Reveal>
+      <Reveal className="clinic-scope-list"><h2>{c.scopeTitle}</h2><ul>{c.scopeItems.map((item) => <li key={item}><Check size={18} />{item}</li>)}</ul></Reveal>
+    </section>
+    <section className="clinic-faq section-space"><div className="section-shell faq-layout">
+      <Reveal className="faq-intro"><p className="section-index">{c.faqTitle}</p><p>{c.faqIntro}</p></Reveal>
+      <div className="faq-list">{c.faqs.map((faq, index) => <Reveal key={faq.question}><details open={index === 0}><summary>{faq.question}<ChevronDown size={20} /></summary><p>{faq.answer}</p></details></Reveal>)}</div>
+    </div></section>
+    <PageAppointmentCta t={t} />
+  </>;
+}
+
+function BlogArchive({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolean }) {
+  const labels = blogLabels[locale];
+  return <>
+    <InteriorCover image={pageCoverImages.blog} imageAlt={labels.title} kicker={labels.kicker} title={labels.title} intro={labels.intro} />
+    <section className="blog-archive section-space section-shell"><div className="blog-grid">{blogPosts.map((post) => <Reveal className="blog-card" key={post.slug}>
+      <a className="blog-card-image" href={localizedHref(locale, `blog/${post.slug}`)}><Image src={post.image} alt={post.title[locale]} fill unoptimized sizes="(max-width: 820px) 92vw, 31vw" /></a>
+      <div className="blog-card-copy"><p className="card-tag">{post.category[locale]}</p><h2><a href={localizedHref(locale, `blog/${post.slug}`)}>{post.title[locale]}</a></h2><p>{post.excerpt[locale]}</p><div className="blog-card-meta"><span>{post.readMinutes} {labels.minutes}</span><a href={localizedHref(locale, `blog/${post.slug}`)}>{labels.read}<DirectionalArrow rtl={rtl} size={15} /></a></div></div>
+    </Reveal>)}</div></section>
+    <PageAppointmentCta t={t} />
+  </>;
+}
+
+function BlogPostPage({ locale, slug, t, rtl }: { locale: Locale; slug: string; t: SiteCopy; rtl: boolean }) {
+  const post = findBlogPost(slug);
+  if (!post) return <BlogArchive locale={locale} t={t} rtl={rtl} />;
+  const labels = blogLabels[locale];
+  const formattedDate = new Intl.DateTimeFormat(locale === "fa" ? "fa-IR" : locale === "ar" ? "ar" : "en-GB", { year: "numeric", month: "long", day: "numeric" }).format(new Date(post.date));
+  return <>
+    <InteriorCover image={post.image} imageAlt={post.title[locale]} kicker={post.category[locale]} title={post.title[locale]} intro={post.excerpt[locale]} />
+    <article className="single-post section-space section-shell">
+      <div className="article-meta"><span>{formattedDate}</span><span>{post.readMinutes} {labels.minutes}</span></div>
+      <div className="article-layout"><aside><a href={localizedHref(locale, "blog")}><DirectionalArrow rtl={!rtl} size={16} />{labels.back}</a></aside><div className="article-body">
+        <section><h2>{labels.overview}</h2><p>{post.excerpt[locale]}</p></section>
+        <section><h2>{labels.assessment}</h2><p>{labels.assessmentText}</p></section>
+        <section><h2>{labels.nextSteps}</h2><p>{labels.nextText}</p></section>
+        <p className="article-disclaimer"><ShieldCheck size={20} />{labels.disclaimer}</p>
+      </div></div>
+    </article>
+    <PageAppointmentCta t={t} />
   </>;
 }
 
@@ -245,7 +346,7 @@ function ContactPage({ t, rtl }: { t: SiteCopy; rtl: boolean }) {
     }
   }
   return <>
-    <section className="page-hero section-shell"><p className="eyebrow"><span />{t.contact.kicker}</p><h1>{t.contact.title}</h1><p>{t.contact.intro}</p><div className="page-hero-orbit"><span /><span /></div></section>
+    <InteriorCover image={pageCoverImages.contact} imageAlt={t.contact.title} kicker={t.contact.kicker} title={t.contact.title} intro={t.contact.intro} />
     <section className="contact-layout section-space section-shell">
       <div className="contact-details"><p className="section-index">{t.footer.contact}</p><h2>{t.contact.beforeTitle}</h2><p>{t.contact.beforeText}</p><a className="button" href="https://nobat.ir/9705" target="_blank" rel="noreferrer">{t.continueNobat}<ExternalLink size={16} /></a><div className="contact-list"><span><MapPin />{t.contact.office}</span><span><Mail /><a href="mailto:info@DrAliMoradi.com">info@DrAliMoradi.com</a></span><span><Phone /><a href="tel:+985132290968" dir="ltr">+98 51 3229 0968</a></span></div></div>
       {sent ? <div className="form-success"><div><Check /></div><h2>{t.contact.readyTitle}</h2><p>{t.contact.readyText}</p><button className="text-link" onClick={() => setSent(false)}>{t.contact.another}<DirectionalArrow rtl={rtl} size={16} /></button></div> : <form className="contact-form" onSubmit={submit} noValidate>
@@ -257,6 +358,7 @@ function ContactPage({ t, rtl }: { t: SiteCopy; rtl: boolean }) {
         <button className="button" type="submit">{t.contact.submit}<DirectionalArrow rtl={rtl} size={16} /></button>
       </form>}
     </section>
+    <PageAppointmentCta t={t} />
   </>;
 }
 

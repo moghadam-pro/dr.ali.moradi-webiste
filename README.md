@@ -7,9 +7,9 @@ coherent digital presence.
 ## Project status
 
 The approved React demo is the active foundation and is maintained on `main`.
-Development now proceeds one page at a time, beginning with the homepage. The
-current homepage refresh preserves the existing component architecture and icon
-set while updating the header, typography, and hero composition.
+The homepage, shared internal-page system, Clinic, About, Contact, Blog archive,
+18 single-post routes, and first editorial versions of Innovation, Research, and
+Education are implemented in English, Persian, and Arabic.
 
 The exact pre-refresh version that was running on the online demo is preserved at:
 
@@ -40,17 +40,19 @@ Design source: [Dr. AliMoradi — website v1.0.0 on Figma](https://www.figma.com
 - Lucide icon components; the approved homepage icon choices must remain stable
 - Responsive CSS, loading states, scroll-reveal motion, and reduced-motion support
 - External appointment flow through `https://nobat.ir/9705` only
+- Dynamic metadata, canonical links, and language alternates for internal pages
+  and nested blog routes
 
 The React structure remains the source of truth for the demo. A later WordPress
 handoff can translate these components into templates and Elementor sections
 without changing the approved visual or content architecture.
 
-## Current homepage scope
+## Current navigation and page scope
 
-- Header order: Product, Clinic, Innovation, Research, Education, About me, Blog
-- Header navigation labels are intentionally non-navigating during page-by-page review
+- Header order: Clinic, Innovation, Research, Education, About me, Blog
+- Every header item links to its locale-preserving destination
 - Language trigger is text-only; flags remain inside the language menu
-- Full-width laboratory hero using `public/media/hero/hero-bg.png`
+- Full-width laboratory hero using `public/media/hero/hero-bg-v2.jpg`
 - Existing four facet icons preserved and moved into the hero
 - Hero CTA removed; appointment CTA remains in the header
 - Section labels use an orange rule and no numeric prefix
@@ -62,8 +64,12 @@ without changing the approved visual or content architecture.
 - The former homepage Clinical Care detail section has been removed
 - Desktop, tablet, mobile, LTR, and RTL layouts are maintained
 
-Other pages remain in the repository but will be corrected individually in later
-review rounds.
+- Internal pages share a full-width image cover that shrinks from a maximum of
+  400 pixels as the visitor starts scrolling
+- Clinic includes services, private-office media, scope, FAQ, and appointment CTA
+- Blog includes an 18-card archive and a dedicated route for every article
+- About and Contact are connected; Innovation, Research, and Education are ready
+  for their next content-specific revision
 
 ## Run the demo
 
@@ -90,6 +96,7 @@ The demo is self-contained. It does not read from or write to the current
 
 - [Documentation hub](docs/README.md)
 - [Persian project conversation archive](docs/project-conversation-archive-fa.md)
+- [Latest implementation change log — 2026-08-17](docs/change-log-2026-08-17.md)
 - [Project discovery](docs/project-discovery.md)
 - [MVP requirements](docs/mvp-requirements.md)
 - [Source content inventory](docs/source-content-inventory.md)
@@ -111,3 +118,6 @@ Each approved milestone is developed, reviewed, documented, and committed as a
 separate logical step. Before a major visual revision, the last approved state is
 preserved in a dated backup branch. This keeps the Git history readable, makes
 rollback straightforward, and prepares the repository for client handoff.
+
+When starting on another computer, pull `main`, read `docs/README.md` and the
+newest dated change log, then run `npm test` before making changes.

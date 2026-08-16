@@ -19,10 +19,17 @@ test("server-renders the completed homepage", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /Dr\. Ali Moradi/);
-  assert.match(html, /Advancing hand care through research and innovation/i);
-  assert.match(html, /Product/);
+  assert.match(html, /Recipient of the 2026 Alborz Award/);
+  assert.match(html, /Hand Surgeon \(Harvard University\), Ph\.D of Artificial Limbs/);
+  assert.doesNotMatch(html, />Product</);
   assert.match(html, /Clinic/);
   assert.match(html, /About me/);
+  assert.match(html, /href="\/clinical-care"/);
+  assert.match(html, /href="\/innovation"/);
+  assert.match(html, /href="\/research"/);
+  assert.match(html, /href="\/education"/);
+  assert.match(html, /href="\/about"/);
+  assert.match(html, /href="\/blog"/);
   assert.match(html, /Where Surgery Goes Beyond Protocols/);
   assert.ok(html.indexOf("CONNECTED PRACTICE") < html.indexOf("PATHWAYS"));
   assert.match(html, /\/media\/connected-practice\/01-injury\.jpg/);
@@ -48,8 +55,9 @@ test("server-renders the completed homepage", async () => {
 });
 
 test("renders internal and localized routes", async () => {
-  const localizedPages = ["clinical-care", "research", "innovation", "education", "about", "news", "contact"];
-  const paths = ["/", ...localizedPages.map((page) => `/${page}`), "/fa", "/ar", ...["fa", "ar"].flatMap((locale) => localizedPages.map((page) => `/${locale}/${page}`))];
+  const localizedPages = ["clinical-care", "research", "innovation", "education", "about", "blog", "contact"];
+  const article = "understanding-carpal-tunnel-syndrome";
+  const paths = ["/", ...localizedPages.map((page) => `/${page}`), `/blog/${article}`, "/fa", "/ar", ...["fa", "ar"].flatMap((locale) => [...localizedPages.map((page) => `/${locale}/${page}`), `/${locale}/blog/${article}`])];
   for (const path of paths) {
     const response = await render(path);
     assert.equal(response.status, 200, path);
@@ -59,11 +67,30 @@ test("renders internal and localized routes", async () => {
   }
 });
 
+test("renders the clinic specification and eighteen-post blog archive", async () => {
+  const clinic = await render("/clinical-care").then((response) => response.text());
+  assert.match(clinic, /\/media\/pages\/clinic-cover\.jpg/);
+  assert.match(clinic, /Clinic services/);
+  assert.match(clinic, /Dr\. Moradi’s private office/);
+  assert.match(clinic, /Scope of clinical services/);
+  assert.match(clinic, /Frequently asked questions/);
+
+  const archive = await render("/blog").then((response) => response.text());
+  assert.equal((archive.match(/class="reveal blog-card"/g) ?? []).length, 18);
+  assert.match(archive, /Understanding carpal tunnel syndrome/);
+  assert.match(archive, /When to seek emergency care/);
+
+  const single = await render("/blog/understanding-carpal-tunnel-syndrome").then((response) => response.text());
+  assert.match(single, /<title>Understanding carpal tunnel syndrome \| Dr\. Ali Moradi<\/title>/);
+  assert.match(single, /Why assessment matters/);
+  assert.match(single, /Back to all articles/);
+});
+
 test("ships the approved brand, social, and favicon metadata", async () => {
   const response = await render();
   const html = await response.text();
   assert.match(html, /\/brand\/logo\.en\.svg/);
-  assert.match(html, /\/media\/hero\/hero-bg\.png/);
+  assert.match(html, /\/media\/hero\/hero-bg-v2\.jpg/);
   assert.match(html, /https:\/\/dralimoradi\.moghadam\.pro\/social-banner\.jpg\?v=20260803/);
   assert.match(html, /https:\/\/dralimoradi\.moghadam\.pro\/favicon\.ico\?v=20260803/);
   assert.match(html, /site\.webmanifest/);
@@ -92,4 +119,8 @@ test("includes reduced-motion and responsive safeguards", async () => {
   assert.doesNotMatch(css, /\.hero-note\s*\{[^}]*margin-bottom:\s*96px/);
   assert.match(css, /@media \(max-width: 1120px\)[\s\S]*?\.path-grid\s*\{\s*grid-template-columns:\s*1fr/);
   assert.doesNotMatch(css, /#176f98/i);
+  assert.match(css, /\.interior-cover\s*\{[^}]*max-height:\s*400px/);
+  assert.match(css, /\.interior-cover-gradient\s*\{[^}]*rgba\(66,147,194,\.4\)/);
+  assert.match(css, /\.blog-grid\s*\{[^}]*repeat\(3/);
+  assert.match(css, /@media \(max-width: 560px\)[\s\S]*?\.blog-grid\s*\{\s*grid-template-columns:\s*1fr/);
 });
