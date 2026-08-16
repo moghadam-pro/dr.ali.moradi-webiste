@@ -88,6 +88,8 @@ The demo is self-contained. It does not read from or write to the current
 
 ## Documentation
 
+- [Documentation hub](docs/README.md)
+- [Persian project conversation archive](docs/project-conversation-archive-fa.md)
 - [Project discovery](docs/project-discovery.md)
 - [MVP requirements](docs/mvp-requirements.md)
 - [Source content inventory](docs/source-content-inventory.md)
