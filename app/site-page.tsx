@@ -132,8 +132,13 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
       <div className="hero-layout section-shell">
         <div className="hero-copy">
           <h1><span>{heroNames[locale][0]}</span> <strong>{heroNames[locale][1]}</strong></h1>
-          <p className="eyebrow"><span />{t.eyebrow}</p>
-          <p className="hero-body">{t.heroBody}</p>
+          <ul className="hero-credentials">
+            {t.heroCredentials.map(([lead, detail]) => <li key={lead}>
+              <span className="hero-credential-dot" aria-hidden="true" />
+              <span className="hero-credential-copy"><strong>{lead}</strong> <span>{detail}</span></span>
+            </li>)}
+          </ul>
+          <p className="hero-description">{t.heroDescription}</p>
         </div>
         <div className="hero-note"><Quote size={36} /><span>{t.heroQuote}</span></div>
         <div className="facet-bar section-shell" aria-label={t.pathsTitle}>

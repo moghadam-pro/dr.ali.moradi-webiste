@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const pages = content[locale].pages as Record<string, InteriorPageData>;
   const pageData = pages[page === "news" ? "blog" : page];
   const title = post?.title[locale] ?? (page === "blog" || page === "news" ? blogLabels[locale].title : pageData?.title) ?? "Dr. Ali Moradi";
-  const description = post?.excerpt[locale] ?? (page === "blog" || page === "news" ? blogLabels[locale].intro : pageData?.intro) ?? content[locale].heroBody;
+  const description = post?.excerpt[locale] ?? (page === "blog" || page === "news" ? blogLabels[locale].intro : pageData?.intro) ?? content[locale].heroDescription;
   const image = post?.image ?? "/social-banner.jpg";
   const path = locale === "en" ? `/${page === "home" ? "" : page}` : `/${locale}/${page === "home" ? "" : page}`;
   return {

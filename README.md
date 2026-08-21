@@ -96,7 +96,8 @@ The demo is self-contained. It does not read from or write to the current
 
 - [Documentation hub](docs/README.md)
 - [Persian project conversation archive](docs/project-conversation-archive-fa.md)
-- [Latest implementation change log — 2026-08-17](docs/change-log-2026-08-17.md)
+- [Latest implementation change log — 2026-08-22](docs/change-log-2026-08-22.md)
+- [Previous implementation change log — 2026-08-17](docs/change-log-2026-08-17.md)
 - [Project discovery](docs/project-discovery.md)
 - [MVP requirements](docs/mvp-requirements.md)
 - [Source content inventory](docs/source-content-inventory.md)

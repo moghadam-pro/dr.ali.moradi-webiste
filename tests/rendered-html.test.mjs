@@ -19,8 +19,13 @@ test("server-renders the completed homepage", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /Dr\. Ali Moradi/);
+  assert.match(html, /Hand Surgeon/);
+  assert.match(html, /Harvard University/);
+  assert.match(html, /Ph\.D of/);
+  assert.match(html, /Artificial Limbs/);
   assert.match(html, /Recipient of the 2026 Alborz Award/);
-  assert.match(html, /Hand Surgeon \(Harvard University\), Ph\.D of Artificial Limbs/);
+  assert.match(html, /Iran’s Nobel Prize/);
+  assert.match(html, /Associate Professor of Orthopedics at Mashhad University of Medical Sciences/);
   assert.doesNotMatch(html, />Product</);
   assert.match(html, /Clinic/);
   assert.match(html, /About me/);
