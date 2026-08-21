@@ -35,12 +35,6 @@ const connectedStepNumbers = {
 } as const;
 const languageNames = { en: "🇬🇧 English", fa: "🇮🇷 فارسی", ar: "🇸🇦 العربية" };
 const navSlugs = ["clinical-care", "innovation", "research", "education", "about", "blog"] as const;
-const heroNames = {
-  en: ["Dr.", "Ali Moradi"],
-  fa: ["دکتر", "علی مرادی"],
-  ar: ["الدكتور", "علي مرادي"],
-} as const;
-
 function localizedHref(locale: Locale, slug = "") {
   if (locale === "en") return slug ? `/${slug}` : "/";
   return slug ? `/${locale}/${slug}` : `/${locale}`;
@@ -131,7 +125,7 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
       </div>
       <div className="hero-layout section-shell">
         <div className="hero-copy">
-          <h1><span>{heroNames[locale][0]}</span> <strong>{heroNames[locale][1]}</strong></h1>
+          <h1><span>{t.heroName[0]}</span> <strong>{t.heroName[1]}</strong></h1>
           <ul className="hero-credentials">
             {t.heroCredentials.map(([lead, detail]) => <li key={lead}>
               <span className="hero-credential-dot" aria-hidden="true" />
