@@ -43,8 +43,10 @@ history, then use the focused documents for implementation details.
 - Supplied Mobina concepts are content references only, never visual templates.
 - Medical, academic, numerical, and appointment claims require final client
   approval before production launch.
-- Public URLs may be documented. Server usernames, private filesystem paths,
-  credentials, certificates, tokens, and host-specific deployment scripts must
-  not be committed.
+- Because this repository is private, non-secret operational identifiers needed
+  for cross-system continuity may be documented: server address, runtime user,
+  application paths, internal port, process name, and deployment profile.
+- Passwords, access tokens, private keys, certificate private material, cookies,
+  `.env` contents, and other authentication secrets must never be committed.
 - On a new system, pull `main`, read this index and the newest dated change log,
   then run `npm test` before starting a new revision.

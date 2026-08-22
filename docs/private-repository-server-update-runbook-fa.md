@@ -14,8 +14,9 @@
 - در صورت شکست پس از جایگزینی، اسکریپت Backup را خودکار بازمی‌گرداند.
 - مقصد عمومی نسخه دمو `https://dralimoradi.moghadam.pro/` است.
 
-نام کاربر لینوکس، مسیرهای خصوصی سرور، نام Process و پورت داخلی عمداً در Git ثبت
-نمی‌شوند. این مقادیر باید در زمان اجرا به‌صورت متغیر وارد شوند.
+طبق تصمیم جدید مالک پروژه، Repository خصوصی است و مشخصات عملیاتی غیرمحرمانه سرور
+برای همگام‌سازی بین سیستم‌ها در Git ثبت می‌شوند. Password، Token، Private Key،
+Certificate و محتوای `.env` همچنان نباید در Git قرار گیرند.
 
 ## ۱. همگام‌سازی سیستم توسعه
 
@@ -67,33 +68,47 @@ No errors detected in compressed data
 
 Hash چاپ‌شده باید برای مقایسه پس از آپلود نگهداری شود.
 
-## ۳. پروفایل اجرای سرور
+## ۳. پروفایل دقیق سرور فعلی
 
-در Shell سرور، مقادیر واقعی همان سرور را وارد کنید. پوشه Release باید خارج از
-پوشه فعال سایت باشد:
+منبع قابل Source شدن این تنظیمات فایل
+`scripts/server-profile.dralimoradi-demo.env` است. پروفایل فعلی:
 
 ```bash
-MORADI_DEPLOY_USER="<linux-runtime-user>"
-MORADI_RELEASE_ID="<commit-or-release-id>"
-MORADI_RELEASE_ROOT="<absolute-release-storage-directory>"
-MORADI_LIVE_APP_DIR="<absolute-live-application-directory>"
-MORADI_PM2_APP="<pm2-process-name>"
-MORADI_HEALTH_URL="http://127.0.0.1:<internal-port>/"
-MORADI_NVM_DIR="<absolute-nvm-directory>"
+MORADI_SERVER_LABEL="hel-20231219"
+MORADI_SERVER_ADDRESS="65.109.217.252"
+MORADI_PUBLIC_URL="https://dralimoradi.moghadam.pro/"
+
+MORADI_DEPLOY_USER="drmomin"
+MORADI_RELEASE_ROOT="/home/drmomin/releases"
+MORADI_LIVE_APP_DIR="/home/drmomin/htdocs/dralimoradi.moghadam.pro"
+MORADI_NVM_DIR="/home/drmomin/.nvm"
+MORADI_NODE_VERSION="22"
+
+MORADI_PM2_APP="dr-alimoradi-demo"
+MORADI_INTERNAL_PORT="3006"
+MORADI_HEALTH_URL="http://127.0.0.1:3006/"
 ```
 
-فایل Zip باید با نامی شامل Release ID در `MORADI_RELEASE_ROOT` آپلود شود. نمونه
-نام فایل:
+Nginx/CloudPanel درخواست دامنه عمومی را به سرویس Node روی پورت داخلی ۳۰۰۶ هدایت
+می‌کند. PM2 Process متعلق به کاربر `drmomin` است؛ بنابراین فرمان‌های PM2 و Build
+باید با همین کاربر اجرا شوند.
+
+فایل Zip باید در `/home/drmomin/releases` آپلود شود و نام آن شامل Commit کوتاه
+باشد. نمونه نام فایل:
 
 ```text
 dr-alimoradi-<release-id>.zip
 ```
 
-## ۴. اعتبارسنجی فایل آپلودشده
+## ۴. آماده‌سازی متغیرها و اعتبارسنجی فایل آپلودشده
 
-روی سرور:
+روی سرور، Release ID را با Commit داخل نام Zip برابر قرار دهید:
 
 ```bash
+MORADI_DEPLOY_USER="drmomin"
+MORADI_RELEASE_ID="<commit-or-release-id>"
+MORADI_RELEASE_ROOT="/home/drmomin/releases"
+
 sha256sum "$MORADI_RELEASE_ROOT/dr-alimoradi-${MORADI_RELEASE_ID}.zip"
 unzip -t "$MORADI_RELEASE_ROOT/dr-alimoradi-${MORADI_RELEASE_ID}.zip"
 ```
@@ -142,11 +157,14 @@ Process سایت را مدیریت می‌کند، نه با PM2 کاربر `roo
 cd /tmp
 ```
 
-سپس با جایگزینی مقادیر واقعی اجرا کنید:
+ابتدا Profile همان Release را Source کنید و سپس Deployment را اجرا کنید:
 
 ```bash
+source "$MORADI_EXTRACTED_DIR/scripts/server-profile.dralimoradi-demo.env"
+
 sudo -u "$MORADI_DEPLOY_USER" -H env \
   MORADI_NVM_DIR="$MORADI_NVM_DIR" \
+  MORADI_NODE_VERSION="$MORADI_NODE_VERSION" \
   MORADI_EXTRACTED_DIR="$MORADI_EXTRACTED_DIR" \
   MORADI_LIVE_APP_DIR="$MORADI_LIVE_APP_DIR" \
   MORADI_PM2_APP="$MORADI_PM2_APP" \
@@ -155,7 +173,7 @@ sudo -u "$MORADI_DEPLOY_USER" -H env \
     set -Eeuo pipefail
     export NVM_DIR="$MORADI_NVM_DIR"
     source "$NVM_DIR/nvm.sh"
-    nvm use 22 >/dev/null
+    nvm use "$MORADI_NODE_VERSION" >/dev/null
 
     bash "$MORADI_EXTRACTED_DIR/scripts/deploy-uploaded-release.sh" \
       "$MORADI_EXTRACTED_DIR" \
@@ -193,15 +211,16 @@ Deployment completed successfully. Backup: <backup-directory>
 
 ```bash
 curl -I "$MORADI_HEALTH_URL"
-curl -I "https://dralimoradi.moghadam.pro/"
+curl -I "$MORADI_PUBLIC_URL"
 
 sudo -u "$MORADI_DEPLOY_USER" -H env \
   MORADI_NVM_DIR="$MORADI_NVM_DIR" \
+  MORADI_NODE_VERSION="$MORADI_NODE_VERSION" \
   MORADI_PM2_APP="$MORADI_PM2_APP" \
   bash -c '
     export NVM_DIR="$MORADI_NVM_DIR"
     source "$NVM_DIR/nvm.sh"
-    nvm use 22 >/dev/null
+    nvm use "$MORADI_NODE_VERSION" >/dev/null
     pm2 list
     pm2 logs "$MORADI_PM2_APP" --lines 30 --nostream
   '
@@ -258,7 +277,8 @@ Restart با کاربر دیگر انجام نشود.
 ## ۱۰. قواعد امنیتی
 
 - Token، Password، Private Key و فایل `.env` هرگز وارد Zip یا Git نشوند.
-- مشخصات خصوصی سرور در سند عمومی Repository ثبت نشوند.
+- مشخصات عملیاتی غیرمحرمانه این سرور می‌توانند در Repository خصوصی ثبت شوند.
+- Password، Token، Private Key، Certificate، Cookie و محتوای `.env` ثبت نشوند.
 - Zip مستقیماً داخل پوشه فعال سایت Extract نشود.
 - دستورهای حذف بازگشت‌ناپذیر برای Release یا Backup اجرا نشوند.
 - Backup تا تأیید نسخه جدید نگهداری شود.
@@ -271,7 +291,8 @@ Restart با کاربر دیگر انجام نشود.
 1. `docs/README.md`؛
 2. جدیدترین Change Log تاریخ‌دار؛
 3. همین Runbook؛
-4. `scripts/deploy-uploaded-release.sh`؛
-5. سپس `npm test` اجرا شود.
+4. `scripts/server-profile.dralimoradi-demo.env`؛
+5. `scripts/deploy-uploaded-release.sh`؛
+6. سپس `npm test` اجرا شود.
 
 این ترتیب منبع حقیقت مشترک برای ادامه توسعه و انتشار است.

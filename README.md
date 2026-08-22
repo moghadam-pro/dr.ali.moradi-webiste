@@ -99,7 +99,9 @@ The demo is self-contained. It does not read from or write to the current
 For a Linux server receiving a fully uploaded repository, use the generic
 `scripts/deploy-uploaded-release.sh` helper. It requires the uploaded directory,
 live application directory, process-manager target, and optional local health URL;
-host-specific paths and service names are intentionally not stored in Git.
+the current non-secret server profile is stored in
+`scripts/server-profile.dralimoradi-demo.env` for continuity between the owner's
+systems. Authentication secrets and application environment values are excluded.
 The complete Persian procedure, integrity checks, recovery behavior, and known
 failure modes are documented in
 [`docs/private-repository-server-update-runbook-fa.md`](docs/private-repository-server-update-runbook-fa.md).
