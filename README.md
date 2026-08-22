@@ -96,6 +96,11 @@ npm run start
 The demo is self-contained. It does not read from or write to the current
 `dralimoradi.com` host.
 
+For a Linux server receiving a fully uploaded repository, use the generic
+`scripts/deploy-uploaded-release.sh` helper. It requires the uploaded directory,
+live application directory, process-manager target, and optional local health URL;
+host-specific paths and service names are intentionally not stored in Git.
+
 ## Documentation
 
 - [Documentation hub](docs/README.md)
