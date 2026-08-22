@@ -7,9 +7,9 @@ coherent digital presence.
 ## Project status
 
 The approved React demo is the active foundation and is maintained on `main`.
-The homepage, shared internal-page system, Clinic, About, Contact, Blog archive,
-18 single-post routes, and first editorial versions of Innovation, Research, and
-Education are implemented in English, Persian, and Arabic.
+The homepage, shared internal-page system, expanded Clinic hub, About, Contact,
+unified Blog/News archive, 21 single-post routes, and editorial versions of
+Innovation, Research, and Education are implemented in English, Persian, and Arabic.
 
 The exact pre-refresh version that was running on the online demo is preserved at:
 
@@ -66,10 +66,14 @@ without changing the approved visual or content architecture.
 
 - Internal pages share a full-width image cover that shrinks from a maximum of
   400 pixels as the visitor starts scrolling
-- Clinic includes services, private-office media, scope, FAQ, and appointment CTA
-- Blog includes an 18-card archive and a dedicated route for every article
-- About and Contact are connected; Innovation, Research, and Education are ready
-  for their next content-specific revision
+- Clinic links to Clinic Services and Hospital Services, introduces the team, and
+  provides two keyboard-accessible 16-image galleries with dedicated routes
+- Blog, News, and Innovation draw from one tagged content collection and share a
+  single-post renderer
+- Patient Resources links resolve to Before Surgery, After Surgery, FAQ, and
+  Rehabilitation Guidance pages
+- Innovation and Research include the shared team section; Research links to the
+  public Google Scholar profile
 
 ## Run the demo
 
@@ -96,7 +100,8 @@ The demo is self-contained. It does not read from or write to the current
 
 - [Documentation hub](docs/README.md)
 - [Persian project conversation archive](docs/project-conversation-archive-fa.md)
-- [Latest implementation change log — 2026-08-22](docs/change-log-2026-08-22.md)
+- [Clinic, templates, galleries, and unified content — 2026-08-22](docs/change-log-2026-08-22-structure-and-clinic.md)
+- [Hero copy implementation change log — 2026-08-22](docs/change-log-2026-08-22.md)
 - [Previous implementation change log — 2026-08-17](docs/change-log-2026-08-17.md)
 - [Project discovery](docs/project-discovery.md)
 - [MVP requirements](docs/mvp-requirements.md)

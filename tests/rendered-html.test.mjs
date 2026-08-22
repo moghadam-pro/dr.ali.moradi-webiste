@@ -60,7 +60,13 @@ test("server-renders the completed homepage", async () => {
 });
 
 test("renders internal and localized routes", async () => {
-  const localizedPages = ["clinical-care", "research", "innovation", "education", "about", "blog", "contact"];
+  const localizedPages = [
+    "clinical-care", "clinical-care/clinic-services", "clinical-care/hospital-services",
+    "clinical-care/clinic-gallery", "clinical-care/hospital-gallery",
+    "patient-resources/before-surgery", "patient-resources/after-surgery",
+    "patient-resources/faq", "patient-resources/rehabilitation",
+    "research", "innovation", "education", "about", "blog", "news", "contact", "team/ali-moradi",
+  ];
   const article = "understanding-carpal-tunnel-syndrome";
   const paths = ["/", ...localizedPages.map((page) => `/${page}`), `/blog/${article}`, "/fa", "/ar", ...["fa", "ar"].flatMap((locale) => [...localizedPages.map((page) => `/${locale}/${page}`), `/${locale}/blog/${article}`])];
   for (const path of paths) {
@@ -72,18 +78,46 @@ test("renders internal and localized routes", async () => {
   }
 });
 
-test("renders the clinic specification and eighteen-post blog archive", async () => {
+test("renders the clinic hub, resources, galleries, team, and unified post archive", async () => {
   const clinic = await render("/clinical-care").then((response) => response.text());
   assert.match(clinic, /\/media\/pages\/clinic-cover\.jpg/);
   assert.match(clinic, /Clinic services/);
-  assert.match(clinic, /Dr\. Moradi’s private office/);
-  assert.match(clinic, /Scope of clinical services/);
-  assert.match(clinic, /Frequently asked questions/);
+  assert.match(clinic, /Hospital services/);
+  assert.match(clinic, /Meet the team/);
+  assert.match(clinic, /Dr\. Mona Meybodi/);
+  assert.match(clinic, /Inside the clinic/);
+  assert.match(clinic, /Hospital-based care/);
+  assert.match(clinic, /href="\/clinical-care\/clinic-services"/);
+  assert.match(clinic, /href="\/clinical-care\/hospital-services"/);
+  assert.match(clinic, /href="\/clinical-care\/clinic-gallery"/);
+  assert.match(clinic, /href="\/clinical-care\/hospital-gallery"/);
+
+  const clinicServices = await render("/clinical-care/clinic-services").then((response) => response.text());
+  assert.match(clinicServices, /Back to the main clinic page/);
+  assert.match(clinicServices, /Selected office procedures/);
+
+  const fullGallery = await render("/clinical-care/clinic-gallery").then((response) => response.text());
+  assert.equal((fullGallery.match(/class="gallery-thumb"/g) ?? []).length, 16);
+
+  const resources = await render("/patient-resources/before-surgery").then((response) => response.text());
+  assert.match(resources, /Before-surgery guidance/);
+  assert.match(resources, /Medication and fasting/);
+
+  const research = await render("/research").then((response) => response.text());
+  assert.match(research, /https:\/\/scholar\.google\.com\/citations\?user=UhXLjGEAAAAJ&amp;hl=en/);
+  assert.match(research, /Maedeh Sharafoddin/);
+
+  const innovation = await render("/innovation").then((response) => response.text());
+  assert.match(innovation, /Dr\. Alireza Akbarzadeh/);
 
   const archive = await render("/blog").then((response) => response.text());
-  assert.equal((archive.match(/class="reveal blog-card"/g) ?? []).length, 18);
+  assert.equal((archive.match(/class="reveal blog-card"/g) ?? []).length, 21);
   assert.match(archive, /Understanding carpal tunnel syndrome/);
   assert.match(archive, /When to seek emergency care/);
+
+  const news = await render("/news").then((response) => response.text());
+  assert.equal((news.match(/class="reveal blog-card"/g) ?? []).length, 3);
+  assert.match(news, /Hand reconstruction and myoelectric prostheses/);
 
   const single = await render("/blog/understanding-carpal-tunnel-syndrome").then((response) => response.text());
   assert.match(single, /<title>Understanding carpal tunnel syndrome \| Dr\. Ali Moradi<\/title>/);
@@ -110,6 +144,12 @@ test("includes reduced-motion and responsive safeguards", async () => {
   assert.match(css, /@media \(max-width: 820px\)/);
   assert.match(css, /\.connected-grid\s*\{[^}]*grid-template-columns:\s*1fr/);
   assert.match(css, /\.connected-arrow[^}]*rotate\(90deg\)/);
+  assert.match(css, /\.section-space\s*\{[^}]*padding-top:\s*80px[^}]*padding-bottom:\s*80px/);
+  assert.match(css, /\.section-index\s*\{[^}]*font-size:\s*18px/);
+  assert.match(css, /\.section-index::before\s*\{[^}]*flex:\s*0 0 4px[^}]*width:\s*4px[^}]*height:\s*32px/);
+  assert.match(css, /\.connected-grid\s*\{[^}]*gap:\s*100px/);
+  assert.match(css, /\.connected-arrow\s*\{[^}]*width:\s*48px[^}]*height:\s*48px/);
+  assert.doesNotMatch(css, /\.connected-arrow\s*\{[^}]*drop-shadow/);
   assert.doesNotMatch(css, /\.innovation\s*\{[^}]*padding-top:\s*30px/);
   assert.match(css, /\.appointment-layout\s*\{[^}]*grid-template-columns/);
   assert.match(css, /\.news-card h3\s*\{[^}]*-webkit-line-clamp:\s*2/);
@@ -125,7 +165,10 @@ test("includes reduced-motion and responsive safeguards", async () => {
   assert.match(css, /@media \(max-width: 1120px\)[\s\S]*?\.path-grid\s*\{\s*grid-template-columns:\s*1fr/);
   assert.doesNotMatch(css, /#176f98/i);
   assert.match(css, /\.interior-cover\s*\{[^}]*max-height:\s*400px/);
-  assert.match(css, /\.interior-cover-gradient\s*\{[^}]*rgba\(66,147,194,\.4\)/);
+  assert.match(css, /\.interior-cover-gradient\s*\{[^}]*linear-gradient\(#4293c275 0%, #4293c2e3 100%\)/i);
+  assert.match(css, /\.large-counts \.section-count\s*\{[^}]*position:\s*absolute[^}]*#edf2f4[^}]*font-size:\s*128px/);
+  assert.match(css, /\.gallery-modal\s*\{[^}]*position:\s*fixed/);
+  assert.match(css, /\.gallery-strip-track, \.gallery-full-track\s*\{[^}]*repeat\(4/);
   assert.match(css, /\.blog-grid\s*\{[^}]*repeat\(3/);
   assert.match(css, /@media \(max-width: 560px\)[\s\S]*?\.blog-grid\s*\{\s*grid-template-columns:\s*1fr/);
 });

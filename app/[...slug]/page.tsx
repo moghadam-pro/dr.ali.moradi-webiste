@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { SitePage } from "../site-page";
 import { content, type InteriorPageData } from "../site-content";
 import { blogLabels, findBlogPost } from "../blog-content";
+import {
+  clinicHubCopy, findTeamMember, galleryCollections, supplementalCoverImages,
+  supplementalPages, type GalleryRoute,
+} from "../structured-content";
 
 type Locale = "en" | "fa" | "ar";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://dralimoradi.moghadam.pro";
@@ -16,11 +20,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const { locale, page } = parseRoute(slug);
   const post = page.startsWith("blog/") ? findBlogPost(page.slice(5)) : undefined;
+  const member = page.startsWith("team/") ? findTeamMember(page.slice(5)) : undefined;
+  const gallery = page in galleryCollections ? galleryCollections[page as GalleryRoute] : undefined;
   const pages = content[locale].pages as Record<string, InteriorPageData>;
-  const pageData = pages[page === "news" ? "blog" : page];
-  const title = post?.title[locale] ?? (page === "blog" || page === "news" ? blogLabels[locale].title : pageData?.title) ?? "Dr. Ali Moradi";
-  const description = post?.excerpt[locale] ?? (page === "blog" || page === "news" ? blogLabels[locale].intro : pageData?.intro) ?? content[locale].heroDescription;
-  const image = post?.image ?? "/social-banner.jpg";
+  const pageData = supplementalPages[locale][page] ?? pages[page === "news" ? "blog" : page];
+  const galleryCopy = gallery ? clinicHubCopy[locale] : undefined;
+  const galleryTitle = gallery?.area === "clinic" ? galleryCopy?.clinicGalleryTitle : galleryCopy?.hospitalGalleryTitle;
+  const galleryDescription = gallery?.area === "clinic" ? galleryCopy?.clinicGalleryIntro : galleryCopy?.hospitalGalleryIntro;
+  const title = post?.title[locale] ?? member?.name[locale] ?? galleryTitle ?? (page === "blog" || page === "news" ? blogLabels[locale].title : pageData?.title) ?? "Dr. Ali Moradi";
+  const description = post?.excerpt[locale] ?? member?.summary[locale] ?? galleryDescription ?? (page === "blog" || page === "news" ? blogLabels[locale].intro : pageData?.intro) ?? content[locale].heroDescription;
+  const image = post?.image ?? member?.image ?? supplementalCoverImages[page] ?? "/social-banner.jpg";
   const path = locale === "en" ? `/${page === "home" ? "" : page}` : `/${locale}/${page === "home" ? "" : page}`;
   return {
     title,

@@ -2,15 +2,20 @@ import type { Locale } from "./site-content";
 
 type LocalizedText = Record<Locale, string>;
 
-export type BlogPost = {
+export type ContentTag = "blog" | "news" | "innovation" | "research" | "care" | "recovery";
+
+export type ContentPost = {
   slug: string;
   image: string;
   date: string;
   readMinutes: number;
   category: LocalizedText;
+  tags: ContentTag[];
   title: LocalizedText;
   excerpt: LocalizedText;
 };
+
+export type BlogPost = ContentPost;
 
 const images = [
   "/media/news/best-paper-meeting.jpg",
@@ -31,6 +36,8 @@ const categories = {
 const entries: Array<{
   slug: string;
   category: keyof typeof categories;
+  tags?: ContentTag[];
+  image?: string;
   title: LocalizedText;
   excerpt: LocalizedText;
 }> = [
@@ -95,22 +102,22 @@ const entries: Array<{
     excerpt: { en: "External frames can stabilize bone while preserving access to injured soft tissue; configuration is selected according to anatomy and treatment goals.", fa: "فریم خارجی می‌تواند استخوان را پایدار کند و هم‌زمان دسترسی به بافت نرم آسیب‌دیده را حفظ کند؛ آرایش آن براساس آناتومی و هدف درمان انتخاب می‌شود.", ar: "يمكن للإطار الخارجي تثبيت العظم مع الحفاظ على الوصول إلى الأنسجة الرخوة، ويُختار تركيبه وفق التشريح وأهداف العلاج." },
   },
   {
-    slug: "myoelectric-and-bionic-hands", category: "innovation",
+    slug: "myoelectric-and-bionic-hands", category: "innovation", tags: ["innovation"],
     title: { en: "Myoelectric and bionic hands", fa: "دست‌های مایوالکتریک و بیونیک", ar: "الأيدي العضلية الكهربائية والإلكترونية" },
     excerpt: { en: "Prosthetic hands translate biological signals into device commands; comfort, control reliability, training, and task needs shape real-world success.", fa: "دست پروتزی سیگنال‌های زیستی را به فرمان دستگاه تبدیل می‌کند؛ راحتی، پایداری کنترل، آموزش و نیازهای واقعی موفقیت آن را مشخص می‌کند.", ar: "تحول اليد التعويضية الإشارات الحيوية إلى أوامر، ويحدد الراحة وموثوقية التحكم والتدريب واحتياجات المهام نجاحها العملي." },
   },
   {
-    slug: "magnetic-sensing-for-prosthetic-control", category: "innovation",
+    slug: "magnetic-sensing-for-prosthetic-control", category: "innovation", tags: ["innovation"],
     title: { en: "Magnetic sensing for prosthetic control", fa: "حسگر مغناطیسی برای کنترل پروتز", ar: "الاستشعار المغناطيسي للتحكم بالطرف التعويضي" },
     excerpt: { en: "Research explores whether implanted magnetic elements and external sensors can create stable, intuitive commands for advanced upper-limb prostheses.", fa: "پژوهش بررسی می‌کند آیا اجزای مغناطیسی کاشتنی و حسگرهای خارجی می‌توانند فرمانی پایدار و طبیعی برای پروتز پیشرفته ایجاد کنند.", ar: "يبحث العمل فيما إذا كانت العناصر المغناطيسية المزروعة والحساسات الخارجية قادرة على توفير أوامر ثابتة وطبيعية للأطراف المتقدمة." },
   },
   {
-    slug: "rehabilitation-robotics", category: "innovation",
+    slug: "rehabilitation-robotics", category: "innovation", tags: ["innovation"],
     title: { en: "Rehabilitation robotics and assisted practice", fa: "رباتیک توان‌بخشی و تمرین کمکی", ar: "روبوتات التأهيل والتدريب المساعد" },
     excerpt: { en: "Robotic and exoskeleton systems can deliver repeatable assisted movement, but meaningful benefit depends on patient selection and clinical integration.", fa: "سامانه‌های رباتیک و اسکلت بیرونی می‌توانند حرکت کمکی تکرارپذیر ایجاد کنند، اما فایده واقعی به انتخاب بیمار و ادغام درست در درمان بستگی دارد.", ar: "توفر الروبوتات والهياكل الخارجية حركة مساعدة قابلة للتكرار، لكن فائدتها تعتمد على اختيار المريض ودمجها الصحيح في الرعاية." },
   },
   {
-    slug: "reading-clinical-research", category: "research",
+    slug: "reading-clinical-research", category: "research", tags: ["research"],
     title: { en: "How to read clinical research with care", fa: "چگونه پژوهش بالینی را دقیق بخوانیم؟", ar: "كيف نقرأ البحث السريري بعناية؟" },
     excerpt: { en: "Study design, comparison groups, outcome definitions, follow-up, and uncertainty matter more than a headline when judging evidence for care.", fa: "طراحی مطالعه، گروه مقایسه، تعریف پیامد، مدت پیگیری و عدم‌قطعیت برای سنجش شواهد از تیتر خبر مهم‌تر هستند.", ar: "تصميم الدراسة ومجموعات المقارنة وتعريف النتائج والمتابعة وعدم اليقين أهم من العنوان عند تقييم دليل الرعاية." },
   },
@@ -124,15 +131,37 @@ const entries: Array<{
     title: { en: "When to seek emergency care", fa: "چه زمانی باید به اورژانس مراجعه کرد؟", ar: "متى نطلب رعاية الطوارئ؟" },
     excerpt: { en: "Crush injury, amputation, open fracture, threatened circulation, severe contamination, or rapidly increasing swelling should not wait for routine booking.", fa: "له‌شدگی، قطع عضو، شکستگی باز، اختلال خون‌رسانی، آلودگی شدید یا تورم سریع نباید تا نوبت معمول منتظر بماند.", ar: "السحق أو البتر أو الكسر المفتوح أو ضعف التروية أو التلوث الشديد أو التورم السريع لا ينبغي أن ينتظر موعداً روتينياً." },
   },
+  {
+    slug: "hand-reconstruction-and-myoelectric-prostheses", category: "innovation", tags: ["news", "innovation"], image: "/media/news/best-paper-meeting.jpg",
+    title: { en: "Hand reconstruction and myoelectric prostheses", fa: "بازسازی دست و پروتزهای مایوالکتریک", ar: "إعادة بناء اليد والأطراف العضلية الكهربائية" },
+    excerpt: { en: "Reconstruction and prosthetic pathways answer different clinical needs; anatomy, function, goals, rehabilitation, and device tolerance shape the decision.", fa: "بازسازی و پروتز به نیازهای بالینی متفاوت پاسخ می‌دهند؛ آناتومی، عملکرد، هدف بیمار، توان‌بخشی و تحمل وسیله در تصمیم نقش دارند.", ar: "تلبي إعادة البناء والأطراف التعويضية احتياجات مختلفة، ويؤثر التشريح والوظيفة والأهداف والتأهيل وتحمل الجهاز في القرار." },
+  },
+  {
+    slug: "hydroxyapatite-pin-coating-research", category: "research", tags: ["news", "research"], image: "/media/news/top-cited.jpg",
+    title: { en: "Research impact in external-fixator pin coatings", fa: "اثرگذاری پژوهش پوشش پین‌های فیکساتور", ar: "أثر بحث طلاء مسامير المثبت الخارجي" },
+    excerpt: { en: "Research on hydroxyapatite-based external-fixator pin coatings was recognized for citation impact; attribution should follow the underlying publication record.", fa: "پژوهش پوشش هیدروکسی‌آپاتیت پین‌های فیکساتور خارجی از نظر اثر استنادی مورد توجه قرار گرفت؛ انتساب باید مطابق سابقه انتشار مقاله باشد.", ar: "حظي بحث طلاء مسامير المثبت الخارجي بالهيدروكسي أباتيت بتقدير لأثر الاستشهاد، ويجب أن يتبع الإسناد سجل النشر الأصلي." },
+  },
+  {
+    slug: "orthopedic-congress-presentation-recognition", category: "research", tags: ["news", "research"], image: "/media/news/congress-recognition.jpg",
+    title: { en: "Orthopedic congress presentation recognition", fa: "تقدیر از ارائه در کنگره ارتوپدی", ar: "تقدير عرض في مؤتمر جراحة العظام" },
+    excerpt: { en: "A selected scientific presentation connected clinical and engineering work in upper-limb innovation; the final public wording remains tied to the verified certificate record.", fa: "یک ارائه علمی منتخب، فعالیت بالینی و مهندسی در نوآوری اندام فوقانی را به هم پیوند داد؛ متن نهایی عمومی باید مطابق مدرک تأییدشده باشد.", ar: "ربط عرض علمي مختار بين العمل السريري والهندسي في ابتكار الطرف العلوي، وتبقى الصياغة النهائية مرتبطة بالسجل الموثق." },
+  },
 ];
 
-export const blogPosts: BlogPost[] = entries.map((entry, index) => ({
+export const contentPosts: ContentPost[] = entries.map((entry, index) => ({
   ...entry,
   category: categories[entry.category],
-  image: images[index % images.length],
+  tags: Array.from(new Set<ContentTag>(["blog", entry.category as ContentTag, ...(entry.tags ?? [])])),
+  image: entry.image ?? images[index % images.length],
   date: `2026-${String((index % 6) + 1).padStart(2, "0")}-${String((index % 20) + 4).padStart(2, "0")}`,
   readMinutes: 4 + (index % 4),
 }));
+
+export const blogPosts = contentPosts;
+
+export function postsForTag(tag: ContentTag) {
+  return contentPosts.filter((post) => post.tags.includes(tag));
+}
 
 export const blogLabels: Record<Locale, {
   kicker: string; title: string; intro: string; read: string; minutes: string;
@@ -140,13 +169,13 @@ export const blogLabels: Record<Locale, {
   assessmentText: string; nextText: string; disclaimer: string;
 }> = {
   en: {
-    kicker: "Blog", title: "Practical education for hand and upper-extremity health.", intro: "Eighteen introductory articles for patients, learners, and collaborators. Content is educational and never replaces individual assessment.", read: "Read article", minutes: "min read", back: "Back to all articles", overview: "Overview", assessment: "Why assessment matters", nextSteps: "Treatment and next steps", assessmentText: "Similar symptoms may arise from different tissues or levels of injury. History, examination, and appropriate imaging or tests help define the diagnosis, severity, and safest care pathway.", nextText: "Options may include observation, activity adjustment, therapy, medication, splinting, an office procedure, or surgery. The right sequence depends on the individual case and should be agreed with the treating team.", disclaimer: "This article is general education. It does not provide a diagnosis or emergency response." },
+    kicker: "Blog", title: "Practical education for hand and upper-extremity health.", intro: "A growing library for patients, learners, and collaborators. Content is educational and never replaces individual assessment.", read: "Read article", minutes: "min read", back: "Back to all articles", overview: "Overview", assessment: "Why assessment matters", nextSteps: "Treatment and next steps", assessmentText: "Similar symptoms may arise from different tissues or levels of injury. History, examination, and appropriate imaging or tests help define the diagnosis, severity, and safest care pathway.", nextText: "Options may include observation, activity adjustment, therapy, medication, splinting, an office procedure, or surgery. The right sequence depends on the individual case and should be agreed with the treating team.", disclaimer: "This article is general education. It does not provide a diagnosis or emergency response." },
   fa: {
-    kicker: "وبلاگ", title: "آموزش کاربردی سلامت دست و اندام فوقانی.", intro: "هجده مقاله مقدماتی برای بیماران، فراگیران و همکاران؛ این محتوا آموزشی است و جایگزین ارزیابی فردی نیست.", read: "مطالعه مقاله", minutes: "دقیقه مطالعه", back: "بازگشت به همه مقاله‌ها", overview: "مرور موضوع", assessment: "چرا ارزیابی اهمیت دارد؟", nextSteps: "درمان و گام بعدی", assessmentText: "علائم مشابه ممکن است از بافت‌ها یا سطوح متفاوت آسیب ناشی شوند. شرح حال، معاینه و تصویر یا آزمایش مناسب به تشخیص، تعیین شدت و انتخاب ایمن‌ترین مسیر کمک می‌کند.", nextText: "گزینه‌ها می‌توانند شامل پایش، اصلاح فعالیت، توان‌بخشی، دارو، آتل، اقدام مطب یا جراحی باشند. ترتیب درست به شرایط فردی وابسته است و باید با تیم درمان تعیین شود.", disclaimer: "این مقاله آموزش عمومی است و تشخیص پزشکی یا پاسخ اورژانسی ارائه نمی‌کند." },
+    kicker: "وبلاگ", title: "آموزش کاربردی سلامت دست و اندام فوقانی.", intro: "کتابخانه‌ای رو به رشد برای بیماران، فراگیران و همکاران؛ این محتوا آموزشی است و جایگزین ارزیابی فردی نیست.", read: "مطالعه مقاله", minutes: "دقیقه مطالعه", back: "بازگشت به همه مقاله‌ها", overview: "مرور موضوع", assessment: "چرا ارزیابی اهمیت دارد؟", nextSteps: "درمان و گام بعدی", assessmentText: "علائم مشابه ممکن است از بافت‌ها یا سطوح متفاوت آسیب ناشی شوند. شرح حال، معاینه و تصویر یا آزمایش مناسب به تشخیص، تعیین شدت و انتخاب ایمن‌ترین مسیر کمک می‌کند.", nextText: "گزینه‌ها می‌توانند شامل پایش، اصلاح فعالیت، توان‌بخشی، دارو، آتل، اقدام مطب یا جراحی باشند. ترتیب درست به شرایط فردی وابسته است و باید با تیم درمان تعیین شود.", disclaimer: "این مقاله آموزش عمومی است و تشخیص پزشکی یا پاسخ اورژانسی ارائه نمی‌کند." },
   ar: {
-    kicker: "المدونة", title: "تثقيف عملي لصحة اليد والطرف العلوي.", intro: "ثمانية عشر مقالاً تمهيدياً للمرضى والمتعلمين والمتعاونين؛ المحتوى تعليمي ولا يستبدل التقييم الفردي.", read: "اقرأ المقال", minutes: "دقائق قراءة", back: "العودة إلى كل المقالات", overview: "نظرة عامة", assessment: "لماذا يهم التقييم؟", nextSteps: "العلاج والخطوات التالية", assessmentText: "قد تنشأ أعراض متشابهة من أنسجة أو مستويات إصابة مختلفة. يساعد التاريخ والفحص والصور أو الاختبارات المناسبة في تحديد التشخيص والشدة والمسار الأكثر أماناً.", nextText: "قد تشمل الخيارات المراقبة وتعديل النشاط والتأهيل والدواء والجبيرة وإجراء في العيادة أو الجراحة. يعتمد التسلسل الصحيح على الحالة الفردية ويُتفق عليه مع الفريق المعالج.", disclaimer: "هذا المقال للتثقيف العام ولا يقدم تشخيصاً أو استجابة للطوارئ." },
+    kicker: "المدونة", title: "تثقيف عملي لصحة اليد والطرف العلوي.", intro: "مكتبة متنامية للمرضى والمتعلمين والمتعاونين؛ المحتوى تعليمي ولا يستبدل التقييم الفردي.", read: "اقرأ المقال", minutes: "دقائق قراءة", back: "العودة إلى كل المقالات", overview: "نظرة عامة", assessment: "لماذا يهم التقييم؟", nextSteps: "العلاج والخطوات التالية", assessmentText: "قد تنشأ أعراض متشابهة من أنسجة أو مستويات إصابة مختلفة. يساعد التاريخ والفحص والصور أو الاختبارات المناسبة في تحديد التشخيص والشدة والمسار الأكثر أماناً.", nextText: "قد تشمل الخيارات المراقبة وتعديل النشاط والتأهيل والدواء والجبيرة وإجراء في العيادة أو الجراحة. يعتمد التسلسل الصحيح على الحالة الفردية ويُتفق عليه مع الفريق المعالج.", disclaimer: "هذا المقال للتثقيف العام ولا يقدم تشخيصاً أو استجابة للطوارئ." },
 };
 
 export function findBlogPost(slug: string) {
-  return blogPosts.find((post) => post.slug === slug);
+  return contentPosts.find((post) => post.slug === slug);
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  ArrowRight, BrainCircuit, CalendarDays, Check, ChevronDown, ChevronRight,
+  ArrowRight, BrainCircuit, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight,
   Camera, Clock3, ExternalLink, FileText, Hand, Languages, Lightbulb,
   Mail, MapPin, Menu, Microscope, Phone, PlayCircle, Quote, Send,
   ShieldCheck, Sparkles, Stethoscope, X,
@@ -10,8 +10,13 @@ import type { LucideIcon } from "lucide-react";
 import Image from "next/image";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { content, type InteriorPageData, type Locale, pageSlugs, type SiteCopy } from "./site-content";
-import { blogLabels, blogPosts, findBlogPost } from "./blog-content";
-import { clinicCopy, pageCoverImages } from "./page-extras";
+import { blogLabels, findBlogPost, postsForTag } from "./blog-content";
+import { pageCoverImages } from "./page-extras";
+import {
+  clinicHubCopy, findTeamMember, galleryCollections, getTeamMembers,
+  resolvePageTemplate, supplementalCoverImages, supplementalPages,
+  teamLabels, type GalleryRoute, type TeamArea,
+} from "./structured-content";
 
 const pathIcons: LucideIcon[] = [Stethoscope, Lightbulb, Microscope];
 const pathCardSlugs = ["clinical-care", "innovation", "research"] as const;
@@ -68,6 +73,7 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
   const nav = useMemo(() => t.nav.map((label, index) => ({ label, slug: navSlugs[index] })), [t.nav]);
   const currentSlug = page === "home" ? "" : page;
   const headerLogo = locale === "en" ? "/brand/logo.en.svg" : "/brand/logo.fa-ar.svg";
+  const template = resolvePageTemplate(page);
 
   return (
     <main className={`${rtl ? "rtl" : "ltr"} locale-${locale}`}>
@@ -101,8 +107,10 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
         {page === "home" ? <HomePage locale={locale} t={t} rtl={rtl} />
           : page === "clinical-care" ? <ClinicPage locale={locale} t={t} />
           : page === "contact" ? <ContactPage t={t} rtl={rtl} />
-          : page === "blog" || page === "news" ? <BlogArchive locale={locale} t={t} rtl={rtl} />
-          : page.startsWith("blog/") ? <BlogPostPage locale={locale} slug={page.slice(5)} t={t} rtl={rtl} />
+          : page in galleryCollections ? <GalleryPage locale={locale} page={page as GalleryRoute} t={t} rtl={rtl} />
+          : page.startsWith("team/") ? <TeamProfilePage locale={locale} slug={page.slice(5)} t={t} rtl={rtl} />
+          : page === "blog" || page === "news" ? <BlogArchive locale={locale} t={t} rtl={rtl} filter={page === "news" ? "news" : "blog"} />
+          : template === "single-post" ? <BlogPostPage locale={locale} slug={page.slice(5)} t={t} rtl={rtl} />
           : <InteriorPage locale={locale} page={page} t={t} rtl={rtl} />}
       </div>
       <Footer locale={locale} t={t} />
@@ -112,6 +120,8 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
 
 function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolean }) {
   const [openAppointment, setOpenAppointment] = useState(0);
+  const innovationPosts = postsForTag("innovation").slice(0, 3);
+  const newsPosts = postsForTag("news").slice(0, 3);
 
   return <>
     <section className="hero">
@@ -151,7 +161,7 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
         <div className="connected-grid">
           {t.journey.map(([overline, title], index) => <Reveal className="connected-card" key={title}>
             <div className="connected-image"><Image src={connectedPracticeImages[index]} alt={title} fill unoptimized sizes="(max-width: 560px) 34vw, 22vw" /></div>
-            {index < 3 && <ChevronRight className="connected-arrow" size={76} strokeWidth={1} aria-hidden="true" />}
+            {index < 3 && <ChevronRight className="connected-arrow" size={48} strokeWidth={1} aria-hidden="true" />}
             <div className="connected-meta"><span>{connectedStepNumbers[locale][index]}</span><div><small>{overline}</small><h3>{title}</h3></div></div>
           </Reveal>)}
         </div>
@@ -172,7 +182,7 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
       <Reveal className="section-heading"><p className="section-index">{t.indexes[3]}</p><p>{t.innovationTitle}. {t.innovationIntro}</p></Reveal>
       <div className="innovation-grid">{t.innovations.map(([tag, title, text], index) => <Reveal className={`innovation-card innovation-${index + 1}`} key={title}>
         <div className="innovation-art"><Image src={innovationImages[index]} alt={title} fill unoptimized sizes="(max-width: 820px) 90vw, 31vw" /></div>
-        <p className="card-tag">{tag}</p><h3>{title}</h3><p>{text}</p><a href={localizedHref(locale, "innovation")}>{t.readStory}<DirectionalArrow rtl={rtl} size={16} /></a>
+        <p className="card-tag">{tag}</p><h3>{title}</h3><p>{text}</p><a href={localizedHref(locale, `blog/${innovationPosts[index]?.slug ?? "external-fixation-explained"}`)}>{t.readStory}<DirectionalArrow rtl={rtl} size={16} /></a>
       </Reveal>)}</div>
     </section>
 
@@ -208,7 +218,7 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
 
     <section className="news section-space section-shell">
       <Reveal className="section-heading split-heading"><div><p className="section-index">{t.indexes[6]}</p><p>{t.newsTitle}</p></div><a className="text-link" href={localizedHref(locale, "blog")}>{t.allUpdates}<DirectionalArrow rtl={rtl} /></a></Reveal>
-      <div className="news-grid">{t.news.map(([tag, title, text], index) => <Reveal className="news-card" key={title}><div className="news-image"><Image src={newsImages[index]} alt={title} fill unoptimized sizes="(max-width: 820px) 90vw, 31vw" /></div><p className="card-tag">{tag}</p><h3>{title}</h3><p>{text}</p><a href={localizedHref(locale, `blog/${blogPosts[[12, 15, 16][index]].slug}`)}>{t.readUpdate}<DirectionalArrow rtl={rtl} size={16} /></a></Reveal>)}</div>
+      <div className="news-grid">{t.news.map(([tag, title, text], index) => <Reveal className="news-card" key={title}><div className="news-image"><Image src={newsImages[index]} alt={title} fill unoptimized sizes="(max-width: 820px) 90vw, 31vw" /></div><p className="card-tag">{tag}</p><h3>{title}</h3><p>{text}</p><a href={localizedHref(locale, `blog/${newsPosts[index]?.slug ?? "reading-clinical-research"}`)}>{t.readUpdate}<DirectionalArrow rtl={rtl} size={16} /></a></Reveal>)}</div>
     </section>
 
     <section className="about-preview section-space"><div className="section-shell about-grid">
@@ -247,53 +257,153 @@ function PageAppointmentCta({ t }: { t: SiteCopy }) {
 function InteriorPage({ locale, page, t, rtl }: { locale: Locale; page: string; t: SiteCopy; rtl: boolean }) {
   const pages = t.pages as Record<string, InteriorPageData>;
   const normalizedPage = page === "news" ? "blog" : page;
-  const data = pages[normalizedPage] || pages.about;
-  const image = pageCoverImages[normalizedPage] || pageCoverImages.about;
+  const data = supplementalPages[locale][normalizedPage] || pages[normalizedPage] || pages.about;
+  const image = supplementalCoverImages[normalizedPage] || pageCoverImages[normalizedPage] || pageCoverImages.about;
+  const isNumberedFeaturePage = normalizedPage === "innovation" || normalizedPage === "research";
+  const backToClinic = normalizedPage.startsWith("clinical-care/");
+  const scholarCopy = locale === "fa"
+    ? { title: "مشاهده پروفایل Google Scholar", text: "فهرست مقاله‌ها، استنادها و تازه‌ترین خروجی پژوهشی دکتر مرادی را در پروفایل عمومی Google Scholar دنبال کنید.", action: "بازکردن Google Scholar" }
+    : locale === "ar"
+      ? { title: "عرض ملف Google Scholar", text: "تابع المقالات والاستشهادات وأحدث المخرجات البحثية للدكتور مرادي في ملفه العام.", action: "فتح Google Scholar" }
+      : { title: "View the Google Scholar profile", text: "Explore Dr. Moradi’s publications, citations, and latest research output in the public Google Scholar profile.", action: "Open Google Scholar" };
   return <>
     <InteriorCover image={image} imageAlt={data.title} kicker={data.kicker} title={data.title} intro={data.intro} />
-    <section className="page-content section-space section-shell">
+    {backToClinic && <div className="interior-back section-shell"><a href={localizedHref(locale, "clinical-care")}><DirectionalArrow rtl={!rtl} size={16} />{clinicHubCopy[locale].backToClinic}</a></div>}
+    <section className={`page-content section-space section-shell ${isNumberedFeaturePage ? "large-counts" : ""}`}>
       <aside><p>{t.onThisPage}</p>{data.sections.map((section, i) => <a key={section.title} href={`#section-${i}`}>{section.title}</a>)}<a href="https://nobat.ir/9705" target="_blank" rel="noreferrer">{t.pageAppointment}<ExternalLink size={14} /></a></aside>
       <div className="content-sections">
         {data.sections.map((section, i) => <Reveal className="content-section" key={section.title}><span className="section-count">0{i + 1}</span><div><h2 id={`section-${i}`}>{section.title}</h2><p>{section.text}</p>{section.items && <ul>{section.items.map(item => <li key={item}><Check size={17} />{item}</li>)}</ul>}</div></Reveal>)}
-        <Reveal className="next-step"><Sparkles /><div><p>{t.nextLabel}</p><h2>{data.ctaTitle}</h2><span>{data.ctaText}</span></div><a className="button" href={localizedHref(locale, normalizedPage === "about" ? "research" : "contact")}>{t.exploreMore}<DirectionalArrow rtl={rtl} size={16} /></a></Reveal>
+        {normalizedPage === "research"
+          ? <Reveal className="next-step"><Sparkles /><div><p>{t.nextLabel}</p><h2>{scholarCopy.title}</h2><span>{scholarCopy.text}</span></div><a className="button" href="https://scholar.google.com/citations?user=UhXLjGEAAAAJ&hl=en" target="_blank" rel="noreferrer">{scholarCopy.action}<ExternalLink size={16} /></a></Reveal>
+          : <Reveal className="next-step"><Sparkles /><div><p>{t.nextLabel}</p><h2>{data.ctaTitle}</h2><span>{data.ctaText}</span></div><a className="button" href={localizedHref(locale, normalizedPage === "about" ? "research" : "contact")}>{t.exploreMore}<DirectionalArrow rtl={rtl} size={16} /></a></Reveal>}
+      </div>
+    </section>
+    {normalizedPage === "innovation" && <TeamSection locale={locale} rtl={rtl} area="innovation" />}
+    {normalizedPage === "research" && <TeamSection locale={locale} rtl={rtl} area="research" />}
+    <PageAppointmentCta t={t} />
+  </>;
+}
+
+function TeamSection({ locale, rtl, area }: { locale: Locale; rtl: boolean; area: TeamArea }) {
+  const labels = teamLabels[locale];
+  const members = getTeamMembers(area);
+  return <section className={`team-section team-${area} section-space`}><div className="section-shell">
+    <Reveal className="section-heading split-heading"><div><p className="section-index">{labels.kicker}</p><p>{labels.title}. {labels.intro}</p></div></Reveal>
+    <div className="team-grid">{members.map((member) => <Reveal className="team-card" key={member.slug}>
+      <a className="team-card-image" href={localizedHref(locale, `team/${member.slug}`)}><Image src={member.image} alt={member.name[locale]} fill unoptimized sizes="(max-width: 560px) 92vw, (max-width: 1120px) 44vw, 24vw" /></a>
+      <div className="team-card-copy"><p>{member.role[locale]}</p><h3><a href={localizedHref(locale, `team/${member.slug}`)}>{member.name[locale]}</a></h3><span>{member.summary[locale]}</span><a className="text-link" href={localizedHref(locale, `team/${member.slug}`)}>{labels.readProfile}<DirectionalArrow rtl={rtl} size={15} /></a></div>
+    </Reveal>)}</div>
+  </div></section>;
+}
+
+function GalleryCollection({ locale, rtl, images, title, full = false }: { locale: Locale; rtl: boolean; images: string[]; title: string; full?: boolean }) {
+  const labels = clinicHubCopy[locale];
+  const [offset, setOffset] = useState(0);
+  const [active, setActive] = useState<number | null>(null);
+  const shown = full ? images.map((_, index) => index) : Array.from({ length: 4 }, (_, index) => (offset + index) % images.length);
+
+  useEffect(() => {
+    if (active === null) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setActive(null);
+      if (event.key === "ArrowLeft") setActive((current) => current === null ? null : (current - 1 + images.length) % images.length);
+      if (event.key === "ArrowRight") setActive((current) => current === null ? null : (current + 1) % images.length);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => { document.body.style.overflow = previousOverflow; window.removeEventListener("keydown", onKeyDown); };
+  }, [active, images.length]);
+
+  const move = (direction: number) => setOffset((current) => (current + direction + images.length) % images.length);
+  return <>
+    <div className={full ? "gallery-full-grid" : "gallery-strip"}>
+      {!full && <button className="gallery-nav gallery-prev" type="button" onClick={() => move(-1)} aria-label={labels.previous}><ChevronLeft className={rtl ? "flip-icon" : ""} /></button>}
+      <div className={full ? "gallery-full-track" : "gallery-strip-track"}>{shown.map((index) => <button className="gallery-thumb" type="button" onClick={() => setActive(index)} key={`${images[index]}-${index}`} aria-label={`${title} ${index + 1}`}>
+        <Image src={images[index]} alt={`${title} ${index + 1}`} fill unoptimized sizes={full ? "(max-width: 560px) 92vw, (max-width: 820px) 46vw, 24vw" : "(max-width: 560px) 92vw, (max-width: 820px) 46vw, 23vw"} />
+        <span>{String(index + 1).padStart(2, "0")}</span>
+      </button>)}</div>
+      {!full && <button className="gallery-nav gallery-next" type="button" onClick={() => move(1)} aria-label={labels.next}><ChevronRight className={rtl ? "flip-icon" : ""} /></button>}
+    </div>
+    {active !== null && <div className="gallery-modal" role="dialog" aria-modal="true" aria-label={title} onClick={() => setActive(null)}>
+      <div className="gallery-modal-panel" onClick={(event) => event.stopPropagation()}>
+        <button className="gallery-modal-close" type="button" onClick={() => setActive(null)} aria-label={labels.close} autoFocus><X /></button>
+        <div className="gallery-modal-image"><Image src={images[active]} alt={`${title} ${active + 1}`} fill priority unoptimized sizes="94vw" /></div>
+        <button className="gallery-modal-nav gallery-modal-prev" type="button" onClick={() => setActive((active - 1 + images.length) % images.length)} aria-label={labels.previous}><ChevronLeft /></button>
+        <button className="gallery-modal-nav gallery-modal-next" type="button" onClick={() => setActive((active + 1) % images.length)} aria-label={labels.next}><ChevronRight /></button>
+        <span className="gallery-modal-count">{active + 1} / {images.length}</span>
+      </div>
+    </div>}
+  </>;
+}
+
+function ClinicPage({ locale, t }: { locale: Locale; t: SiteCopy }) {
+  const data = (t.pages as Record<string, InteriorPageData>)["clinical-care"];
+  const c = clinicHubCopy[locale];
+  const rtl = locale !== "en";
+  const clinicGallery = galleryCollections["clinical-care/clinic-gallery"].images;
+  const hospitalGallery = galleryCollections["clinical-care/hospital-gallery"].images;
+  return <>
+    <InteriorCover image={pageCoverImages["clinical-care"]} imageAlt={data.title} kicker={data.kicker} title={data.title} intro={data.intro} />
+    <section className="clinic-pathways section-space section-shell">
+      <Reveal className="section-heading"><p className="section-index">{c.pathwaysKicker}</p><p>{c.pathwaysTitle}. {c.pathwaysIntro}</p></Reveal>
+      <div className="clinic-pathway-grid">{c.pathways.map((path) => <Reveal className="clinic-pathway-card" key={path.slug}>
+        <a className="clinic-pathway-image" href={localizedHref(locale, path.slug)}><Image src={path.image} alt={path.title} fill unoptimized sizes="(max-width: 820px) 92vw, 46vw" /></a>
+        <div><h2><a href={localizedHref(locale, path.slug)}>{path.title}</a></h2><p>{path.text}</p><a className="text-link" href={localizedHref(locale, path.slug)}>{t.exploreMore}<DirectionalArrow rtl={rtl} size={16} /></a></div>
+      </Reveal>)}</div>
+    </section>
+    <TeamSection locale={locale} rtl={rtl} area="clinic" />
+    <section className="clinic-gallery-row section-space"><div className="section-shell">
+      <Reveal className="section-heading split-heading"><div><p className="section-index">{c.clinicGalleryTitle}</p><p>{c.clinicGalleryIntro}</p></div><a className="text-link" href={localizedHref(locale, "clinical-care/clinic-gallery")}>{c.viewGallery}<DirectionalArrow rtl={rtl} /></a></Reveal>
+      <GalleryCollection locale={locale} rtl={rtl} images={clinicGallery} title={c.clinicGalleryTitle} />
+    </div></section>
+    <section className="clinic-gallery-row hospital-gallery-row section-space"><div className="section-shell">
+      <Reveal className="section-heading split-heading"><div><p className="section-index">{c.hospitalGalleryTitle}</p><p>{c.hospitalGalleryIntro}</p></div><a className="text-link" href={localizedHref(locale, "clinical-care/hospital-gallery")}>{c.viewGallery}<DirectionalArrow rtl={rtl} /></a></Reveal>
+      <GalleryCollection locale={locale} rtl={rtl} images={hospitalGallery} title={c.hospitalGalleryTitle} />
+    </div></section>
+    <PageAppointmentCta t={t} />
+  </>;
+}
+
+function GalleryPage({ locale, page, t, rtl }: { locale: Locale; page: GalleryRoute; t: SiteCopy; rtl: boolean }) {
+  const c = clinicHubCopy[locale];
+  const gallery = galleryCollections[page];
+  const isClinic = gallery.area === "clinic";
+  const title = isClinic ? c.clinicGalleryTitle : c.hospitalGalleryTitle;
+  const intro = isClinic ? c.clinicGalleryIntro : c.hospitalGalleryIntro;
+  return <>
+    <InteriorCover image={supplementalCoverImages[page]} imageAlt={title} kicker={c.pathwaysKicker} title={title} intro={intro} />
+    <div className="interior-back section-shell"><a href={localizedHref(locale, "clinical-care")}><DirectionalArrow rtl={!rtl} size={16} />{c.backToClinic}</a></div>
+    <section className="gallery-page section-space section-shell"><GalleryCollection locale={locale} rtl={rtl} images={gallery.images} title={title} full /></section>
+    <PageAppointmentCta t={t} />
+  </>;
+}
+
+function TeamProfilePage({ locale, slug, t, rtl }: { locale: Locale; slug: string; t: SiteCopy; rtl: boolean }) {
+  const member = findTeamMember(slug);
+  if (!member) return <InteriorPage locale={locale} page="about" t={t} rtl={rtl} />;
+  const labels = teamLabels[locale];
+  const backArea = member.areas.includes("clinic") ? "clinical-care" : member.areas.includes("innovation") ? "innovation" : "research";
+  return <>
+    <InteriorCover image={pageCoverImages.about} imageAlt={member.name[locale]} kicker={labels.profileIntro} title={member.name[locale]} intro={member.role[locale]} />
+    <div className="interior-back section-shell"><a href={localizedHref(locale, backArea)}><DirectionalArrow rtl={!rtl} size={16} />{labels.back}</a></div>
+    <section className="team-profile section-space section-shell">
+      <Reveal className="team-profile-image"><Image src={member.image} alt={member.name[locale]} fill priority unoptimized sizes="(max-width: 820px) 92vw, 34vw" /></Reveal>
+      <div className="team-profile-body">
+        <Reveal><p className="section-index">{labels.expertise}</p><h2>{member.role[locale]}</h2><p>{member.bio[locale]}</p></Reveal>
+        <Reveal className="team-profile-note"><Sparkles /><div><h3>{labels.collaboration}</h3><p>{member.summary[locale]}</p></div></Reveal>
       </div>
     </section>
     <PageAppointmentCta t={t} />
   </>;
 }
 
-function ClinicPage({ locale, t }: { locale: Locale; t: SiteCopy }) {
-  const data = (t.pages as Record<string, InteriorPageData>)["clinical-care"];
-  const c = clinicCopy[locale];
-  const serviceIcons: LucideIcon[] = [Stethoscope, Sparkles, Hand];
-  const gallery = ["/media/about/office.jpg", "/media/pages/clinic-cover.jpg", "/media/pages/clinic-cover.jpg"];
-  return <>
-    <InteriorCover image={pageCoverImages["clinical-care"]} imageAlt={data.title} kicker={data.kicker} title={data.title} intro={data.intro} />
-    <section className="clinic-services section-space section-shell">
-      <Reveal className="section-heading"><p className="section-index">{c.servicesTitle}</p><p>{c.servicesIntro}</p></Reveal>
-      <div className="clinic-service-grid">{c.services.map((service, index) => { const Icon = serviceIcons[index]; return <Reveal className="clinic-service-card" key={service.title}><Icon size={32} /><h2>{service.title}</h2><p>{service.text}</p></Reveal>; })}</div>
-    </section>
-    <section className="clinic-office section-space"><div className="section-shell clinic-office-layout">
-      <Reveal className="clinic-office-copy"><p className="section-index">{c.officeTitle}</p>{c.officeText.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</Reveal>
-      <Reveal className="clinic-office-gallery">{gallery.map((src, index) => <div className={`office-shot office-shot-${index + 1}`} key={`${src}-${index}`}><Image src={src} alt={c.officeImages[index]} fill unoptimized sizes="(max-width: 820px) 44vw, 22vw" /></div>)}</Reveal>
-    </div></section>
-    <section className="clinic-scope section-space section-shell">
-      <Reveal className="clinic-type"><p className="section-index">{c.serviceTypeTitle}</p><p>{c.serviceTypeText}</p></Reveal>
-      <Reveal className="clinic-scope-list"><h2>{c.scopeTitle}</h2><ul>{c.scopeItems.map((item) => <li key={item}><Check size={18} />{item}</li>)}</ul></Reveal>
-    </section>
-    <section className="clinic-faq section-space"><div className="section-shell faq-layout">
-      <Reveal className="faq-intro"><p className="section-index">{c.faqTitle}</p><p>{c.faqIntro}</p></Reveal>
-      <div className="faq-list">{c.faqs.map((faq, index) => <Reveal key={faq.question}><details open={index === 0}><summary>{faq.question}<ChevronDown size={20} /></summary><p>{faq.answer}</p></details></Reveal>)}</div>
-    </div></section>
-    <PageAppointmentCta t={t} />
-  </>;
-}
-
-function BlogArchive({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolean }) {
+function BlogArchive({ locale, t, rtl, filter }: { locale: Locale; t: SiteCopy; rtl: boolean; filter: "blog" | "news" }) {
   const labels = blogLabels[locale];
+  const posts = postsForTag(filter);
   return <>
     <InteriorCover image={pageCoverImages.blog} imageAlt={labels.title} kicker={labels.kicker} title={labels.title} intro={labels.intro} />
-    <section className="blog-archive section-space section-shell"><div className="blog-grid">{blogPosts.map((post) => <Reveal className="blog-card" key={post.slug}>
+    <section className="blog-archive section-space section-shell"><div className="blog-grid">{posts.map((post) => <Reveal className="blog-card" key={post.slug}>
       <a className="blog-card-image" href={localizedHref(locale, `blog/${post.slug}`)}><Image src={post.image} alt={post.title[locale]} fill unoptimized sizes="(max-width: 820px) 92vw, 31vw" /></a>
       <div className="blog-card-copy"><p className="card-tag">{post.category[locale]}</p><h2><a href={localizedHref(locale, `blog/${post.slug}`)}>{post.title[locale]}</a></h2><p>{post.excerpt[locale]}</p><div className="blog-card-meta"><span>{post.readMinutes} {labels.minutes}</span><a href={localizedHref(locale, `blog/${post.slug}`)}>{labels.read}<DirectionalArrow rtl={rtl} size={15} /></a></div></div>
     </Reveal>)}</div></section>
@@ -303,7 +413,7 @@ function BlogArchive({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boo
 
 function BlogPostPage({ locale, slug, t, rtl }: { locale: Locale; slug: string; t: SiteCopy; rtl: boolean }) {
   const post = findBlogPost(slug);
-  if (!post) return <BlogArchive locale={locale} t={t} rtl={rtl} />;
+  if (!post) return <BlogArchive locale={locale} t={t} rtl={rtl} filter="blog" />;
   const labels = blogLabels[locale];
   const formattedDate = new Intl.DateTimeFormat(locale === "fa" ? "fa-IR" : locale === "ar" ? "ar" : "en-GB", { year: "numeric", month: "long", day: "numeric" }).format(new Date(post.date));
   return <>
@@ -369,7 +479,7 @@ function Footer({ locale, t }: { locale: Locale; t: SiteCopy }) {
     <div className="section-shell footer-grid">
       <div className="footer-brand"><Image src={footerLogo} alt="Dr. Ali Moradi" width={153} height={50} /><p>{t.footer.bio}</p><a className="footer-book" href="https://nobat.ir/9705" target="_blank" rel="noreferrer">{t.footer.booking}<ExternalLink size={15} /></a></div>
       <div><h3>{t.footer.explore}</h3>{pageSlugs.slice(0, 6).map((slug) => <a key={slug} href={localizedHref(locale, slug)}>{footerPages[slug].kicker}</a>)}</div>
-      <div><h3>{t.footer.resources}</h3><a href={localizedHref(locale, "clinical-care")}>{t.footer.before}</a><a href={localizedHref(locale, "clinical-care")}>{t.footer.after}</a><a href={localizedHref(locale, "clinical-care")}>{t.footer.faq}</a><a href={localizedHref(locale, "education")}>{t.footer.rehab}</a></div>
+      <div><h3>{t.footer.resources}</h3><a href={localizedHref(locale, "patient-resources/before-surgery")}>{t.footer.before}</a><a href={localizedHref(locale, "patient-resources/after-surgery")}>{t.footer.after}</a><a href={localizedHref(locale, "patient-resources/faq")}>{t.footer.faq}</a><a href={localizedHref(locale, "patient-resources/rehabilitation")}>{t.footer.rehab}</a></div>
       <div className="footer-contact"><h3>{t.footer.contact}</h3><a href="mailto:info@DrAliMoradi.com"><Mail />info@DrAliMoradi.com</a><a href="tel:+985132290968" dir="ltr"><Phone />+98 51 3229 0968</a><p><MapPin />{t.contact.office}</p><p><MapPin />{t.contact.clinic}</p><a href={mapUrl} target="_blank" rel="noreferrer"><MapPin />{t.footer.map}<ExternalLink size={13} /></a></div>
       <div className="footer-social"><h3>{t.footer.social}</h3><a href="https://www.instagram.com/dr_ali_moradi_handsurgeon" target="_blank" rel="noreferrer"><Camera />Instagram</a><a href="https://t.me/DrAliMoradi" target="_blank" rel="noreferrer"><Send />Telegram</a><a href="https://www.aparat.com/dr_ali_moradi_handsurgeon" target="_blank" rel="noreferrer"><PlayCircle />Aparat</a></div>
     </div>
