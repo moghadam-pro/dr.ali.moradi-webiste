@@ -604,3 +604,16 @@ Escape دارند. چهار مقصد Patient Resources نیز به صفحات د
 سکشن Team به Innovation و Research افزوده شد و Next Step صفحه Research به پروفایل
 Google Scholar عمومی دکتر متصل است. جزئیات فنی و مسیر فایل‌ها در
 [Change Log ساختار و کلینیک](change-log-2026-08-22-structure-and-clinic.md) ثبت شده است.
+
+## ۲۱. تثبیت روش انتشار Repository خصوصی
+
+پس از خصوصی‌شدن Repository، روش Pull مستقیم روی سرور کنار گذاشته شد. روش جاری
+بر پایه ساخت Zip تغییرناپذیر با `git archive`، بررسی Zip و SHA-256، آپلود در پوشه
+مستقل، Build و Backup و Restart و Health Check با اسکریپت عمومی پروژه است. خطاهای
+واقعی مشاهده‌شده شامل Zip ناقص، Extract نشدن اسکریپت، اجرای PM2 با کاربر اشتباه،
+Permission فایل‌ها و ورود URL به شکل Markdown نیز مستند شدند.
+
+شرح اجرایی کامل و قواعد بازیابی در
+[راهنمای بروزرسانی سرور از Repository خصوصی](private-repository-server-update-runbook-fa.md)
+ثبت شده است. مشخصات خصوصی سرور مطابق تصمیم قبلی عمداً در Git ذخیره نشده‌اند و
+در زمان اجرا به‌صورت متغیر وارد می‌شوند.

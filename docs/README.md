@@ -7,6 +7,7 @@ history, then use the focused documents for implementation details.
 ## Primary handoff documents
 
 - [آرشیو ساختاریافته گفت‌وگو و تصمیم‌های پروژه](project-conversation-archive-fa.md)
+- [راهنمای بروزرسانی سرور از Repository خصوصی](private-repository-server-update-runbook-fa.md)
 - [ساختار قالب‌ها، کلینیک، گالری و محتوای یکپارچه — 2026-08-22](change-log-2026-08-22-structure-and-clinic.md)
 - [اصلاح Hero Copy و راهنمای نگهداری — 2026-08-22](change-log-2026-08-22.md)
 - [آخرین اصلاحیه و وضعیت اجرایی — 2026-08-17](change-log-2026-08-17.md)

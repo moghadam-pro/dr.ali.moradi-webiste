@@ -100,11 +100,15 @@ For a Linux server receiving a fully uploaded repository, use the generic
 `scripts/deploy-uploaded-release.sh` helper. It requires the uploaded directory,
 live application directory, process-manager target, and optional local health URL;
 host-specific paths and service names are intentionally not stored in Git.
+The complete Persian procedure, integrity checks, recovery behavior, and known
+failure modes are documented in
+[`docs/private-repository-server-update-runbook-fa.md`](docs/private-repository-server-update-runbook-fa.md).
 
 ## Documentation
 
 - [Documentation hub](docs/README.md)
 - [Persian project conversation archive](docs/project-conversation-archive-fa.md)
+- [Private-repository server update runbook (Persian)](docs/private-repository-server-update-runbook-fa.md)
 - [Clinic, templates, galleries, and unified content — 2026-08-22](docs/change-log-2026-08-22-structure-and-clinic.md)
 - [Hero copy implementation change log — 2026-08-22](docs/change-log-2026-08-22.md)
 - [Previous implementation change log — 2026-08-17](docs/change-log-2026-08-17.md)
