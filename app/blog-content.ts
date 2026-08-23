@@ -2,7 +2,7 @@ import type { Locale } from "./site-content";
 
 type LocalizedText = Record<Locale, string>;
 
-export type ContentTag = "blog" | "news" | "innovation" | "research" | "care" | "recovery";
+export type ContentTag = "blog" | "news" | "awards" | "innovation" | "research" | "care" | "recovery";
 
 export type ContentPost = {
   slug: string;
@@ -31,6 +31,7 @@ const categories = {
   recovery: { en: "Recovery", fa: "دوران بهبود", ar: "التعافي" },
   innovation: { en: "Innovation", fa: "نوآوری", ar: "الابتكار" },
   research: { en: "Research literacy", fa: "سواد پژوهشی", ar: "الثقافة البحثية" },
+  awards: { en: "Awards & certificates", fa: "جوایز و گواهی‌ها", ar: "الجوائز والشهادات" },
 } satisfies Record<string, LocalizedText>;
 
 const entries: Array<{
@@ -132,19 +133,29 @@ const entries: Array<{
     excerpt: { en: "Crush injury, amputation, open fracture, threatened circulation, severe contamination, or rapidly increasing swelling should not wait for routine booking.", fa: "له‌شدگی، قطع عضو، شکستگی باز، اختلال خون‌رسانی، آلودگی شدید یا تورم سریع نباید تا نوبت معمول منتظر بماند.", ar: "السحق أو البتر أو الكسر المفتوح أو ضعف التروية أو التلوث الشديد أو التورم السريع لا ينبغي أن ينتظر موعداً روتينياً." },
   },
   {
-    slug: "hand-reconstruction-and-myoelectric-prostheses", category: "innovation", tags: ["news", "innovation"], image: "/media/news/best-paper-meeting.jpg",
+    slug: "hand-reconstruction-and-myoelectric-prostheses", category: "innovation", tags: ["innovation"], image: "/media/news/best-paper-meeting.jpg",
     title: { en: "Hand reconstruction and myoelectric prostheses", fa: "بازسازی دست و پروتزهای مایوالکتریک", ar: "إعادة بناء اليد والأطراف العضلية الكهربائية" },
     excerpt: { en: "Reconstruction and prosthetic pathways answer different clinical needs; anatomy, function, goals, rehabilitation, and device tolerance shape the decision.", fa: "بازسازی و پروتز به نیازهای بالینی متفاوت پاسخ می‌دهند؛ آناتومی، عملکرد، هدف بیمار، توان‌بخشی و تحمل وسیله در تصمیم نقش دارند.", ar: "تلبي إعادة البناء والأطراف التعويضية احتياجات مختلفة، ويؤثر التشريح والوظيفة والأهداف والتأهيل وتحمل الجهاز في القرار." },
   },
   {
-    slug: "hydroxyapatite-pin-coating-research", category: "research", tags: ["news", "research"], image: "/media/news/top-cited.jpg",
+    slug: "hydroxyapatite-pin-coating-research", category: "awards", tags: ["news", "awards", "research"], image: "/media/news/top-cited.jpg",
     title: { en: "Research impact in external-fixator pin coatings", fa: "اثرگذاری پژوهش پوشش پین‌های فیکساتور", ar: "أثر بحث طلاء مسامير المثبت الخارجي" },
     excerpt: { en: "Research on hydroxyapatite-based external-fixator pin coatings was recognized for citation impact; attribution should follow the underlying publication record.", fa: "پژوهش پوشش هیدروکسی‌آپاتیت پین‌های فیکساتور خارجی از نظر اثر استنادی مورد توجه قرار گرفت؛ انتساب باید مطابق سابقه انتشار مقاله باشد.", ar: "حظي بحث طلاء مسامير المثبت الخارجي بالهيدروكسي أباتيت بتقدير لأثر الاستشهاد، ويجب أن يتبع الإسناد سجل النشر الأصلي." },
   },
   {
-    slug: "orthopedic-congress-presentation-recognition", category: "research", tags: ["news", "research"], image: "/media/news/congress-recognition.jpg",
+    slug: "orthopedic-congress-presentation-recognition", category: "awards", tags: ["news", "awards", "research"], image: "/media/news/congress-recognition.jpg",
     title: { en: "Orthopedic congress presentation recognition", fa: "تقدیر از ارائه در کنگره ارتوپدی", ar: "تقدير عرض في مؤتمر جراحة العظام" },
     excerpt: { en: "A selected scientific presentation connected clinical and engineering work in upper-limb innovation; the final public wording remains tied to the verified certificate record.", fa: "یک ارائه علمی منتخب، فعالیت بالینی و مهندسی در نوآوری اندام فوقانی را به هم پیوند داد؛ متن نهایی عمومی باید مطابق مدرک تأییدشده باشد.", ar: "ربط عرض علمي مختار بين العمل السريري والهندسي في ابتكار الطرف العلوي، وتبقى الصياغة النهائية مرتبطة بالسجل الموثق." },
+  },
+  {
+    slug: "best-paper-award-bionic-hand-sensors", category: "awards", tags: ["news", "awards", "innovation"], image: "/media/news/best-paper.jpg",
+    title: { en: "Best Paper Award for bionic-hand sensor research", fa: "جایزه مقاله برتر برای پژوهش حسگر دست بیونیک", ar: "جائزة أفضل بحث حول مستشعرات اليد الإلكترونية" },
+    excerpt: { en: "A certificate recognized research on magnetic sensing for bionic-hand control as a Best Paper at the Iranian Biomedical Engineering Conference.", fa: "پژوهش حسگرهای مغناطیسی برای کنترل دست بیونیک در کنفرانس مهندسی پزشکی ایران با عنوان مقاله برتر تقدیر شد.", ar: "كرّمت شهادة بحث الاستشعار المغناطيسي للتحكم باليد الإلكترونية بوصفه أفضل بحث في مؤتمر الهندسة الطبية الحيوية الإيراني." },
+  },
+  {
+    slug: "featured-poster-bionic-hand-motor-control", category: "awards", tags: ["news", "awards", "innovation"], image: "/media/news/cotarium-2025.jpg",
+    title: { en: "Featured poster in bionic-hand motor control", fa: "پوستر منتخب در کنترل موتور دست بیونیک", ar: "ملصق مميز في التحكم بمحركات اليد الإلكترونية" },
+    excerpt: { en: "Bionic-hand motor-control work was selected as a featured poster at COTARIUM 2025.", fa: "پژوهش کنترل موتور دست بیونیک به‌عنوان پوستر منتخب COTARIUM 2025 معرفی شد.", ar: "اختير عمل التحكم بمحركات اليد الإلكترونية ملصقاً مميزاً في COTARIUM 2025." },
   },
 ];
 

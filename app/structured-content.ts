@@ -43,7 +43,7 @@ export const teamMembers: TeamMember[] = [
       fa: "دکتر مرادی دانشیار ارتوپدی و جراح دست و اندام فوقانی است. فعالیت او مراقبت تخصصی، پژوهش بالینی، مهندسی پزشکی، نوآوری و آموزش حرفه‌ای را به هم متصل می‌کند.",
       ar: "الدكتور مرادي أستاذ مشارك في جراحة العظام وجراح لليد والطرف العلوي، ويربط عمله الرعاية المتخصصة بالبحث والهندسة الطبية والابتكار والتعليم.",
     },
-    image: "/media/appointments/doctor.jpg",
+    image: "/media/team/ali-moradi.jpg",
     areas: ["clinic", "research", "innovation"],
   },
   {
@@ -65,7 +65,7 @@ export const teamMembers: TeamMember[] = [
   },
   {
     slug: "mahsa-jafari",
-    name: { en: "Mahsa Jafari", fa: "مهسا جعفری", ar: "مهسا جعفري" },
+    name: { en: "Dr. Mahsa Jafari", fa: "دکتر مهسا جعفری", ar: "الدكتورة مهسا جعفري" },
     role: { en: "Reception and finance coordinator", fa: "هماهنگ‌کننده پذیرش و امور مالی", ar: "منسقة الاستقبال والشؤون المالية" },
     summary: {
       en: "Supports appointment coordination, reception, and the first point of communication with the clinic.",
@@ -78,6 +78,23 @@ export const teamMembers: TeamMember[] = [
       ar: "تنسق مهسا جعفري الاستقبال والإدارة المالية، وتدعم جدولة واضحة وتواصلاً منظماً مع المراجعين.",
     },
     image: "/media/team/mahsa-jafari.jpg",
+    areas: ["clinic"],
+  },
+  {
+    slug: "mahla-daliri",
+    name: { en: "Dr. Mahla Daliri", fa: "دکتر مهلا دلیری", ar: "الدكتورة مهلا دليري" },
+    role: { en: "Specialist clinic manager", fa: "مدیر کلینیک تخصصی", ar: "مديرة العيادة التخصصية" },
+    summary: {
+      en: "Coordinates the specialist clinic workflow and helps connect patient needs with the clinical team.",
+      fa: "هماهنگی روند کلینیک تخصصی و پیوند نیازهای مراجعه‌کنندگان با تیم بالینی.",
+      ar: "تنسق سير عمل العيادة التخصصية وتربط احتياجات المرضى بالفريق السريري.",
+    },
+    bio: {
+      en: "Dr. Daliri coordinates specialist clinic operations and supports organized communication between patients, clinicians, and the wider care team.",
+      fa: "دکتر دلیری هماهنگی فعالیت‌های کلینیک تخصصی و ارتباط منظم میان مراجعه‌کنندگان، پزشکان و دیگر اعضای تیم درمان را پشتیبانی می‌کند.",
+      ar: "تنسق الدكتورة دليري عمليات العيادة التخصصية وتدعم التواصل المنظم بين المرضى والأطباء وفريق الرعاية.",
+    },
+    image: "/media/team/mahla-daliri.jpg",
     areas: ["clinic"],
   },
   {
@@ -162,9 +179,9 @@ export const teamLabels: Record<Locale, {
   kicker: string; title: string; intro: string; readProfile: string; back: string;
   profileIntro: string; expertise: string; collaboration: string;
 }> = {
-  en: { kicker: "People", title: "Meet the team", intro: "Clinical, research, and engineering work is delivered through coordinated specialist roles.", readProfile: "View profile", back: "Back to the team", profileIntro: "Professional profile", expertise: "Area of work", collaboration: "Contribution to the team" },
-  fa: { kicker: "اعضای تیم", title: "آشنایی با تیم", intro: "فعالیت بالینی، پژوهشی و مهندسی با همکاری نقش‌های تخصصی و هماهنگ پیش می‌رود.", readProfile: "مشاهده صفحه عضو", back: "بازگشت به اعضای تیم", profileIntro: "پروفایل حرفه‌ای", expertise: "حوزه فعالیت", collaboration: "نقش در تیم" },
-  ar: { kicker: "الفريق", title: "تعرّف إلى الفريق", intro: "تتقدم الأعمال السريرية والبحثية والهندسية عبر أدوار تخصصية منسقة.", readProfile: "عرض الملف", back: "العودة إلى الفريق", profileIntro: "الملف المهني", expertise: "مجال العمل", collaboration: "الدور في الفريق" },
+  en: { kicker: "People", title: "Meet the team", intro: "Clinical, research, and engineering work is delivered through coordinated specialist roles.", readProfile: "Read More", back: "Back to the team", profileIntro: "Professional profile", expertise: "Area of work", collaboration: "Contribution to the team" },
+  fa: { kicker: "اعضای تیم", title: "آشنایی با تیم", intro: "فعالیت بالینی، پژوهشی و مهندسی با همکاری نقش‌های تخصصی و هماهنگ پیش می‌رود.", readProfile: "بیشتر بخوانید", back: "بازگشت به اعضای تیم", profileIntro: "پروفایل حرفه‌ای", expertise: "حوزه فعالیت", collaboration: "نقش در تیم" },
+  ar: { kicker: "الفريق", title: "تعرّف إلى الفريق", intro: "تتقدم الأعمال السريرية والبحثية والهندسية عبر أدوار تخصصية منسقة.", readProfile: "اقرأ المزيد", back: "العودة إلى الفريق", profileIntro: "الملف المهني", expertise: "مجال العمل", collaboration: "الدور في الفريق" },
 };
 
 export const clinicHubCopy: Record<Locale, {
@@ -178,26 +195,26 @@ export const clinicHubCopy: Record<Locale, {
   en: {
     pathwaysKicker: "Care locations", pathwaysTitle: "Choose the right care setting", pathwaysIntro: "Explore outpatient clinic services and hospital-based surgery through two focused pathways.",
     pathways: [
-      { slug: "clinical-care/clinic-services", title: "Clinic services", text: "Consultation, selected office procedures, follow-up, and early recovery guidance.", image: "/media/galleries/clinic/clinic-08.jpg" },
-      { slug: "clinical-care/hospital-services", title: "Hospital services", text: "Major and subspecialty operations planned for an appropriately equipped hospital.", image: "/media/galleries/hospital/hospital-14.jpg" },
+      { slug: "clinical-care/clinic-services", title: "Clinic services", text: "Consultation, selected office procedures, follow-up, and early recovery guidance.", image: "/media/clinic/clinic-services-cover.jpg" },
+      { slug: "clinical-care/hospital-services", title: "Hospital services", text: "Major and subspecialty operations planned for an appropriately equipped hospital.", image: "/media/clinic/hospital-services-cover.jpg" },
     ],
-    clinicGalleryTitle: "Inside the clinic", clinicGalleryIntro: "A selected view of the private-office environment and professional workflow.", hospitalGalleryTitle: "Hospital-based care", hospitalGalleryIntro: "Selected professional images representing the hospital and subspecialty-care pathway.", viewGallery: "View full gallery", previous: "Previous image", next: "Next image", close: "Close gallery", backToClinic: "Back to the main clinic page",
+    clinicGalleryTitle: "Clinic surgical cases", clinicGalleryIntro: "Selected outpatient and focused hand-surgery cases managed through the clinic pathway.", hospitalGalleryTitle: "Hospital surgical cases", hospitalGalleryIntro: "Selected complex reconstructions and hospital-based upper-extremity operations.", viewGallery: "View full gallery", previous: "Previous image", next: "Next image", close: "Close gallery", backToClinic: "Back to the main clinic page",
   },
   fa: {
     pathwaysKicker: "محل ارائه خدمات", pathwaysTitle: "مسیر مناسب مراقبت را انتخاب کنید", pathwaysIntro: "خدمات سرپایی کلینیک و جراحی‌های بیمارستانی در دو مسیر مستقل معرفی شده‌اند.",
     pathways: [
-      { slug: "clinical-care/clinic-services", title: "خدمات کلینیک", text: "مشاوره، اقدامات منتخب مطب، پیگیری و راهنمای اولیه دوران بهبود.", image: "/media/galleries/clinic/clinic-08.jpg" },
-      { slug: "clinical-care/hospital-services", title: "خدمات بیمارستان", text: "جراحی‌های بزرگ و فوق‌تخصصی در بیمارستان مجهز و متناسب با نیاز بیمار.", image: "/media/galleries/hospital/hospital-14.jpg" },
+      { slug: "clinical-care/clinic-services", title: "خدمات کلینیک", text: "مشاوره، اقدامات منتخب مطب، پیگیری و راهنمای اولیه دوران بهبود.", image: "/media/clinic/clinic-services-cover.jpg" },
+      { slug: "clinical-care/hospital-services", title: "خدمات بیمارستان", text: "جراحی‌های بزرگ و فوق‌تخصصی در بیمارستان مجهز و متناسب با نیاز بیمار.", image: "/media/clinic/hospital-services-cover.jpg" },
     ],
-    clinicGalleryTitle: "فضای کلینیک", clinicGalleryIntro: "روایتی تصویری از فضای مطب خصوصی و روند حرفه‌ای ارائه خدمات.", hospitalGalleryTitle: "خدمات بیمارستانی", hospitalGalleryIntro: "تصاویر منتخب از مسیر حرفه‌ای مراقبت بیمارستانی و فوق‌تخصصی.", viewGallery: "مشاهده گالری کامل", previous: "تصویر قبلی", next: "تصویر بعدی", close: "بستن گالری", backToClinic: "بازگشت به صفحه اصلی کلینیک",
+    clinicGalleryTitle: "نمونه‌های جراحی کلینیک", clinicGalleryIntro: "منتخبی از اقدامات متمرکز و جراحی‌های دست در مسیر خدمات کلینیک.", hospitalGalleryTitle: "نمونه‌های جراحی بیمارستان", hospitalGalleryIntro: "منتخبی از بازسازی‌های پیچیده و جراحی‌های اندام فوقانی در بیمارستان.", viewGallery: "مشاهده گالری کامل", previous: "تصویر قبلی", next: "تصویر بعدی", close: "بستن گالری", backToClinic: "بازگشت به صفحه اصلی کلینیک",
   },
   ar: {
     pathwaysKicker: "مواقع الرعاية", pathwaysTitle: "اختر بيئة الرعاية المناسبة", pathwaysIntro: "تُعرض خدمات العيادة والجراحة في المستشفى ضمن مسارين واضحين.",
     pathways: [
-      { slug: "clinical-care/clinic-services", title: "خدمات العيادة", text: "الاستشارة والإجراءات المختارة والمتابعة وإرشادات التعافي الأولية.", image: "/media/galleries/clinic/clinic-08.jpg" },
-      { slug: "clinical-care/hospital-services", title: "خدمات المستشفى", text: "العمليات الكبرى والتخصصية في مستشفى مجهز يناسب احتياجات المريض.", image: "/media/galleries/hospital/hospital-14.jpg" },
+      { slug: "clinical-care/clinic-services", title: "خدمات العيادة", text: "الاستشارة والإجراءات المختارة والمتابعة وإرشادات التعافي الأولية.", image: "/media/clinic/clinic-services-cover.jpg" },
+      { slug: "clinical-care/hospital-services", title: "خدمات المستشفى", text: "العمليات الكبرى والتخصصية في مستشفى مجهز يناسب احتياجات المريض.", image: "/media/clinic/hospital-services-cover.jpg" },
     ],
-    clinicGalleryTitle: "داخل العيادة", clinicGalleryIntro: "مشاهد مختارة من بيئة العيادة الخاصة وسير العمل المهني.", hospitalGalleryTitle: "الرعاية في المستشفى", hospitalGalleryIntro: "صور مختارة لمسار الرعاية التخصصية والمستشفى.", viewGallery: "عرض المعرض الكامل", previous: "الصورة السابقة", next: "الصورة التالية", close: "إغلاق المعرض", backToClinic: "العودة إلى صفحة العيادة الرئيسية",
+    clinicGalleryTitle: "نماذج جراحات العيادة", clinicGalleryIntro: "حالات مختارة من الإجراءات المركزة وجراحات اليد ضمن مسار العيادة.", hospitalGalleryTitle: "نماذج جراحات المستشفى", hospitalGalleryIntro: "نماذج مختارة من الترميمات المعقدة وجراحات الطرف العلوي في المستشفى.", viewGallery: "عرض المعرض الكامل", previous: "الصورة السابقة", next: "الصورة التالية", close: "إغلاق المعرض", backToClinic: "العودة إلى صفحة العيادة الرئيسية",
   },
 };
 

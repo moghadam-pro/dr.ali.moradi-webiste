@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { access } from "node:fs/promises";
 import test from "node:test";
 
 async function render(path = "/") {
@@ -46,8 +47,12 @@ test("server-renders the completed homepage", async () => {
   assert.match(html, /GP appointment \(general practitioner screening\)/i);
   assert.match(html, /\/media\/appointments\/doctor\.jpg/);
   assert.match(html, /\/media\/about\/office\.jpg/);
-  assert.match(html, /\/media\/news\/best-paper-meeting\.jpg/);
+  assert.match(html, /Awards and certificates/);
+  assert.match(html, /\/media\/news\/best-paper\.jpg/);
+  assert.match(html, /\/media\/news\/top-cited\.jpg/);
   assert.match(html, /\/media\/news\/congress-recognition\.jpg/);
+  assert.match(html, /\/media\/news\/cotarium-2025\.jpg/);
+  assert.equal((html.match(/class="reveal news-card"/g) ?? []).length, 4);
   assert.doesNotMatch(html, /Surgery beyond protocols/);
   assert.doesNotMatch(html, /section\.connected-practice\.jpg/);
   assert.match(html, /Explore Clinical Care/);
@@ -79,14 +84,26 @@ test("renders internal and localized routes", async () => {
 });
 
 test("renders the clinic hub, resources, galleries, team, and unified post archive", async () => {
+  for (const asset of [
+    "../public/media/clinic/clinic-services-cover.jpg",
+    "../public/media/clinic/hospital-services-cover.jpg",
+    "../public/media/team/ali-moradi.jpg",
+    "../public/media/team/mahsa-jafari.jpg",
+    "../public/media/team/mahla-daliri.jpg",
+    "../public/media/team/mona-meybodi.jpg",
+  ]) await access(new URL(asset, import.meta.url));
+
   const clinic = await render("/clinical-care").then((response) => response.text());
   assert.match(clinic, /\/media\/pages\/clinic-cover\.jpg/);
   assert.match(clinic, /Clinic services/);
   assert.match(clinic, /Hospital services/);
   assert.match(clinic, /Meet the team/);
   assert.match(clinic, /Dr\. Mona Meybodi/);
-  assert.match(clinic, /Inside the clinic/);
-  assert.match(clinic, /Hospital-based care/);
+  assert.match(clinic, /Dr\. Mahla Daliri/);
+  assert.match(clinic, /Clinic surgical cases/);
+  assert.match(clinic, /Hospital surgical cases/);
+  assert.match(clinic, /\/media\/clinic\/clinic-services-cover\.jpg/);
+  assert.match(clinic, /\/media\/clinic\/hospital-services-cover\.jpg/);
   assert.match(clinic, /href="\/clinical-care\/clinic-services"/);
   assert.match(clinic, /href="\/clinical-care\/hospital-services"/);
   assert.match(clinic, /href="\/clinical-care\/clinic-gallery"/);
@@ -111,13 +128,13 @@ test("renders the clinic hub, resources, galleries, team, and unified post archi
   assert.match(innovation, /Dr\. Alireza Akbarzadeh/);
 
   const archive = await render("/blog").then((response) => response.text());
-  assert.equal((archive.match(/class="reveal blog-card"/g) ?? []).length, 21);
+  assert.equal((archive.match(/class="reveal blog-card"/g) ?? []).length, 23);
   assert.match(archive, /Understanding carpal tunnel syndrome/);
   assert.match(archive, /When to seek emergency care/);
 
   const news = await render("/news").then((response) => response.text());
-  assert.equal((news.match(/class="reveal blog-card"/g) ?? []).length, 3);
-  assert.match(news, /Hand reconstruction and myoelectric prostheses/);
+  assert.equal((news.match(/class="reveal blog-card"/g) ?? []).length, 4);
+  assert.match(news, /Best Paper Award for bionic-hand sensor research/);
 
   const single = await render("/blog/understanding-carpal-tunnel-syndrome").then((response) => response.text());
   assert.match(single, /<title>Understanding carpal tunnel syndrome \| Dr\. Ali Moradi<\/title>/);
@@ -152,7 +169,14 @@ test("includes reduced-motion and responsive safeguards", async () => {
   assert.doesNotMatch(css, /\.connected-arrow\s*\{[^}]*drop-shadow/);
   assert.doesNotMatch(css, /\.innovation\s*\{[^}]*padding-top:\s*30px/);
   assert.match(css, /\.appointment-layout\s*\{[^}]*grid-template-columns/);
-  assert.match(css, /\.news-card h3\s*\{[^}]*-webkit-line-clamp:\s*2/);
+  assert.match(css, /\.news-grid\s*\{[^}]*repeat\(4/);
+  assert.match(css, /\.news-card-gradient\s*\{[^}]*linear-gradient/);
+  assert.match(css, /\.news-card-content strong\s*\{[^}]*-webkit-line-clamp:\s*3/);
+  assert.match(css, /\.hero-credentials li\s*\{[^}]*font-size:\s*clamp\(13px, 1vw, 14px\)/);
+  assert.match(css, /\.hero-description\s*\{[^}]*font-size:\s*clamp\(13px, 1vw, 14px\)/);
+  assert.match(css, /\.team-clinic \.team-grid\s*\{[^}]*repeat\(4/);
+  assert.match(css, /\.team-card-image\s*\{[^}]*height:\s*230px/);
+  assert.match(css, /\.clinic-pathway-image\s*\{[^}]*height:\s*150px/);
   assert.match(css, /overflow-x:\s*clip/);
   assert.match(css, /"Inter Variable"/);
   assert.match(css, /"Vazirmatn Variable"/);

@@ -26,7 +26,11 @@ const innovationImages = [
   "/media/innovation/bionic-hand.png",
   "/media/innovation/magnetic-distractor.png",
 ];
-const newsImages = ["/media/news/best-paper-meeting.jpg", "/media/news/top-cited.jpg", "/media/news/congress-recognition.jpg"];
+const awardsSectionCopy = {
+  en: { kicker: "RECOGNITION", title: "Awards and certificates", intro: "Selected awards, certificates, and professional recognition from Dr. Moradi’s clinical, academic, and innovation work." },
+  fa: { kicker: "افتخارات", title: "جوایز و گواهی‌ها", intro: "منتخبی از جوایز، گواهی‌ها و تقدیرهای حرفه‌ای دکتر مرادی در فعالیت‌های بالینی، دانشگاهی و نوآوری." },
+  ar: { kicker: "التقدير", title: "الجوائز والشهادات", intro: "مجموعة مختارة من جوائز الدكتور مرادي وشهاداته والتقدير المهني لأعماله السريرية والأكاديمية والابتكارية." },
+} as const;
 const connectedPracticeImages = [
   "/media/connected-practice/01-injury.jpg",
   "/media/connected-practice/02-innovation.jpg",
@@ -121,7 +125,8 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
 function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolean }) {
   const [openAppointment, setOpenAppointment] = useState(0);
   const innovationPosts = postsForTag("innovation").slice(0, 3);
-  const newsPosts = postsForTag("news").slice(0, 3);
+  const awardsPosts = postsForTag("awards").slice(0, 4);
+  const awardsCopy = awardsSectionCopy[locale];
 
   return <>
     <section className="hero">
@@ -217,8 +222,14 @@ function HomePage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolea
     </section>
 
     <section className="news section-space section-shell">
-      <Reveal className="section-heading split-heading"><div><p className="section-index">{t.indexes[6]}</p><p>{t.newsTitle}</p></div><a className="text-link" href={localizedHref(locale, "blog")}>{t.allUpdates}<DirectionalArrow rtl={rtl} /></a></Reveal>
-      <div className="news-grid">{t.news.map(([tag, title, text], index) => <Reveal className="news-card" key={title}><div className="news-image"><Image src={newsImages[index]} alt={title} fill unoptimized sizes="(max-width: 820px) 90vw, 31vw" /></div><p className="card-tag">{tag}</p><h3>{title}</h3><p>{text}</p><a href={localizedHref(locale, `blog/${newsPosts[index]?.slug ?? "reading-clinical-research"}`)}>{t.readUpdate}<DirectionalArrow rtl={rtl} size={16} /></a></Reveal>)}</div>
+      <Reveal className="section-heading split-heading"><div><p className="section-index">{awardsCopy.kicker}</p><p>{awardsCopy.title}</p><span className="section-heading-intro">{awardsCopy.intro}</span></div><a className="text-link" href={localizedHref(locale, "news")}>{t.allUpdates}<DirectionalArrow rtl={rtl} /></a></Reveal>
+      <div className="news-grid">{awardsPosts.map((post) => <Reveal className="news-card" key={post.slug}>
+        <a className="news-card-link" href={localizedHref(locale, `blog/${post.slug}`)} aria-label={post.title[locale]}>
+          <Image src={post.image} alt="" fill unoptimized sizes="(max-width: 560px) 92vw, (max-width: 1120px) 45vw, 23vw" />
+          <span className="news-card-gradient" aria-hidden="true" />
+          <span className="news-card-content"><small>{post.category[locale]}</small><strong>{post.title[locale]}</strong></span>
+        </a>
+      </Reveal>)}</div>
     </section>
 
     <section className="about-preview section-space"><div className="section-shell about-grid">
@@ -346,10 +357,11 @@ function ClinicPage({ locale, t }: { locale: Locale; t: SiteCopy }) {
   return <>
     <InteriorCover image={pageCoverImages["clinical-care"]} imageAlt={data.title} kicker={data.kicker} title={data.title} intro={data.intro} />
     <section className="clinic-pathways section-space section-shell">
-      <Reveal className="section-heading"><p className="section-index">{c.pathwaysKicker}</p><p>{c.pathwaysTitle}. {c.pathwaysIntro}</p></Reveal>
       <div className="clinic-pathway-grid">{c.pathways.map((path) => <Reveal className="clinic-pathway-card" key={path.slug}>
-        <a className="clinic-pathway-image" href={localizedHref(locale, path.slug)}><Image src={path.image} alt={path.title} fill unoptimized sizes="(max-width: 820px) 92vw, 46vw" /></a>
-        <div><h2><a href={localizedHref(locale, path.slug)}>{path.title}</a></h2><p>{path.text}</p><a className="text-link" href={localizedHref(locale, path.slug)}>{t.exploreMore}<DirectionalArrow rtl={rtl} size={16} /></a></div>
+        <a className="clinic-pathway-link" href={localizedHref(locale, path.slug)}>
+          <span className="clinic-pathway-image"><Image src={path.image} alt="" fill unoptimized sizes="(max-width: 820px) 92vw, 46vw" /></span>
+          <span className="clinic-pathway-title">{path.title}</span>
+        </a>
       </Reveal>)}</div>
     </section>
     <TeamSection locale={locale} rtl={rtl} area="clinic" />
