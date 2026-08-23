@@ -144,9 +144,9 @@ export const clinicCopy: Record<Locale, ClinicCopy> = {
 
 export const pageCoverImages: Record<string, string> = {
   "clinical-care": "/media/pages/clinic-cover.jpg",
-  innovation: "/media/innovation/external-fixator.jpg",
-  research: "/media/innovation/bionic-hand.png",
-  education: "/media/hero/hero-bg-v2.jpg",
+  innovation: "/media/pages/innovation-cover.jpg",
+  research: "/media/pages/research-cover.jpg",
+  education: "/media/pages/education-cover.jpg",
   about: "/media/edited/dr-moradi-hero-v2.jpg",
   blog: "/media/news/best-paper-meeting.jpg",
   contact: "/media/pages/clinic-cover.jpg",

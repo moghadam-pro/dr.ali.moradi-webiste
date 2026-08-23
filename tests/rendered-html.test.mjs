@@ -70,7 +70,10 @@ test("renders internal and localized routes", async () => {
     "clinical-care/clinic-gallery", "clinical-care/hospital-gallery",
     "patient-resources/before-surgery", "patient-resources/after-surgery",
     "patient-resources/faq", "patient-resources/rehabilitation",
-    "research", "innovation", "education", "about", "blog", "news", "contact", "team/ali-moradi",
+    "research", "innovation", "innovation/dynamometer", "innovation/magnetic-joint-distraction",
+    "innovation/dynamic-distal-radius-external-fixator", "innovation/bionic-hand-h3",
+    "innovation/bionic-hand-h5", "innovation/integrated-stem", "innovation/hip-exoskeleton-hexa",
+    "education", "about", "blog", "news", "contact", "team/ali-moradi",
   ];
   const article = "understanding-carpal-tunnel-syndrome";
   const paths = ["/", ...localizedPages.map((page) => `/${page}`), `/blog/${article}`, "/fa", "/ar", ...["fa", "ar"].flatMap((locale) => [...localizedPages.map((page) => `/${locale}/${page}`), `/${locale}/blog/${article}`])];
@@ -91,6 +94,15 @@ test("renders the clinic hub, resources, galleries, team, and unified post archi
     "../public/media/team/mahsa-jafari.jpg",
     "../public/media/team/mahla-daliri.jpg",
     "../public/media/team/mona-meybodi.jpg",
+    "../public/media/team/alireza-akbarzadeh.jpg",
+    "../public/media/team/maedeh-sharafoddin.jpg",
+    "../public/media/team/afsaneh-jahani.jpg",
+    "../public/media/team/naeemeh-kalali.jpg",
+    "../public/media/pages/team-profile-cover.jpg",
+    "../public/media/pages/innovation-cover.jpg",
+    "../public/media/pages/research-cover.jpg",
+    "../public/media/pages/education-cover.jpg",
+    "../public/downloads/pre-surgery-consent-form.pdf",
   ]) await access(new URL(asset, import.meta.url));
 
   const clinic = await render("/clinical-care").then((response) => response.text());
@@ -111,14 +123,20 @@ test("renders the clinic hub, resources, galleries, team, and unified post archi
 
   const clinicServices = await render("/clinical-care/clinic-services").then((response) => response.text());
   assert.match(clinicServices, /Back to the main clinic page/);
-  assert.match(clinicServices, /Selected office procedures/);
+  assert.match(clinicServices, /Cubital tunnel syndrome/);
+
+  const hospitalServices = await render("/clinical-care/hospital-services").then((response) => response.text());
+  assert.match(hospitalServices, /Tendon lacerations/);
+  assert.match(hospitalServices, /Nerve and vascular injuries/);
 
   const fullGallery = await render("/clinical-care/clinic-gallery").then((response) => response.text());
   assert.equal((fullGallery.match(/class="gallery-thumb"/g) ?? []).length, 16);
 
   const resources = await render("/patient-resources/before-surgery").then((response) => response.text());
-  assert.match(resources, /Before-surgery guidance/);
-  assert.match(resources, /Medication and fasting/);
+  assert.match(resources, /Before-surgery preparation guide/);
+  assert.match(resources, /Fasting and the day of surgery/);
+  assert.match(resources, /pre-surgery-consent-form\.pdf/);
+  assert.match(resources, /download=""/);
 
   const research = await render("/research").then((response) => response.text());
   assert.match(research, /https:\/\/scholar\.google\.com\/citations\?user=UhXLjGEAAAAJ&amp;hl=en/);
@@ -126,6 +144,26 @@ test("renders the clinic hub, resources, galleries, team, and unified post archi
 
   const innovation = await render("/innovation").then((response) => response.text());
   assert.match(innovation, /Dr\. Alireza Akbarzadeh/);
+  assert.equal((innovation.match(/class="reveal content-section"/g) ?? []).length, 14);
+  assert.match(innovation, /href="\/innovation\/dynamometer"/);
+  assert.match(innovation, /http:\/\/avisa-med\.com\/index\.php\/products\/schanz-pins/);
+
+  const innovationDetail = await render("/innovation/bionic-hand-h3").then((response) => response.text());
+  assert.match(innovationDetail, /Back to all innovations/);
+  assert.match(innovationDetail, /myoelectrically controlled prosthetic hand/i);
+  assert.match(innovationDetail, /https:\/\/dralimoradi\.com\/bionic-hand-h3\//);
+
+  const education = await render("/education").then((response) => response.text());
+  assert.match(education, /page-content section-space section-shell large-counts/);
+  assert.match(education, /\/media\/pages\/education-cover\.jpg/);
+
+  const about = await render("/about").then((response) => response.text());
+  assert.doesNotMatch(about, /Academic and clinical identity|Training|Research and leadership/);
+  assert.doesNotMatch(about, /page-content section-space section-shell/);
+
+  const member = await render("/team/alireza-akbarzadeh").then((response) => response.text());
+  assert.match(member, /\/media\/pages\/team-profile-cover\.jpg/);
+  assert.match(member, /intentionally provisional draft/);
 
   const archive = await render("/blog").then((response) => response.text());
   assert.equal((archive.match(/class="reveal blog-card"/g) ?? []).length, 23);
@@ -191,6 +229,7 @@ test("includes reduced-motion and responsive safeguards", async () => {
   assert.match(css, /\.interior-cover\s*\{[^}]*max-height:\s*400px/);
   assert.match(css, /\.interior-cover-gradient\s*\{[^}]*linear-gradient\(#4293c275 0%, #4293c2e3 100%\)/i);
   assert.match(css, /\.large-counts \.section-count\s*\{[^}]*position:\s*absolute[^}]*#edf2f4[^}]*font-size:\s*128px/);
+  assert.match(css, /\.content-links\s*\{[^}]*display:\s*flex/);
   assert.match(css, /\.gallery-modal\s*\{[^}]*position:\s*fixed/);
   assert.match(css, /\.gallery-strip-track, \.gallery-full-track\s*\{[^}]*repeat\(4/);
   assert.match(css, /\.blog-grid\s*\{[^}]*repeat\(3/);

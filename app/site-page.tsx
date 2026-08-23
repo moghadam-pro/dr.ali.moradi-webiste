@@ -12,6 +12,7 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { content, type InteriorPageData, type Locale, pageSlugs, type SiteCopy } from "./site-content";
 import { blogLabels, findBlogPost, postsForTag } from "./blog-content";
 import { pageCoverImages } from "./page-extras";
+import { contentOverrides } from "./content-overrides";
 import {
   clinicHubCopy, findTeamMember, galleryCollections, getTeamMembers,
   resolvePageTemplate, supplementalCoverImages, supplementalPages,
@@ -254,7 +255,7 @@ function InteriorCover({ image, imageAlt, kicker, title, intro }: { image: strin
   return <section className="interior-cover" ref={cover}>
     <Image src={image} alt={imageAlt} fill priority unoptimized sizes="100vw" />
     <div className="interior-cover-gradient" aria-hidden="true" />
-    <div className="interior-cover-content section-shell"><p className="section-index light">{kicker}</p><h1>{title}</h1><p>{intro}</p></div>
+    <div className="interior-cover-content section-shell"><p className="section-index light">{kicker}</p><h1>{title}</h1>{intro && <p>{intro}</p>}</div>
   </section>;
 }
 
@@ -268,10 +269,13 @@ function PageAppointmentCta({ t }: { t: SiteCopy }) {
 function InteriorPage({ locale, page, t, rtl }: { locale: Locale; page: string; t: SiteCopy; rtl: boolean }) {
   const pages = t.pages as Record<string, InteriorPageData>;
   const normalizedPage = page === "news" ? "blog" : page;
-  const data = supplementalPages[locale][normalizedPage] || pages[normalizedPage] || pages.about;
-  const image = supplementalCoverImages[normalizedPage] || pageCoverImages[normalizedPage] || pageCoverImages.about;
-  const isNumberedFeaturePage = normalizedPage === "innovation" || normalizedPage === "research";
+  const data = contentOverrides[locale][normalizedPage] || supplementalPages[locale][normalizedPage] || pages[normalizedPage] || contentOverrides[locale].about;
+  const image = supplementalCoverImages[normalizedPage]
+    || pageCoverImages[normalizedPage]
+    || (normalizedPage.startsWith("innovation/") ? pageCoverImages.innovation : pageCoverImages.about);
   const backToClinic = normalizedPage.startsWith("clinical-care/");
+  const backToInnovation = normalizedPage.startsWith("innovation/");
+  const innovationBackLabel = locale === "fa" ? "بازگشت به فهرست نوآوری‌ها" : locale === "ar" ? "العودة إلى قائمة الابتكارات" : "Back to all innovations";
   const scholarCopy = locale === "fa"
     ? { title: "مشاهده پروفایل Google Scholar", text: "فهرست مقاله‌ها، استنادها و تازه‌ترین خروجی پژوهشی دکتر مرادی را در پروفایل عمومی Google Scholar دنبال کنید.", action: "بازکردن Google Scholar" }
     : locale === "ar"
@@ -280,15 +284,19 @@ function InteriorPage({ locale, page, t, rtl }: { locale: Locale; page: string; 
   return <>
     <InteriorCover image={image} imageAlt={data.title} kicker={data.kicker} title={data.title} intro={data.intro} />
     {backToClinic && <div className="interior-back section-shell"><a href={localizedHref(locale, "clinical-care")}><DirectionalArrow rtl={!rtl} size={16} />{clinicHubCopy[locale].backToClinic}</a></div>}
-    <section className={`page-content section-space section-shell ${isNumberedFeaturePage ? "large-counts" : ""}`}>
+    {backToInnovation && <div className="interior-back section-shell"><a href={localizedHref(locale, "innovation")}><DirectionalArrow rtl={!rtl} size={16} />{innovationBackLabel}</a></div>}
+    {data.sections.length > 0 && <section className="page-content section-space section-shell large-counts">
       <aside><p>{t.onThisPage}</p>{data.sections.map((section, i) => <a key={section.title} href={`#section-${i}`}>{section.title}</a>)}<a href="https://nobat.ir/9705" target="_blank" rel="noreferrer">{t.pageAppointment}<ExternalLink size={14} /></a></aside>
       <div className="content-sections">
-        {data.sections.map((section, i) => <Reveal className="content-section" key={section.title}><span className="section-count">0{i + 1}</span><div><h2 id={`section-${i}`}>{section.title}</h2><p>{section.text}</p>{section.items && <ul>{section.items.map(item => <li key={item}><Check size={17} />{item}</li>)}</ul>}</div></Reveal>)}
+        {data.sections.map((section, i) => <Reveal className="content-section" key={section.title}><span className="section-count">{String(i + 1).padStart(2, "0")}</span><div><h2 id={`section-${i}`}>{section.title}</h2><p>{section.text}</p>{section.items && <ul>{section.items.map(item => <li key={item}><Check size={17} />{item}</li>)}</ul>}{section.links && <div className="content-links">{section.links.map((link) => {
+          const href = link.external || link.href.startsWith("/") ? link.href : localizedHref(locale, link.href);
+          return <a className="text-link" href={href} key={`${section.title}-${link.href}`} target={link.external ? "_blank" : undefined} rel={link.external ? "noreferrer" : undefined} download={link.download || undefined}>{link.label}{link.external ? <ExternalLink size={15} /> : <DirectionalArrow rtl={rtl} size={15} />}</a>;
+        })}</div>}</div></Reveal>)}
         {normalizedPage === "research"
           ? <Reveal className="next-step"><Sparkles /><div><p>{t.nextLabel}</p><h2>{scholarCopy.title}</h2><span>{scholarCopy.text}</span></div><a className="button" href="https://scholar.google.com/citations?user=UhXLjGEAAAAJ&hl=en" target="_blank" rel="noreferrer">{scholarCopy.action}<ExternalLink size={16} /></a></Reveal>
           : <Reveal className="next-step"><Sparkles /><div><p>{t.nextLabel}</p><h2>{data.ctaTitle}</h2><span>{data.ctaText}</span></div><a className="button" href={localizedHref(locale, normalizedPage === "about" ? "research" : "contact")}>{t.exploreMore}<DirectionalArrow rtl={rtl} size={16} /></a></Reveal>}
       </div>
-    </section>
+    </section>}
     {normalizedPage === "innovation" && <TeamSection locale={locale} rtl={rtl} area="innovation" />}
     {normalizedPage === "research" && <TeamSection locale={locale} rtl={rtl} area="research" />}
     <PageAppointmentCta t={t} />
@@ -395,14 +403,19 @@ function TeamProfilePage({ locale, slug, t, rtl }: { locale: Locale; slug: strin
   const member = findTeamMember(slug);
   if (!member) return <InteriorPage locale={locale} page="about" t={t} rtl={rtl} />;
   const labels = teamLabels[locale];
+  const draftBackground = locale === "fa"
+    ? "این متن سابقه فعلاً پیش‌نویس است و پس از دریافت رزومه تأییدشده جایگزین می‌شود. نسخه نهایی، تحصیلات، مسئولیت‌ها، پروژه‌های منتخب و زمینه‌های مرتبط فعالیت را ثبت خواهد کرد. همه تاریخ‌ها، وابستگی‌های سازمانی و عناوین حرفه‌ای پیش از انتشار نهایی با خود عضو تیم بازبینی می‌شوند."
+    : locale === "ar"
+      ? "هذا النص المهني مسودة مؤقتة إلى أن تصل السيرة الذاتية الموثقة. ستوثق النسخة النهائية التعليم والمسؤوليات والمشاريع المختارة ومجالات المساهمة ذات الصلة. وستُراجع جميع التواريخ والجهات والصفات المهنية مع عضو الفريق قبل النشر النهائي."
+      : "This background text is an intentionally provisional draft until a verified CV is supplied. The final version will document education, appointments, selected projects, and relevant areas of contribution. All dates, affiliations, and professional titles will be reviewed with the team member before final publication.";
   const backArea = member.areas.includes("clinic") ? "clinical-care" : member.areas.includes("innovation") ? "innovation" : "research";
   return <>
-    <InteriorCover image={pageCoverImages.about} imageAlt={member.name[locale]} kicker={labels.profileIntro} title={member.name[locale]} intro={member.role[locale]} />
+    <InteriorCover image="/media/pages/team-profile-cover.jpg" imageAlt={member.name[locale]} kicker={labels.profileIntro} title={member.name[locale]} intro={member.role[locale]} />
     <div className="interior-back section-shell"><a href={localizedHref(locale, backArea)}><DirectionalArrow rtl={!rtl} size={16} />{labels.back}</a></div>
     <section className="team-profile section-space section-shell">
       <Reveal className="team-profile-image"><Image src={member.image} alt={member.name[locale]} fill priority unoptimized sizes="(max-width: 820px) 92vw, 34vw" /></Reveal>
       <div className="team-profile-body">
-        <Reveal><p className="section-index">{labels.expertise}</p><h2>{member.role[locale]}</h2><p>{member.bio[locale]}</p></Reveal>
+        <Reveal><p className="section-index">{labels.expertise}</p><h2>{member.role[locale]}</h2><p>{member.bio[locale]} {draftBackground}</p></Reveal>
         <Reveal className="team-profile-note"><Sparkles /><div><h3>{labels.collaboration}</h3><p>{member.summary[locale]}</p></div></Reveal>
       </div>
     </section>

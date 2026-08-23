@@ -1,6 +1,7 @@
 export type Locale = "en" | "fa" | "ar";
 
-type Section = { title: string; text: string; items?: string[] };
+export type SectionLink = { label: string; href: string; external?: boolean; download?: boolean };
+export type Section = { title: string; text: string; items?: string[]; links?: SectionLink[] };
 export type InteriorPageData = { kicker: string; title: string; intro: string; sections: Section[]; ctaTitle: string; ctaText: string };
 
 export const pageSlugs = ["clinical-care", "innovation", "research", "education", "about", "blog", "contact"] as const;

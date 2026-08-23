@@ -159,6 +159,7 @@ img { display: block; max-width: 100%; }
 .large-counts .content-section { position: relative; grid-template-columns: 1fr; overflow: hidden; isolation: isolate; }
 .large-counts .section-count { position: absolute; z-index: -1; inset-inline-start: 0; top: 50%; color: #edf2f4; font-size: 128px; font-weight: 760; line-height: .75; letter-spacing: -.09em; transform: translateY(-50%); pointer-events: none; }
 .large-counts .content-section > div { position: relative; z-index: 1; padding-inline-start: 72px; }
+.content-links { display: flex; flex-wrap: wrap; gap: 14px 24px; margin-top: 24px; }.content-links .text-link { color: var(--blue); font-size: 13px; font-weight: 800; }.content-links .text-link[download] { padding: 11px 16px; border-radius: 999px; background: #e7f2f6; }
 .interior-back { padding-top: 24px; }
 .interior-back a { display: inline-flex; align-items: center; gap: 9px; color: var(--blue); font-size: 13px; font-weight: 800; }
 

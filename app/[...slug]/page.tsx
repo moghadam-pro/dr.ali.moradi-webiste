@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { SitePage } from "../site-page";
 import { content, type InteriorPageData } from "../site-content";
+import { contentOverrides } from "../content-overrides";
 import { blogLabels, findBlogPost } from "../blog-content";
+import { pageCoverImages } from "../page-extras";
 import {
   clinicHubCopy, findTeamMember, galleryCollections, supplementalCoverImages,
   supplementalPages, type GalleryRoute,
@@ -23,13 +25,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const member = page.startsWith("team/") ? findTeamMember(page.slice(5)) : undefined;
   const gallery = page in galleryCollections ? galleryCollections[page as GalleryRoute] : undefined;
   const pages = content[locale].pages as Record<string, InteriorPageData>;
-  const pageData = supplementalPages[locale][page] ?? pages[page === "news" ? "blog" : page];
+  const normalizedPage = page === "news" ? "blog" : page;
+  const pageData = contentOverrides[locale][normalizedPage] ?? supplementalPages[locale][normalizedPage] ?? pages[normalizedPage];
   const galleryCopy = gallery ? clinicHubCopy[locale] : undefined;
   const galleryTitle = gallery?.area === "clinic" ? galleryCopy?.clinicGalleryTitle : galleryCopy?.hospitalGalleryTitle;
   const galleryDescription = gallery?.area === "clinic" ? galleryCopy?.clinicGalleryIntro : galleryCopy?.hospitalGalleryIntro;
   const title = post?.title[locale] ?? member?.name[locale] ?? galleryTitle ?? (page === "blog" || page === "news" ? blogLabels[locale].title : pageData?.title) ?? "Dr. Ali Moradi";
   const description = post?.excerpt[locale] ?? member?.summary[locale] ?? galleryDescription ?? (page === "blog" || page === "news" ? blogLabels[locale].intro : pageData?.intro) ?? content[locale].heroDescription;
-  const image = post?.image ?? member?.image ?? supplementalCoverImages[page] ?? "/social-banner.jpg";
+  const image = post?.image
+    ?? (member ? "/media/pages/team-profile-cover.jpg" : undefined)
+    ?? supplementalCoverImages[page]
+    ?? pageCoverImages[page]
+    ?? (page.startsWith("innovation/") ? pageCoverImages.innovation : "/social-banner.jpg");
   const path = locale === "en" ? `/${page === "home" ? "" : page}` : `/${locale}/${page === "home" ? "" : page}`;
   return {
     title,
