@@ -1,0 +1,6 @@
+* text=auto
+
+# Deployment scripts and sourceable profiles must remain Unix-compatible even
+# when a release archive is created from a Windows development machine.
+*.sh text eol=lf
+*.env text eol=lf
