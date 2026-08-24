@@ -1,4 +1,5 @@
 import type { InteriorPageData, Locale, SectionLink } from "./site-content";
+import { aboutPageCopy } from "./about-content";
 
 type InnovationRecord = {
   title: string;
@@ -240,19 +241,10 @@ const beforeSurgery: Record<Locale, InteriorPageData> = {
   ], ctaTitle: "أكد تعليماتك الفردية قبل يوم الجراحة", ctaText: "اسأل الفريق عن أي غموض يتعلق بالأدوية أو الصيام أو وقت الحضور أو الأجهزة المطلوبة." },
 };
 
-function emptyAbout(locale: Locale): InteriorPageData {
-  const copy = locale === "fa"
-    ? { kicker: "درباره من", title: "درباره دکتر علی مرادی", intro: "", ctaTitle: "", ctaText: "" }
-    : locale === "ar"
-      ? { kicker: "عن الدكتور", title: "عن الدكتور علي مرادي", intro: "", ctaTitle: "", ctaText: "" }
-      : { kicker: "About", title: "About Dr. Ali Moradi", intro: "", ctaTitle: "", ctaText: "" };
-  return { ...copy, sections: [] };
-}
-
 export const contentOverrides: Record<Locale, Record<string, InteriorPageData>> = {
-  en: { innovation: innovationPage("en"), about: emptyAbout("en"), ...detailPages.en, ...carePages.en, "patient-resources/before-surgery": beforeSurgery.en },
-  fa: { innovation: innovationPage("fa"), about: emptyAbout("fa"), ...detailPages.fa, ...carePages.fa, "patient-resources/before-surgery": beforeSurgery.fa },
-  ar: { innovation: innovationPage("ar"), about: emptyAbout("ar"), ...detailPages.ar, ...carePages.ar, "patient-resources/before-surgery": beforeSurgery.ar },
+  en: { innovation: innovationPage("en"), about: aboutPageCopy.en, ...detailPages.en, ...carePages.en, "patient-resources/before-surgery": beforeSurgery.en },
+  fa: { innovation: innovationPage("fa"), about: aboutPageCopy.fa, ...detailPages.fa, ...carePages.fa, "patient-resources/before-surgery": beforeSurgery.fa },
+  ar: { innovation: innovationPage("ar"), about: aboutPageCopy.ar, ...detailPages.ar, ...carePages.ar, "patient-resources/before-surgery": beforeSurgery.ar },
 };
 
 export const contentOverrideRoutes = Object.keys(contentOverrides.en).filter((route) => route !== "about" && route !== "innovation");

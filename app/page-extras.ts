@@ -147,7 +147,7 @@ export const pageCoverImages: Record<string, string> = {
   innovation: "/media/pages/innovation-cover.jpg",
   research: "/media/pages/research-cover.jpg",
   education: "/media/pages/education-cover.jpg",
-  about: "/media/edited/dr-moradi-hero-v2.jpg",
-  blog: "/media/news/best-paper-meeting.jpg",
+  about: "/media/pages/about-cover.jpg",
+  blog: "/media/pages/blog-cover.jpg",
   contact: "/media/pages/clinic-cover.jpg",
 };

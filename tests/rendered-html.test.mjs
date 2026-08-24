@@ -102,6 +102,8 @@ test("renders the clinic hub, resources, galleries, team, and unified post archi
     "../public/media/pages/innovation-cover.jpg",
     "../public/media/pages/research-cover.jpg",
     "../public/media/pages/education-cover.jpg",
+    "../public/media/pages/about-cover.jpg",
+    "../public/media/pages/blog-cover.jpg",
     "../public/downloads/pre-surgery-consent-form.pdf",
   ]) await access(new URL(asset, import.meta.url));
 
@@ -158,7 +160,10 @@ test("renders the clinic hub, resources, galleries, team, and unified post archi
   assert.match(education, /\/media\/pages\/education-cover\.jpg/);
 
   const about = await render("/about").then((response) => response.text());
-  assert.doesNotMatch(about, /Academic and clinical identity|Training|Research and leadership/);
+  assert.match(about, /A surgeon shaped by curiosity, evidence, and making/);
+  assert.match(about, /Massachusetts General Hospital/);
+  assert.match(about, /\/media\/pages\/about-cover\.jpg/);
+  assert.match(about, /class="about-page"/);
   assert.doesNotMatch(about, /page-content section-space section-shell/);
 
   const member = await render("/team/alireza-akbarzadeh").then((response) => response.text());
@@ -167,6 +172,7 @@ test("renders the clinic hub, resources, galleries, team, and unified post archi
 
   const archive = await render("/blog").then((response) => response.text());
   assert.equal((archive.match(/class="reveal blog-card"/g) ?? []).length, 23);
+  assert.match(archive, /\/media\/pages\/blog-cover\.jpg/);
   assert.match(archive, /Understanding carpal tunnel syndrome/);
   assert.match(archive, /When to seek emergency care/);
 
@@ -214,6 +220,8 @@ test("includes reduced-motion and responsive safeguards", async () => {
   assert.match(css, /\.hero-description\s*\{[^}]*font-size:\s*clamp\(13px, 1vw, 14px\)/);
   assert.match(css, /\.team-clinic \.team-grid\s*\{[^}]*repeat\(4/);
   assert.match(css, /\.team-card-image\s*\{[^}]*height:\s*230px/);
+  assert.match(css, /\.large-counts \.section-count\s*\{[^}]*color:\s*rgba\(247,148,29,\.14\)/);
+  assert.match(css, /\.about-ecosystem-grid\s*\{[^}]*repeat\(3/);
   assert.match(css, /\.clinic-pathway-image\s*\{[^}]*height:\s*150px/);
   assert.match(css, /overflow-x:\s*clip/);
   assert.match(css, /"Inter Variable"/);
@@ -228,7 +236,7 @@ test("includes reduced-motion and responsive safeguards", async () => {
   assert.doesNotMatch(css, /#176f98/i);
   assert.match(css, /\.interior-cover\s*\{[^}]*max-height:\s*400px/);
   assert.match(css, /\.interior-cover-gradient\s*\{[^}]*linear-gradient\(#4293c275 0%, #4293c2e3 100%\)/i);
-  assert.match(css, /\.large-counts \.section-count\s*\{[^}]*position:\s*absolute[^}]*#edf2f4[^}]*font-size:\s*128px/);
+  assert.match(css, /\.large-counts \.section-count\s*\{[^}]*position:\s*absolute[^}]*rgba\(247,148,29,\.14\)[^}]*font-size:\s*128px/);
   assert.match(css, /\.content-links\s*\{[^}]*display:\s*flex/);
   assert.match(css, /\.gallery-modal\s*\{[^}]*position:\s*fixed/);
   assert.match(css, /\.gallery-strip-track, \.gallery-full-track\s*\{[^}]*repeat\(4/);

@@ -13,6 +13,7 @@ import { content, type InteriorPageData, type Locale, pageSlugs, type SiteCopy }
 import { blogLabels, findBlogPost, postsForTag } from "./blog-content";
 import { pageCoverImages } from "./page-extras";
 import { contentOverrides } from "./content-overrides";
+import { aboutPageCopy } from "./about-content";
 import {
   clinicHubCopy, findTeamMember, galleryCollections, getTeamMembers,
   resolvePageTemplate, supplementalCoverImages, supplementalPages,
@@ -114,6 +115,7 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
           : page === "contact" ? <ContactPage t={t} rtl={rtl} />
           : page in galleryCollections ? <GalleryPage locale={locale} page={page as GalleryRoute} t={t} rtl={rtl} />
           : page.startsWith("team/") ? <TeamProfilePage locale={locale} slug={page.slice(5)} t={t} rtl={rtl} />
+          : page === "about" ? <AboutPage locale={locale} t={t} rtl={rtl} />
           : page === "blog" || page === "news" ? <BlogArchive locale={locale} t={t} rtl={rtl} filter={page === "news" ? "news" : "blog"} />
           : template === "single-post" ? <BlogPostPage locale={locale} slug={page.slice(5)} t={t} rtl={rtl} />
           : <InteriorPage locale={locale} page={page} t={t} rtl={rtl} />}
@@ -301,6 +303,45 @@ function InteriorPage({ locale, page, t, rtl }: { locale: Locale; page: string; 
     {normalizedPage === "research" && <TeamSection locale={locale} rtl={rtl} area="research" />}
     <PageAppointmentCta t={t} />
   </>;
+}
+
+function AboutPage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolean }) {
+  const copy = aboutPageCopy[locale];
+  const principleIcons = [Stethoscope, Microscope, Lightbulb];
+  return <div className="about-page">
+    <InteriorCover image={pageCoverImages.about} imageAlt={copy.title} kicker={copy.kicker} title={copy.title} intro={copy.intro} />
+
+    <section className="about-story section-space"><div className="section-shell about-story-grid">
+      <Reveal className="about-story-media"><Image src="/media/edited/dr-moradi-hero-v1.png" alt={copy.storyTitle} fill unoptimized sizes="(max-width: 820px) 92vw, 45vw" /></Reveal>
+      <Reveal className="about-story-copy"><p className="section-index">{copy.storyKicker}</p><h2>{copy.storyTitle}</h2>
+        {copy.storyText.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        <div className="about-credentials">{copy.credentials.map((credential) => <span key={credential}><Check size={15} />{credential}</span>)}</div>
+      </Reveal>
+    </div></section>
+
+    <section className="about-practice section-space"><div className="section-shell">
+      <Reveal className="about-practice-lead"><div><p className="section-index">{copy.practiceKicker}</p><h2>{copy.practiceTitle}</h2><p>{copy.practiceText}</p></div>
+        <div className="about-practice-image"><Image src="/media/about/office.jpg" alt={copy.practiceTitle} fill unoptimized sizes="(max-width: 820px) 92vw, 42vw" /></div>
+      </Reveal>
+      <div className="about-principles">{copy.principles.map((principle, index) => { const Icon = principleIcons[index]; return <Reveal className="about-principle" key={principle.title}><Icon /><span>0{index + 1}</span><h3>{principle.title}</h3><p>{principle.text}</p></Reveal>; })}</div>
+    </div></section>
+
+    <section className="about-journey section-space"><div className="section-shell about-journey-grid">
+      <Reveal className="about-journey-intro"><p className="section-index">{copy.journeyKicker}</p><h2>{copy.journeyTitle}</h2><p>{copy.journeyText}</p><div className="about-journey-image"><Image src="/media/appointments/doctor.jpg" alt={copy.journeyTitle} fill unoptimized sizes="(max-width: 820px) 92vw, 34vw" /></div></Reveal>
+      <div className="about-timeline">{copy.timeline.map((item) => <Reveal className="about-timeline-item" key={`${item.years}-${item.title}`}><span>{item.years}</span><div><h3>{item.title}</h3><p>{item.text}</p></div></Reveal>)}</div>
+    </div></section>
+
+    <section className="about-ecosystem section-space"><div className="section-shell">
+      <Reveal className="section-heading"><p className="section-index">{copy.ecosystemKicker}</p><h2>{copy.ecosystemTitle}</h2><p>{copy.ecosystemText}</p></Reveal>
+      <div className="about-ecosystem-grid">{copy.ecosystem.map((item) => <Reveal className="about-ecosystem-card" key={item.slug}><a href={localizedHref(locale, item.slug)}><span className="about-ecosystem-image"><Image src={item.image} alt="" fill unoptimized sizes="(max-width: 820px) 92vw, 31vw" /></span><span className="about-ecosystem-copy"><strong>{item.title}</strong><small>{item.text}</small><i>{t.exploreMore}<DirectionalArrow rtl={rtl} size={15} /></i></span></a></Reveal>)}</div>
+    </div></section>
+
+    <section className="about-recognition section-space"><Reveal className="section-shell about-recognition-grid">
+      <div className="about-recognition-image"><Image src="/media/pages/blog-cover.jpg" alt={copy.recognitionTitle} fill unoptimized sizes="(max-width: 820px) 92vw, 48vw" /></div>
+      <div><p className="section-index">{copy.recognitionKicker}</p><h2>{copy.recognitionTitle}</h2><p>{copy.recognitionText}</p><a className="button" href={localizedHref(locale, "news")}>{copy.recognitionAction}<DirectionalArrow rtl={rtl} size={16} /></a></div>
+    </Reveal></section>
+    <PageAppointmentCta t={t} />
+  </div>;
 }
 
 function TeamSection({ locale, rtl, area }: { locale: Locale; rtl: boolean; area: TeamArea }) {

@@ -6,6 +6,7 @@ history, then use the focused documents for implementation details.
 
 ## Primary handoff documents
 
+- [بازطراحی کاورها و صفحه درباره من — 2026-08-25](change-log-2026-08-25-covers-and-about.md)
 - [آرشیو ساختاریافته گفت‌وگو و تصمیم‌های پروژه](project-conversation-archive-fa.md)
 - [گزارش اصلاح محتوا، تیم، نوآوری و راهنمای جراحی — 2026-08-23](change-log-2026-08-23.md)
 - [راهنمای بروزرسانی سرور از Repository خصوصی](private-repository-server-update-runbook-fa.md)
