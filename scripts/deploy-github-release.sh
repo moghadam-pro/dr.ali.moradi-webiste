@@ -31,5 +31,5 @@ curl --fail --location --silent --show-error \
 
 chown -R "$DEPLOY_USER:$DEPLOY_USER" "$SOURCE_DIR"
 echo "Building and deploying as $DEPLOY_USER"
-sudo -iu "$DEPLOY_USER" bash -lc \
+sudo -iu "$DEPLOY_USER" bash -ic \
   "node --version && bash '$SOURCE_DIR/scripts/deploy-uploaded-release.sh' '$SOURCE_DIR' '$APP_DIR' 'pm2:$PM2_NAME' '$HEALTH_URL'"

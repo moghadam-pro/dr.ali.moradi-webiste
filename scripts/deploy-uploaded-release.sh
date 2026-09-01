@@ -31,6 +31,13 @@ for required_command in realpath rsync npm curl flock; do
   }
 done
 
+NODE_MAJOR="$(node -p 'Number(process.versions.node.split(".")[0])')"
+if (( NODE_MAJOR < 22 )); then
+  echo "Node.js 22 or newer is required; current version: $(node --version)" >&2
+  echo "Run this deployment from the CloudPanel user's interactive shell environment." >&2
+  exit 69
+fi
+
 if [[ "$UPLOAD_DIR" == "/" || "$APP_DIR" == "/" || "$UPLOAD_DIR" == "$APP_DIR" ]]; then
   echo "Refusing unsafe or identical deployment paths." >&2
   exit 65
