@@ -2,8 +2,8 @@
 
 import {
   ArrowRight, BrainCircuit, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight,
-  Camera, Clock3, ExternalLink, FileText, Hand, Languages, Lightbulb,
-  Mail, MapPin, Menu, Microscope, Phone, PlayCircle, Quote, Send,
+  Clock3, ExternalLink, FileText, Hand, Languages, Lightbulb,
+  Mail, MapPin, Menu, Microscope, Phone, Quote,
   ShieldCheck, Sparkles, Stethoscope, X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -32,6 +32,74 @@ const awardsSectionCopy = {
   en: { kicker: "RECOGNITION", title: "Awards and certificates", intro: "Selected awards, certificates, and professional recognition from Dr. Moradi’s clinical, academic, and innovation work." },
   fa: { kicker: "افتخارات", title: "جوایز و گواهی‌ها", intro: "منتخبی از جوایز، گواهی‌ها و تقدیرهای حرفه‌ای دکتر مرادی در فعالیت‌های بالینی، دانشگاهی و نوآوری." },
   ar: { kicker: "التقدير", title: "الجوائز والشهادات", intro: "مجموعة مختارة من جوائز الدكتور مرادي وشهاداته والتقدير المهني لأعماله السريرية والأكاديمية والابتكارية." },
+} as const;
+const surgeryGuideCopy = {
+  en: {
+    kicker: "Patient resources", title: "Before and after your procedure", intro: "A clear, step-by-step guide for the selected outpatient procedures performed by Dr. Moradi’s team.",
+    note: "These instructions apply only when your treating team confirms them for your procedure. If your surgeon, hospital, anesthetist, or prescription gives different directions, follow those directions and contact the team before changing any medicine.",
+    beforeTitle: "Before the procedure", beforeIntro: "Complete these three steps in the stated order unless your treating team has given you different instructions.",
+    before: [
+      "Take two Cephalexin capsules two hours before the procedure, only if this antibiotic has been prescribed for you.",
+      "Take one pain reliever (such as Gelofen or paracetamol) or one prescribed suppository 30 minutes before the procedure.",
+      "This selected procedure does not require fasting. You may have a light meal or drink until 30 minutes beforehand, unless the clinical team tells you otherwise.",
+    ],
+    afterTitle: "After the procedure", afterIntro: "Protect the dressing, manage discomfort, and watch for the warning signs below.",
+    after: [
+      "Take one Cephalexin capsule every six hours. A total of three capsules is sufficient unless a clinician prescribes a different course.",
+      "If needed for pain, take the approved pain reliever or suppository every three to six hours, within the dose limits on your prescription or package.",
+      "Do not open or remove the hand dressing for one week. Book the dressing-change visit for the same weekday as your procedure.",
+      "Cover the hand securely with plastic wrap for bathing. The dressing must remain completely dry.",
+      "Avoid heavy lifting and strenuous activity for three to four months, or for the period specified by your surgeon.",
+      "There is no routine dietary restriction after this selected procedure unless your care team advises one.",
+      "Seek urgent clinical advice if pain does not improve after medication, swelling is severe, numbness persists, or the dressing becomes wet.",
+      "Keep the operated arm elevated in a neck sling for the first 48 hours.",
+    ],
+    downloadTitle: "Consent and acknowledgement form", downloadText: "Download and print the one-page form, complete the required fields, read it carefully, and sign it as directed by the clinical team.", download: "Download the consent form (PDF)",
+  },
+  fa: {
+    kicker: "منابع بیمار", title: "راهنمای قبل و بعد از عمل", intro: "راهنمای مرحله‌به‌مرحله برای برخی اقدامات سرپایی منتخب که توسط تیم دکتر مرادی انجام می‌شود.",
+    note: "این دستورها فقط زمانی معتبرند که تیم درمان آن‌ها را برای عمل شما تأیید کرده باشد. اگر دستور جراح، بیمارستان، متخصص بیهوشی یا نسخه دارویی متفاوت است، همان دستور اختصاصی را اجرا کنید و پیش از تغییر دارو با تیم درمان تماس بگیرید.",
+    beforeTitle: "ملاحظات قبل از عمل", beforeIntro: "این سه مرحله را به ترتیب انجام دهید، مگر اینکه تیم درمان برای شما دستور متفاوتی صادر کرده باشد.",
+    before: [
+      "دو کپسول سفالکسین را دو ساعت قبل از عمل مصرف کنید؛ مشروط بر اینکه این آنتی‌بیوتیک برای شما تجویز شده باشد.",
+      "یک مسکن مانند ژلوفن یا استامینوفن، یا یک شیاف تجویزشده را ۳۰ دقیقه قبل از عمل مصرف کنید.",
+      "این اقدام منتخب نیاز به ناشتا بودن ندارد و تا ۳۰ دقیقه قبل می‌توانید غذای سبک یا نوشیدنی میل کنید؛ مگر اینکه تیم درمان دستور دیگری داده باشد.",
+    ],
+    afterTitle: "ملاحظات بعد از عمل", afterIntro: "از پانسمان محافظت کنید، درد را طبق دستور کنترل کنید و علائم هشدار را جدی بگیرید.",
+    after: [
+      "هر شش ساعت یک کپسول سفالکسین مصرف کنید. در مجموع سه کپسول کافی است، مگر اینکه پزشک دوره متفاوتی تجویز کرده باشد.",
+      "در صورت درد، مسکن یا شیاف تأییدشده را هر سه تا شش ساعت و در محدوده دوز نسخه یا بروشور دارو مصرف کنید.",
+      "پانسمان دست را تا یک هفته باز نکنید. برای همان روز هفته‌ای که عمل انجام شده، نوبت تعویض پانسمان بگیرید.",
+      "هنگام استحمام دست را با پلاستیک یا سلفون کاملاً بپوشانید؛ پانسمان نباید خیس شود.",
+      "به مدت سه تا چهار ماه، یا طبق بازه‌ای که جراح تعیین می‌کند، از کار سنگین و فعالیت پرفشار خودداری کنید.",
+      "پس از این اقدام منتخب محدودیت غذایی معمولی وجود ندارد، مگر اینکه تیم درمان دستور دیگری بدهد.",
+      "اگر درد با مسکن بهتر نشد، تورم شدید یا بی‌حسی مداوم داشتید، یا پانسمان خیس شد، فوراً با مطب یا اورژانس بیمارستان تماس بگیرید.",
+      "اندام عمل‌شده را در ۴۸ ساعت نخست با آویز گردنی بالا نگه دارید.",
+    ],
+    downloadTitle: "فرم رضایت و تأیید آگاهی", downloadText: "فرم یک‌صفحه‌ای را دانلود و چاپ کنید، بخش‌های لازم را کامل بخوانید و مطابق راهنمای تیم درمان امضا کنید.", download: "دانلود فرم رضایت‌نامه (PDF)",
+  },
+  ar: {
+    kicker: "موارد المريض", title: "إرشادات ما قبل الإجراء وما بعده", intro: "دليل واضح خطوة بخطوة لبعض الإجراءات الخارجية المختارة التي يجريها فريق الدكتور مرادي.",
+    note: "تُطبق هذه التعليمات فقط بعد تأكيد الفريق المعالج أنها تخص إجراءك. إذا اختلفت تعليمات الجراح أو المستشفى أو طبيب التخدير أو الوصفة، فاتبع التعليمات الفردية واتصل بالفريق قبل تغيير أي دواء.",
+    beforeTitle: "قبل الإجراء", beforeIntro: "نفّذ الخطوات الثلاث بالترتيب ما لم يعطك الفريق المعالج تعليمات مختلفة.",
+    before: [
+      "تناول كبسولتين من سيفالكسين قبل الإجراء بساعتين، فقط إذا وصف لك الفريق هذا المضاد الحيوي.",
+      "تناول مسكناً واحداً مثل جيلوفين أو باراسيتامول، أو تحميلة موصوفة، قبل الإجراء بثلاثين دقيقة.",
+      "هذا الإجراء المختار لا يحتاج إلى صيام؛ ويمكن تناول طعام خفيف أو شراب حتى 30 دقيقة قبله ما لم يوجهك الفريق بخلاف ذلك.",
+    ],
+    afterTitle: "بعد الإجراء", afterIntro: "احمِ الضماد، وسيطر على الألم وفق التعليمات، وانتبه إلى علامات التحذير.",
+    after: [
+      "تناول كبسولة سيفالكسين كل ست ساعات. تكفي ثلاث كبسولات إجمالاً ما لم يصف الطبيب مدة مختلفة.",
+      "عند الألم يمكن تناول المسكن المعتمد أو استخدام التحميلة كل ثلاث إلى ست ساعات ضمن حدود الجرعة الموصوفة.",
+      "لا تفتح ضماد اليد ولا تنزعه لمدة أسبوع، وحدد موعد تغييره في اليوم نفسه من الأسبوع التالي.",
+      "غطّ اليد بإحكام بالبلاستيك عند الاستحمام، ويجب أن يبقى الضماد جافاً تماماً.",
+      "تجنب حمل الأثقال والنشاط المجهد لمدة ثلاثة إلى أربعة أشهر أو حسب المدة التي يحددها الجراح.",
+      "لا توجد قيود غذائية روتينية بعد هذا الإجراء المختار ما لم يوجهك الفريق بخلاف ذلك.",
+      "اطلب المساعدة الطبية العاجلة إذا لم يتحسن الألم بالمسكن، أو ظهر تورم شديد أو خدر مستمر، أو ابتل الضماد.",
+      "أبقِ الطرف الذي أُجري عليه العمل مرفوعاً بحمالة عنق خلال أول 48 ساعة.",
+    ],
+    downloadTitle: "نموذج الموافقة والإقرار", downloadText: "نزّل النموذج ذي الصفحة الواحدة واطبعه، وأكمل الحقول المطلوبة واقرأه بعناية ووقّعه وفق توجيهات الفريق.", download: "تنزيل نموذج الموافقة (PDF)",
+  },
 } as const;
 const connectedPracticeImages = [
   "/media/connected-practice/01-injury.jpg",
@@ -115,6 +183,7 @@ export function SitePage({ locale, page }: { locale: Locale; page: string }) {
           : page === "contact" ? <ContactPage t={t} rtl={rtl} />
           : page in galleryCollections ? <GalleryPage locale={locale} page={page as GalleryRoute} t={t} rtl={rtl} />
           : page.startsWith("team/") ? <TeamProfilePage locale={locale} slug={page.slice(5)} t={t} rtl={rtl} />
+          : page === "patient-resources/before-surgery" ? <SurgeryGuidancePage locale={locale} t={t} />
           : page === "about" ? <AboutPage locale={locale} t={t} rtl={rtl} />
           : page === "blog" || page === "news" ? <BlogArchive locale={locale} t={t} rtl={rtl} filter={page === "news" ? "news" : "blog"} />
           : template === "single-post" ? <BlogPostPage locale={locale} slug={page.slice(5)} t={t} rtl={rtl} />
@@ -305,6 +374,22 @@ function InteriorPage({ locale, page, t, rtl }: { locale: Locale; page: string; 
   </>;
 }
 
+function SurgeryGuidancePage({ locale, t }: { locale: Locale; t: SiteCopy }) {
+  const copy = surgeryGuideCopy[locale];
+  return <>
+    <InteriorCover image="/media/pages/before-surgery-cover.jpg" imageAlt={copy.title} kicker={copy.kicker} title={copy.title} intro={copy.intro} />
+    <section className="surgery-guide section-space"><div className="section-shell">
+      <Reveal className="surgery-alert"><ShieldCheck /><p>{copy.note}</p></Reveal>
+      <Reveal className="surgery-guide-heading"><p className="section-index">01</p><h2>{copy.beforeTitle}</h2><p>{copy.beforeIntro}</p></Reveal>
+      <div className="surgery-step-grid surgery-step-grid-before">{copy.before.map((step, index) => <Reveal className="surgery-step" key={step}><span>{String(index + 1).padStart(2, "0")}</span><div><Check /><p>{step}</p></div></Reveal>)}</div>
+      <Reveal className="surgery-guide-heading surgery-after-heading"><p className="section-index">02</p><h2>{copy.afterTitle}</h2><p>{copy.afterIntro}</p></Reveal>
+      <div className="surgery-step-grid">{copy.after.map((step, index) => <Reveal className="surgery-step" key={step}><span>{String(index + 1).padStart(2, "0")}</span><div><Check /><p>{step}</p></div></Reveal>)}</div>
+      <Reveal className="surgery-download"><FileText /><div><h2>{copy.downloadTitle}</h2><p>{copy.downloadText}</p></div><a className="button" href="/downloads/pre-surgery-consent-form.pdf" download>{copy.download}</a></Reveal>
+    </div></section>
+    <PageAppointmentCta t={t} />
+  </>;
+}
+
 function AboutPage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boolean }) {
   const copy = aboutPageCopy[locale];
   const principleIcons = [Stethoscope, Microscope, Lightbulb];
@@ -312,7 +397,7 @@ function AboutPage({ locale, t, rtl }: { locale: Locale; t: SiteCopy; rtl: boole
     <InteriorCover image={pageCoverImages.about} imageAlt={copy.title} kicker={copy.kicker} title={copy.title} intro={copy.intro} />
 
     <section className="about-story section-space"><div className="section-shell about-story-grid">
-      <Reveal className="about-story-media"><Image src="/media/edited/dr-moradi-hero-v1.png" alt={copy.storyTitle} fill unoptimized sizes="(max-width: 820px) 92vw, 45vw" /></Reveal>
+      <Reveal className="about-story-media"><Image src="/media/team/ali-moradi.jpg" alt={copy.storyTitle} fill unoptimized sizes="(max-width: 820px) 92vw, 45vw" /></Reveal>
       <Reveal className="about-story-copy"><p className="section-index">{copy.storyKicker}</p><h2>{copy.storyTitle}</h2>
         {copy.storyText.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         <div className="about-credentials">{copy.credentials.map((credential) => <span key={credential}><Check size={15} />{credential}</span>)}</div>
@@ -444,11 +529,7 @@ function TeamProfilePage({ locale, slug, t, rtl }: { locale: Locale; slug: strin
   const member = findTeamMember(slug);
   if (!member) return <InteriorPage locale={locale} page="about" t={t} rtl={rtl} />;
   const labels = teamLabels[locale];
-  const draftBackground = locale === "fa"
-    ? "این متن سابقه فعلاً پیش‌نویس است و پس از دریافت رزومه تأییدشده جایگزین می‌شود. نسخه نهایی، تحصیلات، مسئولیت‌ها، پروژه‌های منتخب و زمینه‌های مرتبط فعالیت را ثبت خواهد کرد. همه تاریخ‌ها، وابستگی‌های سازمانی و عناوین حرفه‌ای پیش از انتشار نهایی با خود عضو تیم بازبینی می‌شوند."
-    : locale === "ar"
-      ? "هذا النص المهني مسودة مؤقتة إلى أن تصل السيرة الذاتية الموثقة. ستوثق النسخة النهائية التعليم والمسؤوليات والمشاريع المختارة ومجالات المساهمة ذات الصلة. وستُراجع جميع التواريخ والجهات والصفات المهنية مع عضو الفريق قبل النشر النهائي."
-      : "This background text is an intentionally provisional draft until a verified CV is supplied. The final version will document education, appointments, selected projects, and relevant areas of contribution. All dates, affiliations, and professional titles will be reviewed with the team member before final publication.";
+  const sourceLabel = locale === "fa" ? "مشاهده منبع حرفه‌ای" : locale === "ar" ? "عرض المصدر المهني" : "View professional source";
   const backArea = member.areas.includes("clinic") ? "clinical-care" : member.areas.includes("innovation") ? "innovation" : "research";
   return <>
     <InteriorCover image="/media/pages/team-profile-cover.jpg" imageAlt={member.name[locale]} kicker={labels.profileIntro} title={member.name[locale]} intro={member.role[locale]} />
@@ -456,7 +537,7 @@ function TeamProfilePage({ locale, slug, t, rtl }: { locale: Locale; slug: strin
     <section className="team-profile section-space section-shell">
       <Reveal className="team-profile-image"><Image src={member.image} alt={member.name[locale]} fill priority unoptimized sizes="(max-width: 820px) 92vw, 34vw" /></Reveal>
       <div className="team-profile-body">
-        <Reveal><p className="section-index">{labels.expertise}</p><h2>{member.role[locale]}</h2><p>{member.bio[locale]} {draftBackground}</p></Reveal>
+        <Reveal><p className="section-index">{labels.expertise}</p><h2>{member.role[locale]}</h2><p>{member.bio[locale]}</p>{member.sourceUrl && <a className="team-profile-source" href={member.sourceUrl} target="_blank" rel="noreferrer">{sourceLabel}<ExternalLink size={15} /></a>}</Reveal>
         <Reveal className="team-profile-note"><Sparkles /><div><h3>{labels.collaboration}</h3><p>{member.summary[locale]}</p></div></Reveal>
       </div>
     </section>
@@ -547,7 +628,7 @@ function Footer({ locale, t }: { locale: Locale; t: SiteCopy }) {
       <div><h3>{t.footer.explore}</h3>{pageSlugs.slice(0, 6).map((slug) => <a key={slug} href={localizedHref(locale, slug)}>{footerPages[slug].kicker}</a>)}</div>
       <div><h3>{t.footer.resources}</h3><a href={localizedHref(locale, "patient-resources/before-surgery")}>{t.footer.before}</a><a href={localizedHref(locale, "patient-resources/after-surgery")}>{t.footer.after}</a><a href={localizedHref(locale, "patient-resources/faq")}>{t.footer.faq}</a><a href={localizedHref(locale, "patient-resources/rehabilitation")}>{t.footer.rehab}</a></div>
       <div className="footer-contact"><h3>{t.footer.contact}</h3><a href="mailto:info@DrAliMoradi.com"><Mail />info@DrAliMoradi.com</a><a href="tel:+985132290968" dir="ltr"><Phone />+98 51 3229 0968</a><p><MapPin />{t.contact.office}</p><p><MapPin />{t.contact.clinic}</p><a href={mapUrl} target="_blank" rel="noreferrer"><MapPin />{t.footer.map}<ExternalLink size={13} /></a></div>
-      <div className="footer-social"><h3>{t.footer.social}</h3><a href="https://www.instagram.com/dr_ali_moradi_handsurgeon" target="_blank" rel="noreferrer"><Camera />Instagram</a><a href="https://t.me/DrAliMoradi" target="_blank" rel="noreferrer"><Send />Telegram</a><a href="https://www.aparat.com/dr_ali_moradi_handsurgeon" target="_blank" rel="noreferrer"><PlayCircle />Aparat</a></div>
+      <div className="footer-social"><h3>{t.footer.social}</h3><a href="https://www.instagram.com/dr_ali_moradi_" target="_blank" rel="noreferrer"><Image src="/icons/social/instagram.svg" alt="" width={16} height={16} unoptimized />Instagram</a><a href="https://t.me/Handclinic" target="_blank" rel="noreferrer"><Image src="/icons/social/telegram.svg" alt="" width={16} height={16} unoptimized />Telegram</a><a href="https://www.aparat.com/dr_ali_moradi_handsurgeon" target="_blank" rel="noreferrer"><Image src="/icons/social/aparat.svg" alt="" width={16} height={16} unoptimized />Aparat</a></div>
     </div>
     <div className="section-shell footer-bottom"><span>{t.footer.copyright}</span><span>{t.footer.disclaimer}</span><a href="https://moghadam.pro" target="_blank" rel="noreferrer">{t.footer.credit}</a></div>
   </footer>;

@@ -91,17 +91,19 @@ test("renders the clinic hub, resources, galleries, team, and unified post archi
     "../public/media/clinic/clinic-services-cover.jpg",
     "../public/media/clinic/hospital-services-cover.jpg",
     "../public/media/team/ali-moradi.jpg",
-    "../public/media/team/mahsa-jafari.jpg",
-    "../public/media/team/mahla-daliri.jpg",
-    "../public/media/team/mona-meybodi.jpg",
+    "../public/media/team/mahsa-jafari.png",
+    "../public/media/team/mahla-daliri.png",
+    "../public/media/team/mona-meybodi.png",
     "../public/media/team/alireza-akbarzadeh.jpg",
-    "../public/media/team/maedeh-sharafoddin.jpg",
-    "../public/media/team/afsaneh-jahani.jpg",
-    "../public/media/team/naeemeh-kalali.jpg",
+    "../public/media/team/maedeh-sharafoddin.png",
+    "../public/media/team/afsaneh-jahani.png",
+    "../public/media/team/naeemeh-kalali.png",
+    "../public/media/team/mohammadreza-yazdanpanah.png",
+    "../public/media/team/maryam-jafari.png",
     "../public/media/pages/team-profile-cover.jpg",
-    "../public/media/pages/innovation-cover.jpg",
+    "../public/media/pages/innovation-cover.png",
     "../public/media/pages/research-cover.jpg",
-    "../public/media/pages/education-cover.jpg",
+    "../public/media/pages/education-cover.png",
     "../public/media/pages/about-cover.jpg",
     "../public/media/pages/blog-cover.jpg",
     "../public/downloads/pre-surgery-consent-form.pdf",
@@ -113,7 +115,10 @@ test("renders the clinic hub, resources, galleries, team, and unified post archi
   assert.match(clinic, /Hospital services/);
   assert.match(clinic, /Meet the team/);
   assert.match(clinic, /Dr\. Mona Meybodi/);
-  assert.match(clinic, /Dr\. Mahla Daliri/);
+  assert.match(clinic, /Dr\. Mohammadreza Yazdanpanah/);
+  assert.match(clinic, /Maryam Jafari/);
+  assert.match(clinic, /Mojtaba Asadpour/);
+  assert.doesNotMatch(clinic, /Dr\. Mahla Daliri/);
   assert.match(clinic, /Clinic surgical cases/);
   assert.match(clinic, /Hospital surgical cases/);
   assert.match(clinic, /\/media\/clinic\/clinic-services-cover\.jpg/);
@@ -135,8 +140,10 @@ test("renders the clinic hub, resources, galleries, team, and unified post archi
   assert.equal((fullGallery.match(/class="gallery-thumb"/g) ?? []).length, 16);
 
   const resources = await render("/patient-resources/before-surgery").then((response) => response.text());
-  assert.match(resources, /Before-surgery preparation guide/);
-  assert.match(resources, /Fasting and the day of surgery/);
+  assert.match(resources, /Before and after your procedure/);
+  assert.match(resources, /Before the procedure/);
+  assert.match(resources, /After the procedure/);
+  assert.match(resources, /surgery-step-grid/);
   assert.match(resources, /pre-surgery-consent-form\.pdf/);
   assert.match(resources, /download=""/);
 
@@ -157,7 +164,7 @@ test("renders the clinic hub, resources, galleries, team, and unified post archi
 
   const education = await render("/education").then((response) => response.text());
   assert.match(education, /page-content section-space section-shell large-counts/);
-  assert.match(education, /\/media\/pages\/education-cover\.jpg/);
+  assert.match(education, /\/media\/pages\/education-cover\.png/);
 
   const about = await render("/about").then((response) => response.text());
   assert.match(about, /A surgeon shaped by curiosity, evidence, and making/);
@@ -168,7 +175,11 @@ test("renders the clinic hub, resources, galleries, team, and unified post archi
 
   const member = await render("/team/alireza-akbarzadeh").then((response) => response.text());
   assert.match(member, /\/media\/pages\/team-profile-cover\.jpg/);
-  assert.match(member, /intentionally provisional draft/);
+  assert.doesNotMatch(member, /intentionally provisional draft/);
+
+  const mahla = await render("/team/mahla-daliri").then((response) => response.text());
+  assert.match(mahla, /biomechanics/);
+  assert.match(mahla, /orthopresearch\.com/);
 
   const archive = await render("/blog").then((response) => response.text());
   assert.equal((archive.match(/class="reveal blog-card"/g) ?? []).length, 23);
@@ -196,6 +207,11 @@ test("ships the approved brand, social, and favicon metadata", async () => {
   assert.match(html, /site\.webmanifest/);
   assert.match(html, /favicon-32x32\.png/);
   assert.match(html, /#4293C2/i);
+  assert.match(html, /https:\/\/t\.me\/Handclinic/);
+  assert.match(html, /https:\/\/www\.instagram\.com\/dr_ali_moradi_/);
+  assert.match(html, /\/icons\/social\/telegram\.svg/);
+  assert.match(html, /\/icons\/social\/instagram\.svg/);
+  assert.match(html, /\/icons\/social\/aparat\.svg/);
 });
 
 test("includes reduced-motion and responsive safeguards", async () => {

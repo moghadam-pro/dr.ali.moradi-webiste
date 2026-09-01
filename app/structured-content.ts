@@ -26,6 +26,7 @@ export type TeamMember = {
   bio: LocalizedText;
   image: string;
   areas: TeamArea[];
+  sourceUrl?: string;
 };
 
 export const teamMembers: TeamMember[] = [
@@ -60,7 +61,7 @@ export const teamMembers: TeamMember[] = [
       fa: "دکتر میبدی همکاری خود را با پروژه ثبت اندام فوقانی آغاز کرد و اکنون مدیریت کلینیک تخصصی جراحی دست و ارتوپدی را بر عهده دارد. تمرکز نقش او بر پیوستگی خدمات، سازمان‌دهی و ارتباط با بیمار است.",
       ar: "بدأت الدكتورة ميبدي تعاونها في مشروع سجل الطرف العلوي، وتنسق حالياً عيادة جراحة اليد والعظام مع التركيز على استمرارية الرعاية والتواصل.",
     },
-    image: "/media/team/mona-meybodi.jpg",
+    image: "/media/team/mona-meybodi.png",
     areas: ["clinic"],
   },
   {
@@ -77,25 +78,26 @@ export const teamMembers: TeamMember[] = [
       fa: "مهسا جعفری هماهنگی پذیرش و امور مالی را انجام می‌دهد. فعالیت او به زمان‌بندی روشن، پاسخ‌گویی و تجربه منظم مراجعه کمک می‌کند.",
       ar: "تنسق مهسا جعفري الاستقبال والإدارة المالية، وتدعم جدولة واضحة وتواصلاً منظماً مع المراجعين.",
     },
-    image: "/media/team/mahsa-jafari.jpg",
+    image: "/media/team/mahsa-jafari.png",
     areas: ["clinic"],
   },
   {
     slug: "mahla-daliri",
     name: { en: "Dr. Mahla Daliri", fa: "دکتر مهلا دلیری", ar: "الدكتورة مهلا دليري" },
-    role: { en: "Specialist clinic manager", fa: "مدیر کلینیک تخصصی", ar: "مديرة العيادة التخصصية" },
+    role: { en: "Physician, clinical researcher, and medical innovator", fa: "پزشک، پژوهشگر بالینی و نوآور پزشکی", ar: "طبيبة وباحثة سريرية ومبتكرة طبية" },
     summary: {
-      en: "Coordinates the specialist clinic workflow and helps connect patient needs with the clinical team.",
-      fa: "هماهنگی روند کلینیک تخصصی و پیوند نیازهای مراجعه‌کنندگان با تیم بالینی.",
-      ar: "تنسق سير عمل العيادة التخصصية وتربط احتياجات المرضى بالفريق السريري.",
+      en: "Works across orthopedics, biomechanics, bionic limbs, rehabilitation robotics, and medical-device innovation.",
+      fa: "فعال در پیوند ارتوپدی، بیومکانیک، اندام‌های بیونیک، رباتیک توان‌بخشی و نوآوری تجهیزات پزشکی.",
+      ar: "تعمل عند تقاطع جراحة العظام والميكانيكا الحيوية والأطراف الحيوية وروبوتات التأهيل وابتكار الأجهزة الطبية.",
     },
     bio: {
-      en: "Dr. Daliri coordinates specialist clinic operations and supports organized communication between patients, clinicians, and the wider care team.",
-      fa: "دکتر دلیری هماهنگی فعالیت‌های کلینیک تخصصی و ارتباط منظم میان مراجعه‌کنندگان، پزشکان و دیگر اعضای تیم درمان را پشتیبانی می‌کند.",
-      ar: "تنسق الدكتورة دليري عمليات العيادة التخصصية وتدعم التواصل المنظم بين المرضى والأطباء وفريق الرعاية.",
+      en: "Dr. Mahla Daliri earned her MD from Mashhad University of Medical Sciences in 2022 and continued as a clinical research fellow at its Orthopedics Research Center. Her work spans musculoskeletal research, biomechanics, upper-extremity rehabilitation, external fixation, prosthetics, bionic hands, and rehabilitation robotics. She has contributed to peer-reviewed publications, a book, and national and international patents, with a sustained focus on translating interdisciplinary medical-engineering research into practical technologies.",
+      fa: "دکتر مهلا دلیری در سال ۲۰۲۲ مدرک پزشکی خود را از دانشگاه علوم پزشکی مشهد دریافت کرد و فعالیتش را به‌عنوان پژوهشگر بالینی در مرکز تحقیقات ارتوپدی ادامه داد. حوزه کار او پژوهش‌های اسکلتی‌عضلانی، بیومکانیک، توان‌بخشی اندام فوقانی، فیکساتورهای خارجی، پروتز، دست‌های بیونیک و رباتیک توان‌بخشی را دربرمی‌گیرد. او در مقاله‌های علمی، یک کتاب و پتنت‌های ملی و بین‌المللی مشارکت داشته و بر تبدیل پژوهش میان‌رشته‌ای پزشکی و مهندسی به فناوری کاربردی تمرکز دارد.",
+      ar: "حصلت الدكتورة مهلا دليري على شهادة الطب من جامعة مشهد للعلوم الطبية عام 2022، ثم واصلت عملها كباحثة سريرية في مركز أبحاث جراحة العظام. تشمل اهتماماتها الاضطرابات العضلية الهيكلية والميكانيكا الحيوية وتأهيل الطرف العلوي والمثبتات الخارجية والأطراف التعويضية والأيدي الحيوية وروبوتات التأهيل. ساهمت في أبحاث محكمة وكتاب وبراءات اختراع وطنية ودولية، مع تركيز مستمر على تحويل البحث الطبي الهندسي متعدد التخصصات إلى تقنيات عملية.",
     },
-    image: "/media/team/mahla-daliri.jpg",
-    areas: ["clinic"],
+    image: "/media/team/mahla-daliri.png",
+    areas: ["research", "innovation"],
+    sourceUrl: "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=40",
   },
   {
     slug: "afsaneh-jahani",
@@ -111,7 +113,7 @@ export const teamMembers: TeamMember[] = [
       fa: "دکتر جهانی پژوهشگر مهندسی پزشکی است و در زمینه نانومواد، داربست‌های مهندسی بافت، دارورسانی و کاربردهای ارتوپدی فعالیت می‌کند.",
       ar: "الدكتورة جهاني باحثة في الهندسة الطبية وتشمل أعمالها المواد النانوية وسقالات هندسة الأنسجة وتوصيل الدواء وتطبيقات العظام.",
     },
-    image: "/media/team/afsaneh-jahani.jpg",
+    image: "/media/team/afsaneh-jahani.png",
     areas: ["research", "innovation"],
   },
   {
@@ -128,12 +130,12 @@ export const teamMembers: TeamMember[] = [
       fa: "مائده شرف‌الدین محقق بالینی با آموزش تخصصی در اپیدمیولوژی و سلامت عمومی است و در تولید شواهد ساختاریافته و سنجش پیامدها همکاری می‌کند.",
       ar: "مائدة شرف الدين باحثة سريرية متخصصة في الوبائيات والصحة العامة وتدعم بناء الدليل وقياس النتائج.",
     },
-    image: "/media/team/maedeh-sharafoddin.jpg",
-    areas: ["research"],
+    image: "/media/team/maedeh-sharafoddin.png",
+    areas: ["research", "innovation"],
   },
   {
     slug: "naeemeh-kalali",
-    name: { en: "Dr. Naeemeh Kalali", fa: "دکتر نعیمه کلالی", ar: "الدكتورة نعيمة كلالي" },
+    name: { en: "Naeemeh Kalali", fa: "نعیمه کلالی", ar: "نعيمة كلالي" },
     role: { en: "Laboratory specialist and researcher", fa: "کارشناس آزمایشگاه و پژوهشگر", ar: "اختصاصية مختبر وباحثة" },
     summary: {
       en: "Contributes laboratory expertise in biology and medical microbiology to bone and joint research.",
@@ -141,12 +143,12 @@ export const teamMembers: TeamMember[] = [
       ar: "تقدم خبرة مختبرية في الأحياء والأحياء الدقيقة الطبية لبحوث العظام والمفاصل.",
     },
     bio: {
-      en: "Dr. Kalali supports laboratory research with a background in biology and medical microbiology. Her work contributes to reliable experimental workflows and interdisciplinary studies.",
-      fa: "دکتر کلالی با پیشینه زیست‌شناسی و میکروبیولوژی پزشکی در پژوهش‌های آزمایشگاهی مشارکت دارد و از فرایندهای تجربی قابل‌اعتماد و مطالعات میان‌رشته‌ای پشتیبانی می‌کند.",
-      ar: "تشارك الدكتورة كلالي في البحث المختبري بخلفية في الأحياء والأحياء الدقيقة الطبية وتدعم الدراسات متعددة التخصصات.",
+      en: "Naeemeh Kalali supports laboratory research with a background in biology and medical microbiology. Her work contributes to reliable experimental workflows and interdisciplinary studies.",
+      fa: "نعیمه کلالی با پیشینه زیست‌شناسی و میکروبیولوژی پزشکی در پژوهش‌های آزمایشگاهی مشارکت دارد و از فرایندهای تجربی قابل‌اعتماد و مطالعات میان‌رشته‌ای پشتیبانی می‌کند.",
+      ar: "تشارك نعيمة كلالي في البحث المختبري بخلفية في الأحياء والأحياء الدقيقة الطبية وتدعم الدراسات متعددة التخصصات.",
     },
-    image: "/media/team/naeemeh-kalali.jpg",
-    areas: ["research"],
+    image: "/media/team/naeemeh-kalali.png",
+    areas: ["research", "innovation"],
   },
   {
     slug: "alireza-akbarzadeh",
@@ -166,6 +168,91 @@ export const teamMembers: TeamMember[] = [
     areas: ["innovation"],
   },
 ];
+
+const labMember = (
+  slug: string,
+  names: LocalizedText,
+  roles: LocalizedText,
+  field: LocalizedText,
+  image: string,
+  sourceUrl: string,
+): TeamMember => ({
+  slug,
+  name: names,
+  role: roles,
+  summary: {
+    en: `Contributes ${field.en.toLowerCase()} expertise to the Bone and Joint Research Laboratory’s interdisciplinary program.`,
+    fa: `همکاری تخصصی در حوزه ${field.fa} با برنامه میان‌رشته‌ای آزمایشگاه پژوهشی استخوان و مفاصل.`,
+    ar: `يسهم بخبرة في ${field.ar} ضمن برنامج مختبر أبحاث العظام والمفاصل متعدد التخصصات.`,
+  },
+  bio: {
+    en: `${names.en} is a member of the Bone and Joint Research Laboratory at Mashhad University of Medical Sciences. Their work is centered on ${field.en.toLowerCase()} and supports collaborative orthopedic research, reliable study workflows, and the translation of scientific questions into clinically relevant evidence and technology.`,
+    fa: `${names.fa} از اعضای آزمایشگاه پژوهشی استخوان و مفاصل دانشگاه علوم پزشکی مشهد است. فعالیت حرفه‌ای او بر ${field.fa} متمرکز است و از پژوهش مشترک ارتوپدی، اجرای منظم مطالعات و تبدیل پرسش‌های علمی به شواهد و فناوری‌های مرتبط با نیازهای بالینی پشتیبانی می‌کند.`,
+    ar: `${names.ar} عضو في مختبر أبحاث العظام والمفاصل بجامعة مشهد للعلوم الطبية. يتركز العمل على ${field.ar} ويدعم البحث التعاوني في جراحة العظام وسير الدراسات الموثوق وتحويل الأسئلة العلمية إلى أدلة وتقنيات ذات صلة سريرية.`,
+  },
+  image,
+  areas: ["research", "innovation"],
+  sourceUrl,
+});
+
+teamMembers.push(
+  {
+    slug: "mohammadreza-yazdanpanah",
+    name: { en: "Dr. Mohammadreza Yazdanpanah", fa: "دکتر محمدرضا یزدان‌پناه", ar: "الدكتور محمد رضا يزدان بناه" },
+    role: { en: "Clinic physician", fa: "پزشک همکار کلینیک", ar: "طبيب متعاون في العيادة" },
+    summary: { en: "Supports coordinated clinical assessment and follow-up within the specialist clinic.", fa: "همکاری در ارزیابی بالینی و پیگیری هماهنگ بیماران در کلینیک تخصصی.", ar: "يسهم في التقييم السريري والمتابعة المنسقة داخل العيادة التخصصية." },
+    bio: { en: "Dr. Mohammadreza Yazdanpanah works with the specialist clinic team to support organized assessment, documentation, and follow-up. His profile is currently presented as an interim overview and will be expanded when the approved professional biography is supplied.", fa: "دکتر محمدرضا یزدان‌پناه در کنار تیم کلینیک تخصصی از ارزیابی منظم، مستندسازی و پیگیری بیماران پشتیبانی می‌کند. این معرفی فعلاً نسخه اولیه است و پس از دریافت رزومه تأییدشده تکمیل خواهد شد.", ar: "يعمل الدكتور محمد رضا يزدان بناه مع فريق العيادة التخصصية لدعم التقييم المنظم والتوثيق والمتابعة. هذا التعريف مؤقت وسيُستكمل بعد استلام السيرة المهنية المعتمدة." },
+    image: "/media/team/mohammadreza-yazdanpanah.png", areas: ["clinic"],
+  },
+  {
+    slug: "maryam-jafari",
+    name: { en: "Maryam Jafari", fa: "مریم جعفری", ar: "مريم جعفري" },
+    role: { en: "Clinic administration coordinator", fa: "هماهنگ‌کننده امور اجرایی کلینیک", ar: "منسقة الإدارة في العيادة" },
+    summary: { en: "Supports communication, documentation, and the organized day-to-day patient journey.", fa: "پشتیبانی از ارتباطات، مستندسازی و مسیر منظم مراجعه بیماران.", ar: "تدعم التواصل والتوثيق وتنظيم رحلة المراجعين اليومية." },
+    bio: { en: "Maryam Jafari supports the clinic’s administrative workflow and patient communication. Her role helps keep documentation, coordination, and day-to-day service delivery clear and organized. This interim profile will be updated after the approved professional background is received.", fa: "مریم جعفری از فرایندهای اجرایی و ارتباط با مراجعه‌کنندگان در کلینیک پشتیبانی می‌کند. نقش او به نظم مستندات، هماهنگی و ارائه روشن خدمات روزانه کمک می‌کند. این معرفی اولیه پس از دریافت سوابق تأییدشده تکمیل می‌شود.", ar: "تدعم مريم جعفري سير العمل الإداري والتواصل مع المراجعين، وتساعد في تنظيم التوثيق والتنسيق والخدمة اليومية. سيُحدّث هذا الملف المؤقت بعد استلام المعلومات المهنية المعتمدة." },
+    image: "/media/team/maryam-jafari.png", areas: ["clinic"],
+  },
+  {
+    slug: "mojtaba-asadpour",
+    name: { en: "Mojtaba Asadpour", fa: "مجتبی اسدپور", ar: "مجتبى أسدبور" },
+    role: { en: "Clinic operations team", fa: "همکار اجرایی کلینیک", ar: "فريق تشغيل العيادة" },
+    summary: { en: "Supports coordinated clinic operations and the practical flow of patient services.", fa: "پشتیبانی از عملیات هماهنگ کلینیک و جریان اجرایی خدمات بیماران.", ar: "يدعم تشغيل العيادة وتدفق خدمات المرضى بصورة منسقة." },
+    bio: { en: "Mojtaba Asadpour contributes to the practical coordination of clinic operations and patient services. This page is an interim profile and will be expanded with an approved portrait and verified professional background when supplied.", fa: "مجتبی اسدپور در هماهنگی اجرایی فعالیت‌های کلینیک و خدمات مراجعه‌کنندگان همکاری دارد. این صفحه معرفی اولیه است و پس از دریافت تصویر و سوابق حرفه‌ای تأییدشده تکمیل خواهد شد.", ar: "يسهم مجتبى أسدبور في التنسيق العملي لعمليات العيادة وخدمات المراجعين. هذا ملف مؤقت وسيُستكمل بصورة وسيرة مهنية معتمدتين عند توفرهما." },
+    image: "/media/team/profile-placeholder.svg", areas: ["clinic"],
+  },
+  {
+    slug: "mohammad-reza-akbarzadeh",
+    name: { en: "Dr. Mohammad Reza Akbarzadeh", fa: "دکتر محمدرضا اکبرزاده", ar: "الدكتور محمد رضا أكبرزاده" },
+    role: { en: "Innovation collaborator", fa: "همکار حوزه نوآوری", ar: "متعاون في الابتكار" },
+    summary: { en: "Contributes to interdisciplinary medical-engineering innovation and product-oriented research.", fa: "همکاری در نوآوری میان‌رشته‌ای پزشکی و مهندسی و پژوهش محصول‌محور.", ar: "يسهم في الابتكار الطبي الهندسي والبحث الموجه نحو المنتجات." },
+    bio: { en: "Dr. Mohammad Reza Akbarzadeh collaborates on selected interdisciplinary innovation activities connecting clinical needs, engineering analysis, and product development. This interim profile will be replaced with the approved biography and portrait when provided.", fa: "دکتر محمدرضا اکبرزاده در فعالیت‌های منتخب نوآوری میان‌رشته‌ای که نیاز بالینی، تحلیل مهندسی و توسعه محصول را به هم متصل می‌کنند همکاری دارد. این معرفی پس از دریافت رزومه و تصویر تأییدشده تکمیل می‌شود.", ar: "يتعاون الدكتور محمد رضا أكبرزاده في أنشطة ابتكارية مختارة تربط الاحتياجات السريرية بالتحليل الهندسي وتطوير المنتجات. سيُستكمل هذا الملف بالسيرة والصورة المعتمدتين عند توفرهما." },
+    image: "/media/team/profile-placeholder.svg", areas: ["innovation"],
+  },
+  {
+    slug: "nafiseh-jirofti",
+    name: { en: "Dr. Nafiseh Jirofti", fa: "دکتر نفیسه جیرفتی", ar: "الدكتورة نفيسة جيرفتي" },
+    role: { en: "Bone and Joint Research Laboratory manager", fa: "مدیر آزمایشگاه پژوهشی استخوان و مفاصل", ar: "مديرة مختبر أبحاث العظام والمفاصل" },
+    summary: { en: "Leads interdisciplinary tissue-engineering, biomaterials, and orthopedic laboratory research.", fa: "هدایت پژوهش میان‌رشته‌ای مهندسی بافت، مواد زیستی و آزمایشگاه ارتوپدی.", ar: "تقود أبحاث هندسة الأنسجة والمواد الحيوية ومختبر جراحة العظام." },
+    bio: { en: "Dr. Nafiseh Jirofti is an Assistant Professor of Tissue Engineering and manager of the Bone and Joint Research Laboratory. She earned her PhD in Chemical Engineering with a tissue-engineering focus in 2018 and completed four years of postdoctoral research at Mashhad University of Medical Sciences. Her work includes hybrid biopolymer scaffolds, drug-loaded bioinks, freeze-drying and bioprinting, cell culture, stem-cell extraction, antibacterial bioceramics, and orthopedic implant coatings. She has managed research laboratories, supervised more than thirty proposals, and contributed to more than forty journal and conference publications.", fa: "دکتر نفیسه جیرفتی استادیار مهندسی بافت و مدیر آزمایشگاه پژوهشی استخوان و مفاصل است. او دکترای مهندسی شیمی با گرایش مهندسی بافت را در سال ۲۰۱۸ دریافت کرد و چهار سال پژوهش پسادکتری را در دانشگاه علوم پزشکی مشهد گذراند. حوزه‌های فعالیتش شامل داربست‌های زیست‌پلیمری هیبریدی، بایواینک‌های دارورسان، فریزدرایینگ و بایوپرینتینگ، کشت سلول، استخراج سلول‌های بنیادی، بیوسرامیک‌های ضدباکتری و پوشش ایمپلنت‌های ارتوپدی است. او سابقه مدیریت آزمایشگاه، راهنمایی بیش از سی پروپوزال و مشارکت در بیش از چهل مقاله و ارائه علمی را دارد.", ar: "الدكتورة نفيسة جيرفتي أستاذة مساعدة في هندسة الأنسجة ومديرة مختبر أبحاث العظام والمفاصل. حصلت على الدكتوراه في الهندسة الكيميائية مع تركيز على هندسة الأنسجة عام 2018، وأكملت أربع سنوات من أبحاث ما بعد الدكتوراه في جامعة مشهد للعلوم الطبية. تشمل أعمالها السقالات البوليمرية الحيوية الهجينة والأحبار الحيوية المحملة بالأدوية والتجفيف بالتجميد والطباعة الحيوية وزراعة الخلايا واستخراج الخلايا الجذعية والسيراميك الحيوي المضاد للبكتيريا وطلاءات الغرسات العظمية. أدارت مختبرات بحثية وأشرفت على أكثر من ثلاثين مقترحاً وأسهمت في أكثر من أربعين بحثاً وعرضاً علمياً." },
+    image: "/media/team/nafiseh-jirofti.png", areas: ["research", "innovation"], sourceUrl: "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=54",
+  },
+  labMember("fatemeh-koohzad", { en: "Dr. Fatemeh Koohzad", fa: "دکتر فاطمه کوهزاد", ar: "الدكتورة فاطمة كوهزاد" }, { en: "Postdoctoral researcher", fa: "پژوهشگر پسادکتری", ar: "باحثة ما بعد الدكتوراه" }, { en: "biochemistry", fa: "بیوشیمی", ar: "الكيمياء الحيوية" }, "/media/team/fatemeh-koohzad.png", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=109"),
+  labMember("azar-gharib", { en: "Dr. Azar Gharib", fa: "دکتر آذر غریب", ar: "الدكتورة آذر غريب" }, { en: "Postdoctoral researcher", fa: "پژوهشگر پسادکتری", ar: "باحثة ما بعد الدكتوراه" }, { en: "physical chemistry", fa: "شیمی فیزیک", ar: "الكيمياء الفيزيائية" }, "/media/team/azar-gharib.png", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=104"),
+  labMember("mehrnoush-nakhaei", { en: "Dr. Mehrnoush Nakhaei", fa: "دکتر مهرنوش نخعی", ar: "الدكتورة مهرنوش نخعي" }, { en: "Postdoctoral researcher", fa: "پژوهشگر پسادکتری", ar: "باحثة ما بعد الدكتوراه" }, { en: "solid-state physics", fa: "فیزیک حالت جامد", ar: "فيزياء الحالة الصلبة" }, "/media/team/mehrnoush-nakhaei.png", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=55"),
+  labMember("pouya-youseflee", { en: "Dr. Pouya Youseflee", fa: "دکتر پویا یوسفی‌لی", ar: "الدكتور بويا يوسفي لي" }, { en: "Laboratory researcher", fa: "پژوهشگر آزمایشگاه", ar: "باحث في المختبر" }, { en: "clinical medicine", fa: "پزشکی بالینی", ar: "الطب السريري" }, "/media/team/pouya-youseflee.jpg", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=129"),
+  labMember("mohamad-soveyzi", { en: "Mohamad Soveyzi", fa: "محمد سویزی", ar: "محمد سويزي" }, { en: "Laboratory researcher", fa: "پژوهشگر آزمایشگاه", ar: "باحث في المختبر" }, { en: "medical genetics", fa: "ژنتیک پزشکی", ar: "الوراثة الطبية" }, "/media/team/mohamad-soveyzi.jpg", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=110"),
+  labMember("mahdi-ahmadi", { en: "Mahdi Ahmadi", fa: "مهدی احمدی", ar: "مهدي أحمدي" }, { en: "PharmD student researcher", fa: "پژوهشگر دانشجوی داروسازی", ar: "باحث وطالب صيدلة" }, { en: "pharmacy", fa: "داروسازی", ar: "الصيدلة" }, "/media/team/mahdi-ahmadi.jpg", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=108"),
+  labMember("mohadese-khorasani", { en: "Dr. Mohadese Mohadesi Khorasani", fa: "دکتر محدثه محدثی خراسانی", ar: "الدكتورة محدثة محدثي خراساني" }, { en: "PharmD researcher", fa: "پژوهشگر داروسازی", ar: "باحثة في الصيدلة" }, { en: "regenerative medicine and drug delivery", fa: "پزشکی بازساختی و دارورسانی", ar: "الطب التجديدي وتوصيل الدواء" }, "/media/team/mohadese-khorasani.png", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=107"),
+  labMember("nik-qazvini", { en: "Nik Qazvini", fa: "نیک قزوینی", ar: "نيك قزويني" }, { en: "PharmD student researcher", fa: "پژوهشگر دانشجوی داروسازی", ar: "باحث وطالب صيدلة" }, { en: "pharmacy", fa: "داروسازی", ar: "الصيدلة" }, "/media/team/nik-qazvini.jpg", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=117"),
+  labMember("mohammad-amin-khojastehnezhad", { en: "Dr. Mohammad Amin Khojastehnezhad", fa: "دکتر محمدامین خجسته‌نژاد", ar: "الدكتور محمد أمين خجسته نجاد" }, { en: "Medical and biomedical-engineering researcher", fa: "پژوهشگر پزشکی و مهندسی پزشکی", ar: "باحث في الطب والهندسة الطبية" }, { en: "biomechanics and rehabilitation robotics", fa: "بیومکانیک و رباتیک توان‌بخشی", ar: "الميكانيكا الحيوية وروبوتات التأهيل" }, "/media/team/mohammad-amin-khojastehnezhad.jpg", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=119"),
+  labMember("mahsa-shariatrazavi", { en: "Dr. Sayyedeh Mahsa Shariatrazavi", fa: "دکتر سیده مهسا شریعت‌رضوی", ar: "الدكتورة سيدة مهسا شريعت رضوي" }, { en: "Medical researcher", fa: "پژوهشگر پزشکی", ar: "باحثة طبية" }, { en: "clinical orthopedic research", fa: "پژوهش بالینی ارتوپدی", ar: "البحث السريري في جراحة العظام" }, "/media/team/mahsa-shariatrazavi.png", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=118"),
+  labMember("saba-banaian", { en: "Saba Banaian", fa: "صبا بنائیان", ar: "صبا بنائيان" }, { en: "Mechanical-engineering researcher", fa: "پژوهشگر مهندسی مکانیک", ar: "باحثة في الهندسة الميكانيكية" }, { en: "mechanical engineering", fa: "مهندسی مکانیک", ar: "الهندسة الميكانيكية" }, "/media/team/saba-banaian.png", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=120"),
+  labMember("mehraneh-movahedi", { en: "Dr. Mehraneh Movahedi Aliabadi", fa: "دکتر مهرانه موحدی علی‌آبادی", ar: "الدكتورة مهرانه موحدي علي آبادي" }, { en: "Medical researcher", fa: "پژوهشگر پزشکی", ar: "باحثة طبية" }, { en: "clinical orthopedic research", fa: "پژوهش بالینی ارتوپدی", ar: "البحث السريري في جراحة العظام" }, "/media/team/mehraneh-movahedi.png", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=127"),
+  labMember("saeedeh-ebrahimzadeh", { en: "Saeedeh Ebrahimzadeh Bideskan", fa: "سعیده ابراهیم‌زاده بیدسکان", ar: "سعيدة إبراهيم زاده بيدسكان" }, { en: "Physiotherapy researcher", fa: "پژوهشگر فیزیوتراپی", ar: "باحثة في العلاج الطبيعي" }, { en: "physiotherapy", fa: "فیزیوتراپی", ar: "العلاج الطبيعي" }, "/media/team/saeedeh-ebrahimzadeh.png", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=124"),
+  labMember("seyed-mohamad-ebadi-rad", { en: "Dr. Seyed Mohamad Ebadi Rad", fa: "دکتر سید محمد عبادی‌راد", ar: "الدكتور سيد محمد عبادي راد" }, { en: "Medical researcher", fa: "پژوهشگر پزشکی", ar: "باحث طبي" }, { en: "clinical orthopedic research", fa: "پژوهش بالینی ارتوپدی", ar: "البحث السريري في جراحة العظام" }, "/media/team/seyed-mohamad-ebadi-rad.jpg", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=126"),
+  labMember("hamidreza-jamali", { en: "Hamidreza Jamali", fa: "حمیدرضا جمالی", ar: "حميد رضا جمالي" }, { en: "Student researcher", fa: "پژوهشگر دانشجو", ar: "باحث طالب" }, { en: "cell and molecular biology", fa: "زیست‌شناسی سلولی و مولکولی", ar: "الأحياء الخلوية والجزيئية" }, "/media/team/hamidreza-jamali.jpg", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=128"),
+  labMember("ghazaleh-hajiaghajani", { en: "Ghazaleh Hajiaghajani", fa: "غزاله حاجی‌آقاجانی", ar: "غزالة حاجي آقاجاني" }, { en: "Biomedical-engineering researcher", fa: "پژوهشگر مهندسی پزشکی", ar: "باحثة في الهندسة الطبية" }, { en: "bioelectric engineering", fa: "مهندسی بیوالکتریک", ar: "الهندسة الكهربائية الحيوية" }, "/media/team/ghazaleh-hajiaghajani.png", "https://orthopresearch.com/index.php/component/sppagebuilder/?view=page&id=76"),
+);
 
 export function getTeamMembers(area: TeamArea) {
   return teamMembers.filter((member) => member.areas.includes(area));
