@@ -192,24 +192,112 @@ programmatically from the already-authenticated session instead).
   — a bidi/`dir` styling issue in the block's markup, not a data problem
   (the stored value is correct). Needs a `dir="ltr"` (or unicode-bidi
   isolate) wrapper around the number in `blocks/contact-info`.
-- **Not yet done** (unchanged from before, still open):
-  - Menus (Appearance → Menus) — not created. The content available so
-    far (home, About, posts, team) doesn't yet include the Clinical
-    Care / Research / Innovation / Education hub pages
-    `content-migration-plan.md` calls for, so a real primary/footer menu
-    per language is better built once those exist rather than rebuilt
-    twice.
-  - The interior hub pages themselves (Clinical Care, Research,
-    Innovation, Education, Contact) and the `condition`/`innovation`/
-    `publication`/`patient_resource` CPT content — `conditions-seed.json`
-    / `innovations-seed.json` exist (starter/teaser copy only, per that
-    file's own comment) but have not been imported; they need real
-    patient-facing copy, not a mechanical dump, per `open-items.md`.
+- **Not yet done** as of this entry — see the next entry below for what
+  was completed after it.
+
+## 2026-09-02 (continued further) — conditions, innovations, hub pages, contact, menus
+
+- **Conditions and Innovations CPTs imported** from the existing
+  `conditions-seed.json` / `innovations-seed.json` starter/teaser copy
+  (6 conditions, 3 innovations, each in en/fa/ar, Polylang-linked) —
+  same status as before: teaser copy only, needs real patient-facing
+  detail content before launch, per the "Which conditions have approved
+  patient-facing copy for launch" item already in `open-items.md`.
+  `innovation` gained a `dam_category` meta field (architecture.md's
+  content model calls for one; the seed data has a category per entry
+  that had nowhere to live).
+- **Section hub pages built for Clinical Care, Innovation, and
+  Research** (`page-hub` template) — but first checked the live
+  reference site (`https://dralimoradi.moghadam.pro/clinic`,
+  `/innovation`, `/research`, `/education`): none of the four hub
+  routes render dedicated content there today; every one falls back to
+  the same generic page. So there was no existing hub-page copy to
+  migrate. What these three pages actually contain is the homepage's
+  already-published "choose the path that fits your visit" teaser text
+  (`pathCards` in homepage-content.json) plus links to the imported
+  CPT/page content — real, already-live text, not new copy. **Education
+  was intentionally not created**: it has no equivalent teaser or any
+  other content anywhere in the source, on either site, so building it
+  would mean inventing content rather than migrating it. Flagged in
+  `open-items.md` for the operator to supply real content for.
+- **Contact page built** from the homepage's real `contact` object
+  (intro, office/hospital addresses, "before you write" notice) with an
+  explicit placeholder paragraph noting the MPro Forms contact form
+  still needs to be inserted once available.
+- **Menus**: all 6 (Primary/Footer × en/fa/ar) created, populated from
+  the real `nav` labels already in homepage-content.json
+  (`["Clinic","Innovation","Research","Education","About me","Blog"]`
+  per locale), and linked to their Site Editor locations. Education and
+  Blog are omitted from the nav for the same reason Education's hub
+  page is: Education has no destination page, and there is no working
+  "all posts" archive URL yet (`front-page.html` takes over `/`, so
+  there's nowhere for a "Blog" link to point — flagged as an open
+  question, not solved here, since it's a real content-architecture
+  decision).
+  - **Real bug found and fixed while doing this**: `?lang=` does not
+    filter WordPress REST *collection* queries in this Polylang setup
+    (confirmed by testing: `?lang=fa` and `?lang=en` on the same
+    collection returned identical results) even though it correctly
+    sets a single entry's language on create. The very first import run
+    relied on `?lang=` to tell locales apart when looking up an
+    existing entry by a shared slug, so every locale's lookup found the
+    same first-created (English) entry and reused it — all "three"
+    locale versions of every team member, post, and page were actually
+    one English row with the same id repeated three times
+    (`{"en":16,"fa":16,"ar":16}`). Also confirmed (by testing) that a
+    shared slug can't work as a fallback either: without Polylang Pro's
+    "Share slugs" feature, WordPress auto-suffixes ("-2", "-3") a second
+    post created with an already-used slug in a different language,
+    *even after* the two posts are linked as Polylang translations —
+    the exemption from the uniqueness check is a Pro-only behavior.
+    Fixed by giving every non-default-locale entry an explicit slug
+    (`{slug}-fa`, `{slug}-ar`) and looking up by that exact slug, which
+    needs no `lang` filtering to work correctly. Re-imported everything
+    after the fix; all team members, posts, conditions, innovations,
+    and pages now have three genuinely distinct, correctly linked
+    entries — spot-checked live (e.g. `/fa/team/ali-moradi-fa/`,
+    `/ar/understanding-carpal-tunnel-syndrome-ar/`).
+  - **Second real bug found and fixed**: menu *locations* could not be
+    assigned via the REST API the way menu creation and content import
+    could. `/wp/v2/menus`'s `locations` field only accepts
+    `get_registered_nav_menus()` keys (`primary`, `footer`) — Polylang's
+    per-language locations (`primary___fa`, shown as "Primary Navigation
+    فارسی" in Appearance → Menus) aren't in that list, so REST rejects
+    them outright. Worked around this the same way as the translation-
+    linking gap: `inc/polylang.php` now exposes `/set-menu-location`,
+    calling `set_theme_mod()` directly — but testing (added a temporary
+    debug comment to `blocks/site-navigation/render.php`, since
+    `has_nav_menu()` was silently returning false with no visible error)
+    showed Polylang does not treat that write as equivalent to its own
+    classic-screen save: Polylang hooks the theme_mods option on save
+    and reprocesses it into its own per-language storage, and a raw
+    write outside that hook leaves `has_nav_menu()` reporting *every*
+    location as unset, not just the ones never touched. The REST route
+    still runs and pre-seeds the assignment, but each of the 6 menus
+    then had to be opened once in Appearance → Menus and saved via that
+    screen's own "Save Menu" button before the front end actually
+    picked up any of them — confirmed this is genuinely required (not
+    caching) by testing the debug output before and after that manual
+    save. This is now the documented, repeatable extra step after
+    running the importer; removed the debug code once confirmed working.
+- Verified live, in the browser, for all three languages: primary and
+  footer navigation render with the correct localized labels and
+  correct localized links (e.g. `/fa/innovations-fa/` linking to
+  `/fa/innovation/external-fixation-systems-fa/`), and the Clinical
+  Care / Innovation / Research / Contact pages render their real content
+  correctly with the theme's actual styling.
+- **Still not done**:
+  - Education content (hub page + nav item) — needs the operator to
+    supply real content; not fabricated here (see above).
+  - A working "all posts" listing page/URL — `front-page.html` takes
+    over `/`, so there's currently no page a "Blog" nav item or a "View
+    all posts" link could point to. Needs a decision (a dedicated posts
+    page at another slug? drop the front-page override on that one
+    route?) before it can be built — flagged rather than guessed at.
+  - `publication` and `patient_resource` CPTs — no seed data was ever
+    extracted for these (unlike conditions/innovations); not imported.
   - Full page-by-page, language-by-language parity check against
-    `https://dralimoradi.moghadam.pro/` — only spot-checked so far (team
-    member and post detail pages, both confirmed correct); the homepage,
-    About page, and every other page/language combination still need a
-    deliberate side-by-side pass, with findings logged here.
-  - A visual/CSS polish pass — the homepage and the pages checked above
-    already render with the theme's real styling (not unstyled HTML), but
-    no dedicated comparison against the approved look has been done yet.
+    `https://dralimoradi.moghadam.pro/` — still only spot-checked, not
+    exhaustive.
+  - The RTL phone-number display bug noted above — still open.
+  - A visual/CSS polish pass against the approved look — still open.

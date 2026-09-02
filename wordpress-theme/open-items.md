@@ -43,6 +43,34 @@ decisions and time, not new access or approvals.
    issue in `blocks/contact-info`'s markup, not a data problem — the
    stored value is correct). Needs a `dir="ltr"` or unicode-bidi-isolate
    wrapper around the number.
+6. **Menu location assignment needs a manual finishing step.** Polylang
+   does not accept the core `/wp/v2/menus` REST field for its
+   per-language locations, and a direct `set_theme_mod()` write (the
+   theme's `/set-menu-location` bridge) doesn't take effect either —
+   confirmed by testing that Polylang only properly links a menu to a
+   location when its own classic Appearance → Menus screen is used to
+   save it. After running the importer, each of the 6 menus must be
+   opened once in Appearance → Menus and saved via that screen's "Save
+   Menu" button before navigation actually appears on the front end.
+   Already done once for the current `tmp.saveon.me` state; needed again
+   only if the menus are recreated from scratch.
+
+## Content decisions needed before Education and a "Blog" page can be built
+
+7. **Education has no content anywhere.** Neither `tmp.saveon.me` nor
+   the live reference site (`https://dralimoradi.moghadam.pro/education`,
+   which falls back to a generic page) has any real Education copy —
+   not even homepage teaser text the way Clinical Care/Innovation/
+   Research have. No Education hub page or nav item was created rather
+   than inventing content. Needs real copy from the operator.
+8. **No "all posts" listing page exists, and building one is a design
+   decision, not a mechanical step.** `front-page.html` is the theme's
+   homepage and takes over the `/` URL, so there is currently no page a
+   "Blog"/"News" nav item could point to. Options: a dedicated posts
+   page at another slug (e.g. `/news/`, via Settings → Reading's "Posts
+   page"), or something else — needs a decision before it's built, so
+   the "Blog" nav item and a working posts archive are both still
+   missing.
 
 ## Content decisions still open (carried over from `docs/content-strategy-and-sitemap.md`)
 
