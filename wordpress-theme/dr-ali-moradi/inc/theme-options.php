@@ -53,11 +53,16 @@ function dam_register_theme_options() {
 				'type'              => 'string',
 				'sanitize_callback' => 'url' === $field[1] ? 'esc_url_raw' : 'sanitize_textarea_field',
 				'default'           => isset( $field[2] ) ? $field[2] : '',
+					'show_in_rest'      => true,
 			)
 		);
 	}
 }
-add_action( 'admin_init', 'dam_register_theme_options' );
+// Registered on `init`, not `admin_init`, because `admin_init` never runs
+// during a REST API request — and these settings must be readable/writable
+// via `/wp/v2/settings` (show_in_rest above) for the content-migration
+// import script, not just from the wp-admin settings form.
+add_action( 'init', 'dam_register_theme_options' );
 
 function dam_render_theme_options_page() {
 	if ( ! current_user_can( 'manage_options' ) ) {

@@ -20,6 +20,10 @@ function dam_meta_field_definitions() {
 	return array(
 		'team_member' => array(
 			array( 'key' => 'dam_role', 'label' => __( 'Role', 'dr-ali-moradi' ), 'type' => 'text' ),
+			array( 'key' => 'dam_summary', 'label' => __( 'Short summary', 'dr-ali-moradi' ), 'type' => 'text' ),
+		),
+		'post'        => array(
+			array( 'key' => 'dam_read_minutes', 'label' => __( 'Read time (minutes)', 'dr-ali-moradi' ), 'type' => 'number' ),
 		),
 		'innovation'  => array(
 			array(
