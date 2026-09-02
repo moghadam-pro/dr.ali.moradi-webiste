@@ -3,28 +3,27 @@
 Things that block further progress, or decisions still needed from the
 operator. Updated as items are resolved.
 
+## Resolved (2026-09-02, continued)
+
+1. ~~**WordPress site access for `tmp.saveon.me`.**~~ Resolved without
+   SSH/SFTP: the operator logged into wp-admin directly in a
+   Claude-driven browser session, which was then used to upload the
+   theme (Appearance → Themes → Upload Theme) and generate an
+   Application Password (Users → Profile) for the REST-based content
+   import — no server file access needed, since a plain zip upload
+   through wp-admin covers theme installation, and Polylang/Rank Math
+   were already installed on the site.
+2. ~~**No browser-automation tool in this environment.**~~ One is
+   available in this environment (unlike the session that wrote the
+   items below) and was used for theme installation and spot-checking;
+   the bulk content import still runs as a script via the REST API,
+   which remains the right tool for a one-shot bulk import.
+
 ## Blocking
 
-1. **WordPress site access for `tmp.saveon.me`.** Deploying the theme's
-   files and running the bulk content import both require either:
-   - An **Application Password** for an administrator account (created
-     from Users → Profile → Application Passwords in wp-admin — takes a
-     few seconds, no developer needed), used against the REST API for
-     content import, **and**
-   - **SFTP/SSH access** (or equivalent file access) to upload the theme
-     folder into `wp-content/themes/`, since there is no browser-automation
-     tool available in this environment to use the Appearance → Themes
-     upload screen interactively.
-
-   Without at least the SSH/SFTP access, the theme cannot be installed on
-   the temporary site; without the Application Password, content cannot be
-   imported. Both are needed to complete the "upload it yourself" request.
-
-2. **No browser-automation tool in this environment.** The request to open
-   an internal browser session for wp-admin login isn't something this
-   session can do — there is no such tool available. Application
-   Passwords / SSH+WP-CLI are used instead, which is also more efficient
-   for a bulk, scripted import than a driven browser session would be.
+None currently — see `progress-log.md`'s "Not yet done" list for
+sequenced next work (hub pages, menus, parity check) that needs content
+decisions and time, not new access or approvals.
 
 ## Not blocking, but flagged
 
@@ -34,6 +33,16 @@ operator. Updated as items are resolved.
    asked for no trace of the assistant. Commit messages and documentation
    are written neutrally (no first-person narration) but the footer line
    stays.
+4. **Theme Options left blank, not fabricated.** WhatsApp number and
+   social media URLs (Instagram/Telegram/Aparat labels exist in
+   `app/site-content.ts`'s footer copy, but not the actual links) are not
+   present anywhere in the current content model. Fill in via Appearance
+   → Theme Options once available.
+5. **RTL display bug in the contact-info block.** The phone number
+   visually reverses/reorders on `fa`/`ar` pages (a bidi/`dir` styling
+   issue in `blocks/contact-info`'s markup, not a data problem — the
+   stored value is correct). Needs a `dir="ltr"` or unicode-bidi-isolate
+   wrapper around the number.
 
 ## Content decisions still open (carried over from `docs/content-strategy-and-sitemap.md`)
 
