@@ -38,11 +38,9 @@ decisions and time, not new access or approvals.
    `app/site-content.ts`'s footer copy, but not the actual links) are not
    present anywhere in the current content model. Fill in via Appearance
    → Theme Options once available.
-5. **RTL display bug in the contact-info block.** The phone number
-   visually reverses/reorders on `fa`/`ar` pages (a bidi/`dir` styling
-   issue in `blocks/contact-info`'s markup, not a data problem — the
-   stored value is correct). Needs a `dir="ltr"` or unicode-bidi-isolate
-   wrapper around the number.
+5. ~~**RTL display bug in the contact-info block.**~~ Fixed 2026-09-03:
+   added `dir="ltr"` to the phone number link in
+   `blocks/contact-info/render.php`.
 6. **Menu location assignment needs a manual finishing step.** Polylang
    does not accept the core `/wp/v2/menus` REST field for its
    per-language locations, and a direct `set_theme_mod()` write (the
@@ -54,6 +52,22 @@ decisions and time, not new access or approvals.
    Menu" button before navigation actually appears on the front end.
    Already done once for the current `tmp.saveon.me` state; needed again
    only if the menus are recreated from scratch.
+
+9. **Visual/CSS design pass is a known, sized-up, not-started task —
+   confirm before starting it.** The current templates (front-page.html
+   especially) are functional placeholders: plain WP block markup, a
+   solid-color hero, no photos, icons, or decorative treatment — not a
+   visual match to the polished design on
+   `https://dralimoradi.moghadam.pro/`. The real design's photography
+   already exists in the repo (`public/media/hero/`,
+   `public/media/edited/`) and the color palette/fonts in `theme.json`
+   are already correct, so this is buildable without new assets, but
+   it's a genuinely large pass (hero layout with photo + quote overlay +
+   expertise cards, the dark "Connected Practice" horizontal scroller,
+   card styling throughout). Raised with the operator on 2026-09-03, who
+   chose to keep going on content/technical work for now rather than
+   start this. Confirm scope/priority with the operator before beginning
+   it, rather than assuming how much of it to do.
 
 ## Content decisions needed before Education and a "Blog" page can be built
 

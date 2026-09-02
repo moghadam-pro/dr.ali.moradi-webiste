@@ -301,3 +301,64 @@ programmatically from the already-authenticated session instead).
     exhaustive.
   - The RTL phone-number display bug noted above — still open.
   - A visual/CSS polish pass against the approved look — still open.
+
+## 2026-09-03 — RTL fix, site-wide health check, Rank Math setup
+
+- **RTL phone-number bug fixed**: added `dir="ltr"` to the phone link in
+  `blocks/contact-info/render.php`, so the number reads correctly
+  left-to-right inside `fa`/`ar` pages. Deployed and left the theme in
+  this state (see below for what else changed in the same deploy).
+- **Visual design gap identified and discussed with the operator**: the
+  operator asked why the site doesn't look like the React version on
+  their subdomain. Confirmed by comparing screenshots: `front-page.html`
+  and the other templates are functional placeholders (plain WP block
+  markup — a solid-color hero, no photo, no icons, no decorative
+  treatment) built to get the content pipeline (CPTs, multilingual,
+  menus) working first, not a visual match to the reference design. The
+  color palette and fonts in `theme.json` are already correct, and the
+  reference design's actual photography already exists in the repo
+  (`public/media/hero/`, `public/media/edited/`) — a visual/CSS pass is
+  possible without new assets, just not yet done. Given the choice
+  between starting that (large) redesign pass now versus continuing
+  content/technical work, **the operator chose to continue
+  content/technical work** — the visual pass remains open, tracked in
+  `open-items.md`, not abandoned.
+- **Site-wide automated health check** (script-driven, not manual) across
+  every published entry (137 URLs: 24 team_member + 70 posts + 18
+  condition + 9 innovation + 16 pages, across en/fa/ar):
+  - All 137 return HTTP 200 (no broken links/404s from the import).
+  - Zero pages contain PHP `Notice:`/`Warning:`/`Deprecated:`/`Fatal
+    error:` text in their rendered HTML.
+  - All 90 `fa`/`ar` pages correctly render `dir="rtl"` on `<html>`.
+- **Rank Math setup wizard completed** (it had never been run — the
+  free XML sitemap was 404ing because of this, not a bug). Chose "Easy"
+  mode; business type "Physician" (available in the free tier — more
+  precise than `architecture.md`'s original assumption that only the
+  generic "Local Business"/"Medical Business" types were free; corrected
+  here since real behavior beats the earlier assumption); Person name
+  set to "Dr. Ali Moradi" for the Google Knowledge Panel field. Declined
+  the two steps that require connecting an external account (Rank
+  Math's own account, and Google Search Console/Analytics) — those are
+  the operator's own accounts to connect, not something done on their
+  behalf. Enabled the sitemap for every public post type and taxonomy
+  (`team_member`, `condition`, `innovation`, `publication`,
+  `patient_resource`, `category`, `condition_category`,
+  `publication_type`, `team_area`) — `publication`/`patient_resource`
+  have no content yet but are enabled so nothing needs revisiting once
+  they do. Verified `https://tmp.saveon.me/sitemap_index.xml` now
+  returns real per-type sitemaps, and `post-sitemap.xml` correctly lists
+  all three language variants of each post.
+- **Removed WordPress's default placeholder content**: the "Hello
+  world!" post and "Sample Page" (both auto-created on install, never
+  part of the real site).
+- **301 redirect map (content-migration-plan.md step 6) deliberately not
+  built yet** — checked `app/sitemap.ts`: it would need every old
+  Next.js URL (`/[locale]/team/{slug}`, `/[locale]/blog/{slug}`, etc.)
+  mapped to the new WordPress URLs, several of which now differ in
+  shape (e.g. `fa`/`ar` entries get a `-fa`/`-ar` slug suffix — see the
+  slug-collision bug fixed on 2026-09-02). This redirect map only
+  matters once a domain that was actually live at the *old* URLs cuts
+  over to the new site — `tmp.saveon.me` was never public at those old
+  paths, so building it now would be premature, not skipped work.
+  Revisit at the `dralimoradi.com` cutover, using the now-finalized
+  slug scheme.
