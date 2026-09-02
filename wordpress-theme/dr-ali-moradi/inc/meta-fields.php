@@ -26,6 +26,7 @@ function dam_meta_field_definitions() {
 			array( 'key' => 'dam_read_minutes', 'label' => __( 'Read time (minutes)', 'dr-ali-moradi' ), 'type' => 'number' ),
 		),
 		'innovation'  => array(
+			array( 'key' => 'dam_category', 'label' => __( 'Category', 'dr-ali-moradi' ), 'type' => 'text' ),
 			array(
 				'key'     => 'dam_status',
 				'label'   => __( 'Development Status', 'dr-ali-moradi' ),

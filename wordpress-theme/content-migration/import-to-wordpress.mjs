@@ -122,6 +122,35 @@ function headingBlock(text, level = 2) {
   return `<!-- wp:heading {"level":${level}} -->\n<h${level}>${escaped}</h${level}>\n<!-- /wp:heading -->`;
 }
 
+function linkParagraphBlock(href, text) {
+  const escapedText = String(text || "").replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  return `<!-- wp:paragraph -->\n<p><a href="${href}">${escapedText}</a></p>\n<!-- /wp:paragraph -->`;
+}
+
+function listBlock(items) {
+  const li = items.map(({ href, text }) => `<!-- wp:list-item --><li><a href="${href}">${text}</a></li><!-- /wp:list-item -->`).join("\n");
+  return `<!-- wp:list -->\n<ul class="wp-block-list">\n${li}\n</ul>\n<!-- /wp:list -->`;
+}
+
+/** Localized front-end URL for a path: default locale has no prefix. */
+function localizedPath(locale, path) {
+  return locale === DEFAULT_LOCALE ? `/${path}/` : `/${locale}/${path}/`;
+}
+
+/**
+ * The `condition`/`innovation` seed data has no stable id or slug of its
+ * own (see conditions-seed.json / innovations-seed.json) — just parallel
+ * per-locale arrays aligned by index. Slugs are derived from the English
+ * title so re-running the script is stable and idempotent.
+ */
+function slugify(text) {
+  return String(text)
+    .toLowerCase()
+    .replace(/[&]/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 /* ---------------------------------------------------------------------- */
 /* Media                                                                   */
 /* ---------------------------------------------------------------------- */
@@ -386,6 +415,282 @@ async function importPosts() {
 }
 
 /* ---------------------------------------------------------------------- */
+/* Conditions -> CPT `condition`                                          */
+/* ---------------------------------------------------------------------- */
+
+/**
+ * Starter/teaser copy only (title + one-line description), carried over
+ * verbatim from the homepage's condition teasers — the same text already
+ * published on the live reference site. Not full patient-facing detail
+ * pages; `condition_category` is intentionally left unassigned since the
+ * seed data has no grouping of its own (see open-items.md).
+ */
+async function importConditions() {
+  const seed = await readJson("conditions-seed.json");
+
+  console.log(`\n=== Conditions (${seed.en.length}) ===`);
+  for (let index = 0; index < seed.en.length; index += 1) {
+    const baseSlug = slugify(seed.en[index].title);
+    console.log(`- ${baseSlug}`);
+
+    const payloadByLocale = {};
+    for (const locale of LOCALES) {
+      const entry = seed[locale]?.[index];
+      if (!entry) continue;
+      payloadByLocale[locale] = {
+        status: "publish",
+        title: entry.title,
+        content: paragraphBlock(entry.text),
+        excerpt: entry.text,
+      };
+    }
+
+    const ids = await ensureTranslatedEntry("condition", baseSlug, payloadByLocale);
+    console.log(`  -> ${JSON.stringify(ids)}`);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Innovations -> CPT `innovation`                                        */
+/* ---------------------------------------------------------------------- */
+
+async function importInnovations() {
+  const seed = await readJson("innovations-seed.json");
+
+  console.log(`\n=== Innovations (${seed.en.length}) ===`);
+  for (let index = 0; index < seed.en.length; index += 1) {
+    const baseSlug = slugify(seed.en[index].title);
+    console.log(`- ${baseSlug}`);
+
+    const payloadByLocale = {};
+    for (const locale of LOCALES) {
+      const entry = seed[locale]?.[index];
+      if (!entry) continue;
+      payloadByLocale[locale] = {
+        status: "publish",
+        title: entry.title,
+        content: paragraphBlock(entry.text),
+        excerpt: entry.text,
+        meta: {
+          dam_category: entry.category || "",
+        },
+      };
+    }
+
+    const ids = await ensureTranslatedEntry("innovation", baseSlug, payloadByLocale);
+    console.log(`  -> ${JSON.stringify(ids)}`);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Section hub pages (Clinical Care, Innovation, Research)                */
+/* ---------------------------------------------------------------------- */
+
+/**
+ * `content-migration-plan.md` and `architecture.md` call for Clinical
+ * Care / Research / Innovation / Education hub pages. Checked against the
+ * live reference site (dralimoradi.moghadam.pro) before building these:
+ * none of the four hub routes (/clinic, /innovation, /research,
+ * /education) actually render dedicated content there today — each falls
+ * back to the same generic page — so there is no existing hub-page copy
+ * to migrate. What *does* already exist and is already published is the
+ * homepage's three-card "choose the path that fits your visit" teaser
+ * (`pathCards` in homepage-content.json) for Clinical Care, Innovation,
+ * and Research. These three hub pages reuse that real, already-live text
+ * rather than inventing new copy, and add links to the CPT content
+ * imported above. Education has no equivalent existing teaser anywhere
+ * in the source content, so it is intentionally not created here rather
+ * than fabricated — see open-items.md.
+ *
+ * Slugs deliberately differ from the CPT archive slugs they link to
+ * (`conditions`, `innovation`) so the hub page and the archive don't
+ * collide on the same URL.
+ */
+const HUB_PAGES = [
+  { pathCardIndex: 0, slug: "clinical-care" },
+  { pathCardIndex: 1, slug: "innovations" },
+  { pathCardIndex: 2, slug: "research" },
+];
+
+async function importHubPages() {
+  const homepage = await readJson("homepage-content.json");
+  const innovationsSeed = await readJson("innovations-seed.json");
+
+  console.log(`\n=== Section hub pages ===`);
+  for (const hub of HUB_PAGES) {
+    console.log(`- ${hub.slug}`);
+
+    const payloadByLocale = {};
+    for (const locale of LOCALES) {
+      const [title, intro] = homepage[locale]?.pathCards?.[hub.pathCardIndex] || [];
+      if (!title) continue;
+
+      const blocks = [paragraphBlock(intro)];
+
+      if (hub.slug === "clinical-care") {
+        const label = homepage[locale]?.viewConditions || "View all conditions";
+        blocks.push(linkParagraphBlock(localizedPath(locale, "conditions"), label));
+      }
+
+      if (hub.slug === "innovations") {
+        const items = innovationsSeed.en.map((entry, index) => {
+          const baseSlug = slugify(entry.title);
+          const localTitle = innovationsSeed[locale]?.[index]?.title || entry.title;
+          return { href: localizedPath(locale, `innovation/${localizedSlug(baseSlug, locale)}`), text: localTitle };
+        });
+        blocks.push(listBlock(items));
+      }
+
+      payloadByLocale[locale] = {
+        status: "publish",
+        title,
+        content: blocks.join("\n\n"),
+        template: "page-hub",
+      };
+    }
+
+    const ids = await ensureTranslatedEntry("pages", hub.slug, payloadByLocale);
+    console.log(`  -> ${JSON.stringify(ids)}`);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Contact page                                                           */
+/* ---------------------------------------------------------------------- */
+
+async function importContactPage() {
+  const homepage = await readJson("homepage-content.json");
+
+  console.log(`\n=== Contact page ===`);
+  const payloadByLocale = {};
+  for (const locale of LOCALES) {
+    const c = homepage[locale]?.contact;
+    if (!c) continue;
+
+    const blocks = [];
+    if (c.intro) blocks.push(paragraphBlock(c.intro));
+    if (c.office) blocks.push(paragraphBlock(c.office));
+    if (c.clinic) blocks.push(paragraphBlock(c.clinic));
+    if (c.beforeTitle) blocks.push(headingBlock(c.beforeTitle, 3));
+    if (c.beforeText) blocks.push(paragraphBlock(c.beforeText));
+    blocks.push(
+      paragraphBlock(
+        "MPro Forms placeholder: insert the contact form block/shortcode here once available."
+      )
+    );
+
+    payloadByLocale[locale] = {
+      status: "publish",
+      title: c.title || "Contact",
+      content: blocks.join("\n\n"),
+      template: "page-contact",
+    };
+  }
+
+  const ids = await ensureTranslatedEntry("pages", "contact", payloadByLocale);
+  console.log(`  -> ${JSON.stringify(ids)}`);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Menus                                                                  */
+/* ---------------------------------------------------------------------- */
+
+async function ensureMenu(name) {
+  const existing = await wpFetch(`${WP_BASE_URL}/wp-json/wp/v2/menus?search=${encodeURIComponent(name)}`);
+  const match = existing.find((m) => m.name === name);
+  if (match) return match.id;
+  const created = await wpFetch(`${WP_BASE_URL}/wp-json/wp/v2/menus`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name }),
+  });
+  return created.id;
+}
+
+async function setMenuLocation(location, menuId) {
+  await customPost("set-menu-location", { location, menu_id: menuId });
+}
+
+/** Adds a menu item if one for the same target doesn't already exist. */
+async function ensureMenuItem(menuId, item) {
+  const existing = await wpFetch(`${WP_BASE_URL}/wp-json/wp/v2/menu-items?menus=${menuId}&per_page=50`);
+  const isMatch = (i) =>
+    item.object_id ? i.object_id === item.object_id && i.object === item.object : i.url === item.url;
+  if (existing.some(isMatch)) return;
+
+  await wpFetch(`${WP_BASE_URL}/wp-json/wp/v2/menu-items`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...item, menus: menuId, status: "publish" }),
+  });
+}
+
+/**
+ * Primary nav mirrors the real, already-published `nav` labels from
+ * homepage-content.json (["Clinic","Innovation","Research","Education",
+ * "About me","Blog"]) for the items that have a destination page. Education
+ * and Blog are intentionally left out: neither has a real page to link to
+ * yet (see importHubPages()'s note on Education; there is no working
+ * "all posts" archive URL because front-page.html takes over "/" — see
+ * open-items.md). Footer repeats the same links plus Contact, which the
+ * reference site's primary nav doesn't carry as a top-level item.
+ *
+ * IMPORTANT — manual step still required after running this: this creates
+ * the 6 menus, adds their items, and pre-seeds their location assignment
+ * via the theme's /set-menu-location bridge, but Polylang does not treat
+ * that REST write as a real save — it keeps reporting every location as
+ * unset (has_nav_menu() returns false site-wide) until each of the 6
+ * menus is opened once in Appearance -> Menus and saved via that screen's
+ * own "Save Menu" button. See the note on that endpoint in
+ * inc/polylang.php and progress-log.md on the docs branch.
+ */
+async function importMenus() {
+  const homepage = await readJson("homepage-content.json");
+  const home = { en: "Home", fa: "خانه", ar: "الرئيسية" };
+
+  console.log(`\n=== Menus ===`);
+  for (const locale of LOCALES) {
+    const nav = homepage[locale]?.nav || [];
+    const contactLabel = homepage[locale]?.contact?.kicker || "Contact";
+
+    async function pageId(baseSlug) {
+      const found = await findEntry("pages", localizedSlug(baseSlug, locale));
+      return found?.id;
+    }
+
+    const homeHref = locale === DEFAULT_LOCALE ? "/" : `/${locale}/`;
+    const items = [
+      { title: home[locale], type: "custom", url: `${WP_BASE_URL}${homeHref}` },
+      { title: nav[0], pageSlug: "clinical-care" },
+      { title: nav[1], pageSlug: "innovations" },
+      { title: nav[2], pageSlug: "research" },
+      { title: nav[4], pageSlug: "about" },
+    ];
+
+    for (const kind of ["primary", "footer"]) {
+      const menuName = `${kind === "primary" ? "Primary" : "Footer"} Navigation (${locale.toUpperCase()})`;
+      const menuId = await ensureMenu(menuName);
+      const location = locale === DEFAULT_LOCALE ? kind : `${kind}___${locale}`;
+      await setMenuLocation(location, menuId);
+
+      const menuOrder = kind === "primary" ? items : [...items, { title: contactLabel, pageSlug: "contact" }];
+      let order = 1;
+      for (const entry of menuOrder) {
+        if (entry.pageSlug) {
+          const id = await pageId(entry.pageSlug);
+          if (!id) continue;
+          await ensureMenuItem(menuId, { title: entry.title, type: "post_type", object: "page", object_id: id, menu_order: order });
+        } else {
+          await ensureMenuItem(menuId, { title: entry.title, type: "custom", url: entry.url, menu_order: order });
+        }
+        order += 1;
+      }
+      console.log(`- ${menuName} (id ${menuId}) -> ${location}`);
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------- */
 /* About page -> WordPress Page (page.html template)                      */
 /* ---------------------------------------------------------------------- */
 
@@ -430,7 +735,12 @@ async function main() {
   requireEnv();
   await importTeam();
   await importPosts();
+  await importConditions();
+  await importInnovations();
+  await importHubPages();
+  await importContactPage();
   await importAboutPage();
+  await importMenus();
   console.log("\nDone.");
 }
 

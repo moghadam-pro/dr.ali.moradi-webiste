@@ -112,5 +112,53 @@ function dam_register_migration_rest_routes() {
 			},
 		)
 	);
+
+	register_rest_route(
+		'dr-ali-moradi/v1',
+		'/set-menu-location',
+		array(
+			'methods'             => 'POST',
+			'permission_callback' => function () {
+				return current_user_can( 'edit_theme_options' );
+			},
+			'callback'            => function ( WP_REST_Request $request ) {
+				// Assigns a menu to a nav menu location with a plain
+				// set_theme_mod() write, including Polylang's per-language
+				// location keys (e.g. "primary___fa" for "Primary
+				// Navigation فارسی"). Those compound keys are only
+				// understood by Polylang's own admin-screen markup, not by
+				// core's get_registered_nav_menus(), so the core
+				// `/wp/v2/menus` REST endpoint's schema validation rejects
+				// them.
+				//
+				// Known limitation, confirmed by testing: Polylang hooks
+				// `pre_update_option_theme_mods_{theme}` and reprocesses
+				// this option on its own terms when the *classic Menus
+				// screen* submits it, splitting the per-language mapping
+				// into its own internal storage; a raw REST/API write like
+				// this one is not run through that processing, so
+				// `has_nav_menu()` keeps reading the location as unset
+				// (Polylang's read-side filter zeroes every location,
+				// including ones this route never touched) until each menu
+				// is opened once in Appearance -> Menus and actually saved
+				// via that screen's own "Save Menu" button. This route is
+				// still useful to pre-seed the assignment before that
+				// manual step, and for a plain (non-Polylang) location.
+				// See progress-log.md on the docs branch.
+				$location = $request->get_param( 'location' );
+				$menu_id  = (int) $request->get_param( 'menu_id' );
+
+				if ( ! $location || ! $menu_id || ! wp_get_nav_menu_object( $menu_id ) ) {
+					return new WP_Error( 'invalid_params', 'Provide a location and a valid menu_id.', array( 'status' => 400 ) );
+				}
+
+				$locations             = get_theme_mod( 'nav_menu_locations', array() );
+				$locations[ $location ] = $menu_id;
+				set_theme_mod( 'nav_menu_locations', $locations );
+
+				return rest_ensure_response( array( 'nav_menu_locations' => $locations ) );
+			},
+		)
+	);
 }
 add_action( 'rest_api_init', 'dam_register_migration_rest_routes' );
