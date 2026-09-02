@@ -58,12 +58,17 @@ Pages → Add New, with a template assigned from Page Attributes.
 | `page-hub.html` | Section-hub pages (Clinical Care, Research, Innovation, Education overviews) — card grids, sub-sections |
 | `page-contact.html` | Contact page: locations, map placeholder, MPro Forms contact form |
 | `page-full-width.html` | Full-width page, no title/cover treatment |
-| `single.html` | Single blog/news post (shared across all categories) |
+| `single.html` | Single blog/news post (shared across all categories); also the fallback for the `publication` and `patient_resource` CPTs until they need a bespoke layout |
 | `archive.html` | Blog/News listing, filterable by category |
-| `singular-team.html` | Single Team Member (CPT) |
-| `singular-condition.html` | Single Condition (CPT) |
-| `singular-innovation.html` | Single Innovation project (CPT) |
-| `search.html`, `404.html` | Utility templates |
+| `single-team_member.html` | Single Team Member (CPT) |
+| `single-condition.html` | Single Condition (CPT) |
+| `single-innovation.html` | Single Innovation project (CPT) |
+| `search.html`, `404.html`, `index.html` | Utility templates (`index.html` is the required block-theme fallback) |
+
+Filenames follow WordPress's own block-template hierarchy convention
+(`single-{post_type}.html`), not the looser `singular-*` naming used in an
+earlier draft of this table — see `progress-log.md` for the as-built
+state.
 
 The operator never chooses a layout from scratch — only from this fixed
 list, so the visual system cannot be broken by accident.
