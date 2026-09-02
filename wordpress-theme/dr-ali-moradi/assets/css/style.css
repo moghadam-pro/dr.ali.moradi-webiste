@@ -1,0 +1,72 @@
+/*
+ * Rules that block support / theme.json settings don't reach: layout for
+ * the theme's own dynamic blocks and a couple of section paddings. Colors,
+ * fonts, and spacing scale come from theme.json (Global Styles) so they
+ * stay editable by the operator in the Site Editor.
+ */
+
+.dam-site-navigation__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.5rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.dam-site-navigation__list a {
+	text-decoration: none;
+}
+
+.dam-contact-info {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.dam-contact-info a {
+	text-decoration: none;
+}
+
+.dam-impact-stats__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 1.5rem 2rem;
+	list-style: none;
+	margin: 1.5rem 0 0.5rem;
+	padding: 0;
+}
+
+.dam-impact-stats__item {
+	display: flex;
+	flex-direction: column;
+}
+
+.dam-impact-stats__value {
+	font-size: 2rem;
+	font-weight: 700;
+}
+
+.dam-impact-stats__as-of {
+	font-size: 0.85rem;
+	opacity: 0.7;
+}
+
+.dam-hero,
+.dam-paths,
+.dam-expertise,
+.dam-innovation-preview,
+.dam-impact,
+.dam-appointments,
+.dam-latest-news,
+.dam-about-preview {
+	padding-top: 3rem;
+	padding-bottom: 3rem;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+}
+
+/* RTL: Persian/Arabic use the same layouts, mirrored by the browser via
+ * the document `dir` attribute WordPress sets per language (Polylang).
+ * No direction-specific overrides should be needed unless a component
+ * turns out to need one during QA. */

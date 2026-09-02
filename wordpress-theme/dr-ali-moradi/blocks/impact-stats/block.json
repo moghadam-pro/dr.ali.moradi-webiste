@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/impact-stats",
+	"title": "Impact Numbers",
+	"category": "dr-ali-moradi",
+	"icon": "chart-bar",
+	"description": "Publication/patent/award counts, read live from Theme Options.",
+	"supports": { "html": false, "align": ["wide", "full"] },
+	"render": "file:./render.php"
+}

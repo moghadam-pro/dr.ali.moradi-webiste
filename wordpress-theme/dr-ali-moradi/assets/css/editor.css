@@ -1,0 +1,24 @@
+/* Loaded in the block editor only, via add_editor_style(). Mirrors the
+ * handful of front-end-only layout rules in style.css so what the operator
+ * sees while editing roughly matches the published page. */
+
+.dam-site-navigation__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.5rem;
+	list-style: none;
+	padding: 0;
+}
+
+.dam-impact-stats__list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 1.5rem 2rem;
+	list-style: none;
+	padding: 0;
+}
+
+.dam-impact-stats__value {
+	font-size: 2rem;
+	font-weight: 700;
+}

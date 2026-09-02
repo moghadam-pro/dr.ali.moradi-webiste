@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/contact-info",
+	"title": "Clinic Contact Info",
+	"category": "dr-ali-moradi",
+	"icon": "phone",
+	"description": "Phone, WhatsApp, and address, read live from Theme Options.",
+	"supports": { "html": false, "align": false },
+	"render": "file:./render.php"
+}

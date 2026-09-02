@@ -8,3 +8,4 @@ dist/
 .wrangler/
 *.log
 *.tsbuildinfo
+wordpress-theme/content-migration/export/
