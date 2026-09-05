@@ -418,3 +418,41 @@ Closes the "no working posts listing / Blog nav item" item from
 - Re-ran the full automated health check (141 URLs, all three
   languages) after all of the above: 0 broken links, 0 PHP
   errors/warnings, 0 pages missing `dir="rtl"`.
+
+## 2026-09-05 (continued) — a real MPro Forms contact form
+
+The Contact page had a "MPro Forms placeholder" text note instead of an
+actual form (architecture.md: "All forms ... are built and rendered by
+MPro Forms"). Built one:
+
+- Used wp-admin → Forms → New form → "Contact us (complete)" template
+  (MPro Forms has no REST or CLI API — its form builder is the only way
+  to create one) and relabeled its fields to match the real copy
+  already in `homepage-content.json`'s `contact` object: the "Enquiry
+  type" dropdown's three options (Research collaboration / Education
+  and training / Media and professional enquiry), the message field's
+  sensitive-medical-information placeholder, and the consent checkbox.
+  The consent text is *adapted*, not copied verbatim: the old React
+  site's version specifically described a mailto-style form ("opens my
+  email application"), which is factually wrong for MPro Forms (stores
+  entries server-side, has its own inbox) — kept the underlying
+  instruction (don't send sensitive medical info; use Nobat.ir for a
+  real visit) and dropped the no-longer-true mechanism description.
+- Embedded via `[mpro_form id="1"]` on all three language versions of
+  the Contact page (`import-to-wordpress.mjs`'s `importContactPage()`
+  updated to embed this shortcode for future runs; the three
+  already-existing Contact pages were patched directly since the
+  importer's idempotent `ensureEntry` intentionally never overwrites an
+  existing entry's content).
+- Verified live: the form renders with the correct fields, options, and
+  placeholder text on `/contact/`; `/fa/contact-fa/` and
+  `/ar/contact-ar/` both return 200 with the form present and no PHP
+  errors. Did not submit a test entry (would create a fake row in the
+  operator's real inbox for no benefit).
+- **Known limitation, not solved**: MPro Forms doesn't hook into
+  Polylang string translation, so the form's field labels stay in
+  English even on the `fa`/`ar` Contact pages. Fixing this would mean
+  changes to MPro Forms itself (the operator's own plugin, out of scope
+  here) or building a second, separately-labelled form per language —
+  not done, to avoid guessing at a design the operator hasn't asked
+  for.

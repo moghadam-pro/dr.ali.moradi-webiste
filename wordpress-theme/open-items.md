@@ -82,6 +82,18 @@ decisions and time, not new access or approvals.
     `progress-log.md`'s 2026-09-05 entry for what was tried and why an
     empty placeholder slug (a possible fix) wasn't attempted.
 
+12. **MPro Forms contact form built; its labels aren't localized.** A
+    real form (`[mpro_form id="1"]`, built by hand — MPro Forms has no
+    REST/CLI API) is now embedded on all three Contact pages, fields
+    matching `homepage-content.json`'s `contact` object. Not solved:
+    MPro Forms doesn't hook into Polylang string translation, so the
+    form's field labels ("Full name", "Enquiry type", etc.) stay in
+    English on the `fa`/`ar` Contact pages. Fixing this needs either a
+    change to MPro Forms itself (the operator's own plugin) or a
+    second, separately-labelled form per language — not built, since
+    guessing at that design wasn't warranted without the operator
+    asking for it.
+
 ## Content decisions needed before Education can be built
 
 7. **Education has no content anywhere.** Neither `tmp.saveon.me` nor
