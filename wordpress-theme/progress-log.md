@@ -952,3 +952,45 @@ English and Persian (RTL-mirrored).
   always takes the `dam_render_clinical_care_body()` branch) but was
   left in place rather than removed, since removing it isn't needed for
   correctness and wasn't asked for.
+
+## 2026-09-05 (final pass) — full site sweep, every page, every locale
+
+The operator asked to keep checking pages, explicitly including Arabic.
+Went through every distinct page type in English, Persian, and Arabic
+by hand (homepage, About, Contact, Research, Innovation, the Clinical
+Care hub, clinic/hospital services, both galleries, all four
+patient-resources pages, the blog archive, a single post, and several
+team-member profiles), then ran an automated check across all 168
+published URLs (every page, post, team member, condition, and
+innovation entry, in all three languages).
+
+**Automated result: 0 broken links (all 200), 0 PHP
+errors/warnings/notices, 100% correct `dir="rtl"` on every `fa`/`ar`
+page.** No regressions from this session's earlier fixes.
+
+**Two new, real gaps found and documented (not fixed — see
+open-items.md items 12 and 13 for detail), both outside the theme's
+own code:**
+- The MPro Forms contact embed's "Enquiry type" dropdown placeholder
+  and consent checkbox show literal Persian text on the *Arabic*
+  contact page (confirmed by comparing all three locales: English
+  shows "Select"/"Yes", Persian shows "انتخاب کنید"/"بله" — correctly
+  — but Arabic also shows "انتخاب کنید"/"بله" instead of an Arabic
+  translation). This is inside MPro Forms' own form-builder
+  configuration, not theme code — needs an Arabic translation added to
+  the form's own field options.
+- `single-condition.html`/`single-innovation.html` (individual
+  Condition/Innovation CPT entries, e.g.
+  `/conditions/hand-and-wrist-disorders/`) never received the visual
+  redesign the rest of the site got — still the plain placeholder
+  markup from before 2026-09-05. Lower priority: neither template is
+  linked from anywhere in the current navigation or hub pages (only
+  reachable by direct URL or the XML sitemap), so this is a real but
+  currently invisible-to-visitors gap.
+
+Everything else re-verified working correctly, including the
+Persian/Arabic team grids' correct per-locale members (the
+`clinical-care` taxonomy-slug fix from the previous entry), the
+restored 5-column footer in Persian and Arabic (RTL-mirrored), and
+every team member's "back to the team" link resolving to the correct
+locale-appropriate hub page.

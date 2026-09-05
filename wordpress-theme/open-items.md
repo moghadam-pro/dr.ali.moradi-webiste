@@ -101,6 +101,25 @@ decisions and time, not new access or approvals.
     there — flagged for the operator/form owner rather than guessed
     at or edited here.
 
+13. **`condition` and `innovation` CPT single pages (`single-condition.html`,
+    `single-innovation.html`) never got the visual redesign.** Found
+    while sweeping every page in every locale this session: individual
+    entries like `/conditions/hand-and-wrist-disorders/` and
+    `/innovation/external-fixation-systems/` still render as plain
+    title + excerpt with no cover photo or styling — the original
+    placeholder templates from before the 2026-09-05 redesign passes,
+    which covered the hub pages (Research/Innovation) and every other
+    template but never named these two. Lower urgency than the rest of
+    the redesign: neither template is linked from anywhere in the
+    current navigation, homepage, or hub pages — the homepage's
+    innovation cards and the hub pages' team/content sections all link
+    generically to the `innovations`/`research` hub, not to individual
+    CPT entries (a deliberate earlier decision, see progress-log.md) —
+    so these ~9 pages (6 conditions + 3 innovations, ×3 locales) are
+    only reachable by a direct URL or through the XML sitemap. Not
+    fixed here since it's a new chunk of design work, not a bug in
+    something already built; flagged for a decision on priority.
+
 ## Content decisions needed before Education can be built
 
 7. **Education has no content anywhere.** Neither `tmp.saveon.me` nor
