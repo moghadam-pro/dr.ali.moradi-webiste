@@ -15,7 +15,7 @@ $menu_icon_close = dam_icon( 'x', 24 );
 <a class="skip-link" href="#content"><?php echo esc_html( $t['skip'] ?? 'Skip to content' ); ?></a>
 <header <?php echo get_block_wrapper_attributes( array( 'class' => 'site-header' ) ); ?>>
 	<a class="brand" href="<?php echo esc_url( $home ); ?>" aria-label="<?php esc_attr_e( 'Dr. Ali Moradi home', 'dr-ali-moradi' ); ?>">
-		<img src="<?php echo esc_url( DAM_THEME_URI . '/assets/img/brand/' . $logo ); ?>" width="153" height="50" alt="Dr. Ali Moradi">
+		<img src="<?php echo esc_url( dam_theme_asset_url( '/assets/img/brand/' . $logo ) ); ?>" width="153" height="50" alt="Dr. Ali Moradi">
 	</a>
 
 	<?php if ( has_nav_menu( 'primary' ) ) : ?>

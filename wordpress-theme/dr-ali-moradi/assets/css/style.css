@@ -223,6 +223,7 @@ img { display: block; max-width: 100%; }
 .footer-book { display: flex; align-items: center; gap: 7px; margin-top: 20px; color: white !important; font-weight: 750; }
 .footer-contact a, .footer-contact p, .footer-social a { display: flex; align-items: flex-start; gap: 8px; margin: 0; }
 .footer-contact svg, .footer-social svg { width: 16px; height: 16px; margin-top: 2px; flex: none; color: #72b8dc; }
+.footer-social img { object-fit: contain; filter: brightness(0) saturate(100%) invert(75%) sepia(25%) saturate(901%) hue-rotate(158deg) brightness(89%) contrast(84%); flex: 0 0 auto; width: 16px; height: 16px; margin-top: 2px; }
 .footer-bottom { display: flex; justify-content: space-between; gap: 30px; padding-top: 22px; padding-bottom: 28px; border-top: 1px solid rgba(255,255,255,.11); color: #829eaa; font-size: 11px; }
 .footer-bottom a { font-size: 11px; }
 

@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DAM_THEME_VERSION', '0.4.0' );
+define( 'DAM_THEME_VERSION', '0.5.0' );
 define( 'DAM_THEME_DIR', get_template_directory() );
 define( 'DAM_THEME_URI', get_template_directory_uri() );
 
@@ -74,6 +74,18 @@ add_action( 'wp_enqueue_scripts', 'dam_enqueue_assets' );
  * `.locale-fa` / `.locale-ar` selectors) so Persian/Arabic pages pick up
  * the Vazirmatn/Scheherazade font stack without per-template overrides.
  */
+/**
+ * URL for a theme-bundled asset with the same `?ver=` cache-busting the
+ * enqueued CSS/JS already use. Without this, a file that 404s once (e.g.
+ * mid-deploy) gets that failure cached by the browser for as long as the
+ * host's `Cache-Control` header says -- confirmed on this host to be a
+ * literal 10 years -- so a later successful deploy of the *same* URL
+ * never fixes it for anyone who already hit the 404. See progress-log.md.
+ */
+function dam_theme_asset_url( $relative_path ) {
+	return DAM_THEME_URI . $relative_path . '?ver=' . DAM_THEME_VERSION;
+}
+
 function dam_locale_body_class( $classes ) {
 	$locale     = dam_current_locale();
 	$classes[]  = 'locale-' . $locale;
