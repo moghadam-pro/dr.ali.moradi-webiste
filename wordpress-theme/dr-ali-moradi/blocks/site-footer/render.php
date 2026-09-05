@@ -34,7 +34,7 @@ $social = array(
 );
 ?>
 <footer <?php echo get_block_wrapper_attributes( array( 'class' => 'site-footer' ) ); ?>>
-	<div class="section-shell footer-grid">
+	<div class="section-shell footer-grid footer-grid--no-resources">
 		<div class="footer-brand">
 			<img src="<?php echo esc_url( dam_theme_asset_url( '/assets/img/brand/' . $logo ) ); ?>" width="153" height="50" alt="Dr. Ali Moradi">
 			<p><?php echo esc_html( $t['footer']['bio'] ); ?></p>
