@@ -1,0 +1,16 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/interior-cover",
+	"title": "Interior Page Cover",
+	"category": "dr-ali-moradi",
+	"icon": "cover-image",
+	"description": "The photo cover (kicker/title/intro) used at the top of every interior page, with the scroll-shrink effect.",
+	"attributes": {
+		"pageKey": { "type": "string", "default": "" },
+		"image": { "type": "string", "default": "" },
+		"backLink": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

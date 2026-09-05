@@ -133,6 +133,11 @@
       "name": "page-full-width",
       "title": "Full Width Page",
       "postTypes": ["page"]
+    },
+    {
+      "name": "page-about",
+      "title": "About Page",
+      "postTypes": ["page"]
     }
   ]
 }

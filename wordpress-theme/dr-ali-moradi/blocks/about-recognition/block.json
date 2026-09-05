@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/about-recognition",
+	"title": "About: Recognition",
+	"category": "dr-ali-moradi",
+	"icon": "awards",
+	"description": "The closing recognition section linking to the blog/news archive.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

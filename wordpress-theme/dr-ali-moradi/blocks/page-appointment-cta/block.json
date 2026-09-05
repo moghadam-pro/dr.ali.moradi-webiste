@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/page-appointment-cta",
+	"title": "Page Appointment CTA",
+	"category": "dr-ali-moradi",
+	"icon": "calendar",
+	"description": "The 'book an appointment' call-to-action shown at the bottom of every interior page.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

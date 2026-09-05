@@ -591,18 +591,15 @@ async function importContactPage() {
     const c = homepage[locale]?.contact;
     if (!c) continue;
 
-    const blocks = [];
-    if (c.intro) blocks.push(paragraphBlock(c.intro));
-    if (c.office) blocks.push(paragraphBlock(c.office));
-    if (c.clinic) blocks.push(paragraphBlock(c.clinic));
-    if (c.beforeTitle) blocks.push(headingBlock(c.beforeTitle, 3));
-    if (c.beforeText) blocks.push(paragraphBlock(c.beforeText));
-    blocks.push(`<!-- wp:shortcode -->${CONTACT_FORM_SHORTCODE}<!-- /wp:shortcode -->`);
-
+    // The page-contact.html template's own dr-ali-moradi/contact-details
+    // block now renders the kicker/beforeTitle/beforeText/office copy
+    // (see wordpress-theme/dr-ali-moradi/blocks/contact-details), so the
+    // page's stored content is just the form shortcode -- duplicating
+    // that copy here would print it twice on the page.
     payloadByLocale[locale] = {
       status: "publish",
       title: c.title || "Contact",
-      content: blocks.join("\n\n"),
+      content: `<!-- wp:shortcode -->${CONTACT_FORM_SHORTCODE}<!-- /wp:shortcode -->`,
       template: "page-contact",
     };
   }
