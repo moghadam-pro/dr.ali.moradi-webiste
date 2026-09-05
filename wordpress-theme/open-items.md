@@ -78,17 +78,28 @@ decisions and time, not new access or approvals.
     `progress-log.md`'s 2026-09-05 entry for what was tried and why an
     empty placeholder slug (a possible fix) wasn't attempted.
 
-12. **MPro Forms contact form built; its labels aren't localized.** A
-    real form (`[mpro_form id="1"]`, built by hand — MPro Forms has no
-    REST/CLI API) is now embedded on all three Contact pages, fields
-    matching `homepage-content.json`'s `contact` object. Not solved:
-    MPro Forms doesn't hook into Polylang string translation, so the
-    form's field labels ("Full name", "Enquiry type", etc.) stay in
-    English on the `fa`/`ar` Contact pages. Fixing this needs either a
-    change to MPro Forms itself (the operator's own plugin) or a
-    second, separately-labelled form per language — not built, since
-    guessing at that design wasn't warranted without the operator
-    asking for it.
+12. **MPro Forms contact form built; its labels aren't localized —
+    and on Arabic, part of it silently falls back to Persian, not
+    English.** A real form (`[mpro_form id="1"]`, built by hand — MPro
+    Forms has no REST/CLI API) is embedded on all three Contact pages,
+    fields matching `homepage-content.json`'s `contact` object. The
+    fixed field labels ("Full name", "Enquiry type", "Subject",
+    "Message", etc.) stay in English on every locale, as previously
+    noted. Found this session, verified live on `/ar/contact-ar/`: two
+    of the form's own *configurable* values — the "Enquiry type"
+    dropdown's placeholder option and the consent checkbox's label —
+    **do** vary per language (English page shows "Select" / "Yes";
+    Persian page shows "انتخاب کنید" / "بله"), but the Arabic page also
+    shows the Persian text "انتخاب کنید" / "بله" verbatim instead of an
+    Arabic translation or an English fallback. This points to the form
+    being built with a Persian base value for these two fields and an
+    English translation added on top, with no Arabic translation ever
+    added — so Arabic falls through to the Persian raw value rather
+    than to English. This is inside MPro Forms' own form-builder
+    configuration (Forms → the "Contact us" form → its field options),
+    not the theme's code, so it needs an Arabic translation added
+    there — flagged for the operator/form owner rather than guessed
+    at or edited here.
 
 ## Content decisions needed before Education can be built
 
