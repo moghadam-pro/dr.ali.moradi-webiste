@@ -53,21 +53,27 @@ decisions and time, not new access or approvals.
    Already done once for the current `tmp.saveon.me` state; needed again
    only if the menus are recreated from scratch.
 
-9. **Visual/CSS design pass is a known, sized-up, not-started task —
-   confirm before starting it.** The current templates (front-page.html
-   especially) are functional placeholders: plain WP block markup, a
-   solid-color hero, no photos, icons, or decorative treatment — not a
-   visual match to the polished design on
-   `https://dralimoradi.moghadam.pro/`. The real design's photography
-   already exists in the repo (`public/media/hero/`,
-   `public/media/edited/`) and the color palette/fonts in `theme.json`
-   are already correct, so this is buildable without new assets, but
-   it's a genuinely large pass (hero layout with photo + quote overlay +
-   expertise cards, the dark "Connected Practice" horizontal scroller,
-   card styling throughout). Raised with the operator on 2026-09-03, who
-   chose to keep going on content/technical work for now rather than
-   start this. Confirm scope/priority with the operator before beginning
-   it, rather than assuming how much of it to do.
+9. **Visual/CSS design pass: homepage/header/footer done
+   (2026-09-05); interior pages not started yet.** The operator asked
+   for a redesign matching `https://dralimoradi.moghadam.pro/` exactly
+   after initially deferring it on 2026-09-03. Done: header, footer,
+   and every homepage section (hero with photo/orbits/quote, facet bar,
+   connected-practice journey strip, pathways, innovation cards, impact
+   numbers, appointment accordion, news grid, about-preview),
+   ported directly from the reference site's own source (this repo's
+   `main`/`app/*` — see progress-log.md's 2026-09-05 (continued
+   further) entry) with matching CSS, copy (en/fa/ar), and RTL
+   mirroring. **Not done yet**: every interior page template
+   (`page-hub`, `page-contact`, `page.html`, `archive.html`,
+   `single.html`, team-profile/gallery templates, the About page, the
+   Clinical Care hub, the Blog archive/post pages) still uses the old
+   plain-block placeholder markup and the old placeholder color
+   palette's visual weight — there will be a visible seam between the
+   redesigned homepage and any interior page until those get the same
+   treatment. The reference's own source for all of these
+   (`ClinicPage`, `AboutPage`, `BlogArchive`, `TeamProfilePage`,
+   `GalleryCollection`, etc. in `app/site-page.tsx`) is available to
+   port the same way the homepage was.
 
 10. ~~**Menu location assignment needs a manual finishing step.**~~ See
     item 6 above — same fix category, listed once.

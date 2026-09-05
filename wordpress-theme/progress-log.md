@@ -456,3 +456,137 @@ MPro Forms"). Built one:
   here) or building a second, separately-labelled form per language —
   not done, to avoid guessing at a design the operator hasn't asked
   for.
+
+## 2026-09-05 (continued further) — homepage/header/footer visual redesign
+
+The operator asked for a visual redesign matching the reference site
+(`https://dralimoradi.moghadam.pro/`) exactly, after previously choosing
+to defer it (see open-items.md item 9). Discovered that this same
+repository (on `main`, and therefore in both worktrees) *is* the
+reference site's own Next.js source — `app/site-page.tsx`,
+`app/site-content.ts`, `app/globals.css` — so the redesign was built by
+porting that real markup/CSS/copy directly rather than approximating it
+from screenshots.
+
+**What changed**, all in the theme's own code (no new plugin):
+
+- `theme.json`'s color palette replaced with the reference's exact hex
+  values (`--ink #102630`, `--blue #4293c2`, `--orange #f7941d`,
+  `--blue-deep #062b3e`, etc.) — the previous palette was a placeholder
+  guess, not a real match despite what open-items.md item 9 said.
+- `assets/css/style.css` replaced with a ported version of the
+  reference's `globals.css` (same class names on purpose, for future
+  diffing against the source), plus a `.fill-img` utility class standing
+  in for the `position:absolute;inset:0` that Next.js's `<Image fill>`
+  injects inline (there is no Next.js here, so each such image gets the
+  class explicitly instead).
+- `assets/js/site.js` (new): vanilla-JS equivalents of the reference's
+  React state — mobile-nav toggle, language-dropdown toggle, the
+  appointment accordion, scroll-reveal via `IntersectionObserver`, and
+  the interior-page cover's scroll-shrink effect.
+- `inc/icons.php` (new): a small hand-drawn icon set in the same
+  24x24 stroke style as the reference's `lucide-react` icons (check,
+  chevron, arrow, calendar, phone, mail, map-pin, etc.) — not
+  byte-identical SVG paths, since lucide's exact path data wasn't
+  available to copy from here, but visually equivalent generic
+  pictograms.
+- `inc/homepage-content.php` (new): per-locale (en/fa/ar) copy for the
+  header, footer, and every homepage section, transcribed verbatim from
+  the reference's own `app/site-content.ts` — the same "static
+  translated-copy object" approach the reference itself uses for
+  marketing/UI strings, as opposed to Theme-Options-editable content.
+  Also `dam_media_url( $slug )`, a small helper that looks up a Media
+  Library attachment by slug and returns its URL (see below), and
+  `dam_localized_page_url( $slug )` for linking to a page's translation
+  by slug.
+- `inc/nav-walker.php` (new): two `Walker_Nav_Menu` subclasses that
+  print the Primary menu as bare `<a class="nav-link">` tags (desktop)
+  or full-width rows with a trailing chevron (mobile) instead of
+  `<ul><li>` — matching the reference's flat markup, which the existing
+  `dr-ali-moradi/site-navigation` block's plain `wp_nav_menu()` call
+  couldn't produce.
+- Ten new dynamic blocks, each a single self-contained
+  `render.php` (matching the existing pattern from `impact-stats` /
+  `appointment-cta`): `site-header` and `site-footer` (replacing
+  `parts/header.html` / `parts/footer.html`'s content wholesale — a
+  tightly-structured section like the header needs to be one block, not
+  several, so WordPress's per-block wrapper `<div>`s don't break the
+  exact parent/child CSS), and eight `homepage-*` blocks (hero,
+  connected-practice journey, pathways, innovation stories, impact
+  numbers, appointments accordion, news/awards, about-preview) used
+  directly in `templates/front-page.html` in place of the old generic
+  placeholder markup (plain headings/paragraphs/columns).
+- `homepage-news` queries the 4 latest real posts (not a hardcoded
+  "awards" tag filter like the reference, since no such taxonomy exists
+  on the imported posts yet) — a deliberate simplification, not a bug.
+- `homepage-innovation` and `homepage-journey`'s "read more" links point
+  to the `innovations` hub page generically rather than deep-linking to
+  specific Innovation CPT posts per card, to avoid guessing at slug
+  matches.
+- Footer's "Explore" column links only to pages that actually exist
+  (`clinical-care`, `innovations`, `research`, `about`, `blog` — not
+  `education`, which still has no content per open-items.md item 7) —
+  checked with `get_page_by_path()` at render time so the column
+  self-updates if Education is ever added.
+- Footer's social-media column now has real links (Instagram, Telegram,
+  Aparat) found hardcoded in the reference's own `Footer()` component —
+  this resolves open-items.md item 4's "no WhatsApp/social links
+  anywhere" for everything except WhatsApp, which genuinely isn't in
+  the reference either.
+
+**Two real bugs found and fixed while deploying this:**
+
+1. **Theme-upload endpoint has a much lower request-size ceiling than
+   Media Library uploads, on this host.** Packaging the theme zip with
+   its ~1.9MB of new decorative photography (hero background, the four
+   connected-practice images, three innovation photos, the appointments
+   portrait, the about-page office photo) made Appearance → Themes →
+   Upload Theme fail with "The package could not be installed. The
+   theme is missing the style.css stylesheet" — misleading, since the
+   zip was verified byte-for-byte intact (`unzip -t`, `unzip -l`) with
+   `style.css` correctly at `dr-ali-moradi/style.css`. Confirmed by
+   testing: a code-only zip (no images) of the exact same theme
+   installed without issue, and Media Library's own uploader reports a
+   64MB ceiling and accepted every one of those same images
+   individually without complaint. Conclusion: the failure is a
+   silently-truncated upload (likely `post_max_size`, or a
+   reverse-proxy/WAF body-size limit ahead of PHP) specific to the
+   classic theme-zip-upload form, not a zip problem or a Media Library
+   problem. **Fix**: decorative photography now uploads through Media
+   Library (queried by attachment slug at render time via
+   `dam_media_url()`) instead of shipping inside the theme zip; only
+   the small brand-logo SVGs (WordPress core blocks SVG uploads by
+   default) stay bundled in the theme. The full-resolution source files
+   still live in the theme's own `assets/img/` in git as a durable
+   backup/reference and as the `dam_media_url()` fallback value, they
+   are just excluded from the deployed zip.
+2. **Cloudflare kept serving a stale `style.css` after every theme
+   update, because the cache-busting version never changed.**
+   `DAM_THEME_VERSION` (used as the `?ver=` query string on the
+   enqueued stylesheet) had stayed `'0.1.0'` since the very first
+   deploy, so `style.css?ver=0.1.0` was byte-identical, from
+   Cloudflare's point of view, before and after this whole redesign —
+   it kept serving the old ~600-byte file from the very start of this
+   project. Confirmed by comparing `document.styleSheets[...].cssRules
+   .length` (9 rules — matching the old file) against a same-origin
+   `fetch()` of the same URL (which returned the new, correct, several
+   -hundred-rule content instead) with the same URL and browser cache.
+   **Fix**: bump `DAM_THEME_VERSION` on every deploy that touches CSS
+   or JS; this constant genuinely needs to change per release, not just
+   exist.
+
+**Verified live** on `tmp.saveon.me` in English and Persian: hero
+(background photo, orbits, credentials, quote card, facet bar),
+connected-practice journey strip, pathways cards, innovation cards,
+impact numbers, appointment accordion (all four items, first one
+open by default, real Nobat.ir link), news grid (showing real post
+thumbnails), about-preview, and the full footer — all match the
+reference's layout, spacing, and color treatment closely, including
+correct RTL mirroring in Persian (logo/nav/language-switcher swap
+sides, orbit/wash gradients flip, credential dots/icons mirror). Did
+not yet re-check Arabic specifically, and did not yet touch any
+interior page template (`page-hub`, `page-contact`, `page.html`,
+`archive.html`, `single.html`, team-profile/gallery templates) — those
+still use the old placeholder block markup and colors from before this
+session, so there will be a visible seam between the homepage and any
+interior page until those get the same treatment.
