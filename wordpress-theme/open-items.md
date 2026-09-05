@@ -53,27 +53,40 @@ decisions and time, not new access or approvals.
    Already done once for the current `tmp.saveon.me` state; needed again
    only if the menus are recreated from scratch.
 
-9. **Visual/CSS design pass: homepage/header/footer done
-   (2026-09-05); interior pages not started yet.** The operator asked
+9. **Visual/CSS design pass: homepage, header/footer, About, Contact,
+   Research, and Innovation done (2026-09-05); Clinical Care hub,
+   Blog, team profiles, and galleries remaining.** The operator asked
    for a redesign matching `https://dralimoradi.moghadam.pro/` exactly
-   after initially deferring it on 2026-09-03. Done: header, footer,
-   and every homepage section (hero with photo/orbits/quote, facet bar,
-   connected-practice journey strip, pathways, innovation cards, impact
-   numbers, appointment accordion, news grid, about-preview),
-   ported directly from the reference site's own source (this repo's
-   `main`/`app/*` — see progress-log.md's 2026-09-05 (continued
-   further) entry) with matching CSS, copy (en/fa/ar), and RTL
-   mirroring. **Not done yet**: every interior page template
-   (`page-hub`, `page-contact`, `page.html`, `archive.html`,
-   `single.html`, team-profile/gallery templates, the About page, the
-   Clinical Care hub, the Blog archive/post pages) still uses the old
-   plain-block placeholder markup and the old placeholder color
-   palette's visual weight — there will be a visible seam between the
-   redesigned homepage and any interior page until those get the same
-   treatment. The reference's own source for all of these
-   (`ClinicPage`, `AboutPage`, `BlogArchive`, `TeamProfilePage`,
-   `GalleryCollection`, etc. in `app/site-page.tsx`) is available to
-   port the same way the homepage was.
+   after initially deferring it on 2026-09-03. Done, all ported
+   directly from the reference site's own source (this repo's
+   `main`/`app/*`) with matching CSS, copy (en/fa/ar), and RTL
+   mirroring — see progress-log.md's several 2026-09-05 entries:
+   - Header, footer, and every homepage section.
+   - The About page (its own 5-section design: story, connected-
+     practice principles, training timeline, fields-of-work grid,
+     recognition banner).
+   - The Contact page (photo cover + two-column layout around the real
+     MPro Forms embed).
+   - Research and Innovation (shared generic interior template: cover +
+     numbered sections with a sidebar table of contents + real team
+     grid + closing CTA).
+   **Not done yet**:
+   - **Clinical Care** falls back to the generic interior template
+     above instead of its own dedicated pathways/team/galleries design
+     — blocked on content that doesn't exist yet in this site: the
+     `clinical-care/clinic-services` and `.../hospital-services`
+     sub-pages, and ~32 real gallery images
+     (`app/structured-content.ts`'s `galleryCollections`) that were
+     never imported.
+   - Blog archive/single-post pages, team-member profile pages, and
+     the clinic/hospital surgical-case gallery pages still use the old
+     plain-block placeholder templates and old placeholder visual
+     weight — there will be a visible seam between these and the
+     redesigned pages until they get the same treatment. The
+     reference's own source for all of these (`BlogArchive`,
+     `BlogPostPage`, `TeamProfilePage`, `GalleryCollection`,
+     `ClinicPage` in `app/site-page.tsx`) is available to port the
+     same way the rest was.
 
 10. ~~**Menu location assignment needs a manual finishing step.**~~ See
     item 6 above — same fix category, listed once.

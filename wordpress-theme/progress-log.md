@@ -575,6 +575,114 @@ from screenshots.
    or JS; this constant genuinely needs to change per release, not just
    exist.
 
+## 2026-09-05 (yet again) — About, Contact, Research, and Innovation redesigned
+
+Continued the reference-matching redesign onto the interior pages,
+after the operator asked to keep going. Same method as the homepage:
+read the exact markup/CSS/copy from the reference site's own source
+(this repo's `main`/`app/*`) and port it, rather than approximating.
+
+New reusable pieces:
+- `blocks/interior-cover` — the photo cover (kicker/title/intro) at the
+  top of every interior page. Resolves which page's copy to show via
+  `dam_current_page_key()` (strips the importer's `-fa`/`-ar` slug
+  suffix), so the same block works for all three languages of a page
+  without per-language wiring, and special-cases `about` and `contact`
+  to pull from their own dedicated copy files instead of the generic
+  interior-page fallback entry of the same key.
+- `blocks/interior-body` — the numbered content-sections + sticky
+  sidebar table of contents + closing "next step" card, used on
+  Research and Innovation. Copy transcribed verbatim from the
+  reference's `app/site-content.ts` `pages` object into the new
+  `inc/interior-content.php`. Research's next-step card links to the
+  real Google Scholar profile; everything else links to an internal
+  page.
+- `blocks/page-appointment-cta` — the closing booking CTA + medical-
+  emergency notice shared by every interior page.
+- `inc/team.php`'s `dam_render_team_section( $area )` (a plain
+  function, not a block, since it's called inline from
+  `interior-body`) — queries the real `team_member` CPT posts by the
+  existing `team_area` taxonomy, matching the reference's
+  `<TeamSection area="..."/>` reuse on Research/Innovation. No team
+  content was invented; this only queries what the content-migration
+  import already created (confirmed live: Research shows Dr. Moradi,
+  Dr. Jahani, Maedeh Sharafoddin, and Dr. Kalali with their real photos
+  and bios, matching the reference exactly).
+
+**About page** got its own dedicated template (`page-about`, added to
+`theme.json`) and five dedicated blocks (`about-story`, `about-practice`,
+`about-journey`, `about-ecosystem`, `about-recognition`), since its
+real design — five distinct full-width sections (portrait + story,
+dark "connected practice" with three principle cards, a sticky training
+timeline, a three-card "fields of work" grid, and a closing recognition
+banner) — doesn't fit the generic interior-body pattern at all. Copy
+transcribed verbatim from `app/about-content.ts` into the new
+`inc/about-content.php`. The "fields of work" grid only shows cards for
+pages that actually exist (Research, Innovation) and leaves out
+Education, the same existence-check pattern already used for the
+footer's Explore column.
+
+**Contact page** got a `contact-details` block for its left column
+(kicker, "before you write" notice, Nobat button, office address,
+email, phone), matching the reference's two-column `contact-layout`.
+The page's own stored content used to duplicate this copy (from the
+original `importContactPage()`, which wrote intro/office/clinic/
+beforeTitle/beforeText paragraphs *and* the MPro Forms shortcode into
+one page); since `contact-details` now renders that copy itself, the
+three live Contact pages were patched directly (via an authenticated
+`fetch()` from the page's own wp-admin editor tab, using the
+`wpApiSettings.nonce` already loaded there — no Application Password
+needed for this one-off) to hold just the shortcode, and
+`importContactPage()` was updated the same way so a future re-import
+doesn't reintroduce the duplication. MPro Forms renders its own markup
+the theme doesn't control, so rather than trying to restyle its
+internal fields, the wrapping element around it just gets the same
+card treatment as `.contact-form` via a new `.contact-form-shell`
+class.
+
+**Two content-model corrections found and fixed while wiring this up:**
+- `pathSlugs`/footer/journey/innovation-story links all used the
+  reference's own slug `innovation` (singular) for the Innovation hub,
+  but this site's actual imported page slug is `innovations` (plural)
+  — confirmed via `/wp-json/wp/v2/pages`. Fixed every reference to the
+  correct plural slug; this also fixed the footer's "Explore" column,
+  which was silently one link short (4 of 5) before the fix because the
+  existence check (`get_page_by_path('innovation')`) was quietly
+  failing.
+- `about`'s *generic* interior-page fallback entry in
+  `inc/interior-content.php` (title: "A surgeon, researcher, inventor,
+  and educator.") is intentionally different text from the *real*
+  About page's own copy in `inc/about-content.php` (title: "A surgeon
+  shaped by curiosity, evidence, and making.") — these are two
+  different objects in the reference source for two different
+  purposes (a rarely-reached fallback vs. the real page), and
+  `interior-cover` needs to read the right one per page or the About
+  page's cover shows the wrong title.
+
+**Verified live** on `tmp.saveon.me` (English): About (all five
+sections, real office/doctor photos, correct Research/Innovation-only
+ecosystem cards), Contact (cover, contact-details column, MPro form in
+a proper card), Research (sidebar TOC, giant background numbers,
+Scholar CTA, real team grid), and Innovation (same pattern, correct
+copy) all match the reference's layout and content closely.
+
+**Not done yet, and why:**
+- **Clinical Care** currently falls back to the generic `interior-body`
+  (numbered sections) instead of its own dedicated `ClinicPage` design
+  (pathway cards to Clinic-services/Hospital-services + a team section
+  + before/after surgical-case galleries). That real design needs
+  content that doesn't exist in this WordPress site yet: the
+  `clinical-care/clinic-services` and `clinical-care/hospital-services`
+  sub-pages, and ~32 real gallery images (`app/structured-content.ts`'s
+  `galleryCollections`) that were never imported. Not fabricated;
+  flagged instead.
+- Blog archive/single-post pages, team-member profile pages, and the
+  clinic/hospital surgical-case gallery pages still use the old
+  placeholder templates from before this redesign.
+- Arabic has not been separately re-checked on any of these interior
+  pages (Persian and English were spot-checked during the homepage
+  pass; today's interior-page verification was English only).
+
 **Verified live** on `tmp.saveon.me` in English and Persian: hero
 (background photo, orbits, credentials, quote card, facet bar),
 connected-practice journey strip, pathways cards, innovation cards,
