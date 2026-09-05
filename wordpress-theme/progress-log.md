@@ -590,3 +590,65 @@ interior page template (`page-hub`, `page-contact`, `page.html`,
 still use the old placeholder block markup and colors from before this
 session, so there will be a visible seam between the homepage and any
 interior page until those get the same treatment.
+
+## 2026-09-05 (continued once more) — real icons, another cache bug, operator feedback
+
+The operator reviewed the redesign and gave three pieces of feedback:
+don't guess/recreate anything that already exists in the git repo or
+the live reference site (icons, SVGs, styles included); the English
+header logo wasn't loading; and to re-check for CSS drift against the
+live site. Addressed all three:
+
+- **`inc/icons.php`'s icons were hand-drawn approximations, not the
+  real thing.** The first pass wrote plausible-looking Lucide-style
+  SVGs from memory rather than the actual path data (`lucide-react`
+  isn't installed in this checkout — no `node_modules` — so there was
+  no local copy to read). Fixed by opening
+  `https://dralimoradi.moghadam.pro/` itself in a browser and reading
+  each icon's real path data straight out of the rendered DOM
+  (`document.querySelectorAll('svg.lucide')`, grouped by its
+  `lucide-<name>` class) across the homepage, the appointments
+  accordion's third (initially-collapsed) item, and an interior page
+  for `Sparkles` — 21 icons total, all now byte-identical to the
+  reference's own rendering instead of lookalikes.
+- **Footer social icons: the live site has moved ahead of this repo's
+  `main` for this one detail.** The reference's own `app/site-page.tsx`
+  in this repo still renders Instagram/Telegram/Aparat as generic
+  lucide `Camera`/`Send`/`PlayCircle` icons, but the *live* site
+  currently renders real branded icon files from `/icons/social/*.svg`
+  with a specific CSS `filter:` recolor rule. Since the operator's
+  instruction is to pull from whichever of the two sources (repo or
+  live site) actually has the asset, downloaded those three SVGs
+  directly and copied the exact filter rule from the live site's
+  computed CSS rather than approximating a tint.
+- **Real bug: the English logo 404'd once, and this host caches static
+  files for 10 years.** `assets/img/brand/logo.en.svg` returned 404 on
+  first load because an earlier zip deploy didn't yet include
+  `assets/img/brand/` (it was added in a later commit this same day).
+  The theme's static files are served with `Cache-Control:
+  max-age=315360000` (10 years) — confirmed via `fetch()` with
+  `cf-cache-status`/`cache-control` headers — so a browser that ever
+  hit that 404 keeps it forever, even after the file starts deploying
+  successfully; a plain `fetch()` bypassing cache proved the file was
+  fine on the server the whole time. Same root cause as the
+  `DAM_THEME_VERSION` stylesheet-caching bug from the previous entry,
+  just on an `<img src>` instead of an enqueued asset, which don't get
+  WordPress's own `?ver=` treatment automatically. Fixed with a new
+  `dam_theme_asset_url()` helper (append `?ver=DAM_THEME_VERSION`,
+  same pattern as the enqueue calls) applied to both header and footer
+  logo `<img>` tags.
+- **CSS re-check**: spot-compared several sections pixel-by-pixel
+  against the live site (facet bar, appointments portrait background,
+  footer layout) and found the ported CSS accurate except for the
+  footer-social icon filter noted above.
+- **"English should load by default" — investigated, could not
+  reproduce.** Checked Polylang's settings (English has the default-
+  language star, "Detect browser language" is deactivated) and tested
+  both a fresh visit to `/` and a visit to `/fa/` followed by a visit
+  to `/` (to check for Polylang's cookie-remembered-language behavior)
+  — both correctly served English (`<html lang="en-US">`, English
+  title). Whatever the operator saw may have been from before this
+  session's `dam_translate_front_page_option` fix (2026-09-05, earlier
+  entry) or a since-cleared browser/cookie state; flagged rather than
+  silently assumed-fixed, since it couldn't be reproduced to confirm
+  the fix actually addressed it.
