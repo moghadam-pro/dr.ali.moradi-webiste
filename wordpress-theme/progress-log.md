@@ -829,3 +829,126 @@ live site. Addressed all three:
   entry) or a since-cleared browser/cookie state; flagged rather than
   silently assumed-fixed, since it couldn't be reproduced to confirm
   the fix actually addressed it.
+
+## 2026-09-05 (yet again) — Clinical Care hub, blog, and team-profile pages completed
+
+Closes open-items.md item 9's last remaining piece. The operator asked
+to continue reviewing pages, focus this phase on the blog and
+team-member profiles (real content already exists for both), and fully
+complete the Clinical Care hub. Same method as every prior redesign
+phase: port the reference's own source (`app/site-page.tsx`) rather
+than approximate it.
+
+**New blocks/templates:**
+- `blocks/clinic-pathways`, `inc/clinic-content.php` — the hub's two
+  pathway cards (Clinic services / Hospital services) plus
+  `dam_render_clinical_care_body()`, which replaces the generic
+  `interior-body` numbered-sections layout for the Clinical Care page
+  specifically with the reference's own dedicated design.
+- `blocks/blog-archive`, `blocks/single-post-body`, `inc/blog-content.php`
+  — a real WP-post-backed archive grid and single-post layout (Overview
+  / Assessment / Next steps sections built from each post's actual
+  content, not invented), replacing the old generic placeholder.
+- `blocks/team-profile` — a team member's own page (photo, role,
+  summary, real post-content bio, a "draft background" disclosure
+  matching the reference's own provisional-CV notice, and a "back to
+  the team" link resolved per member via the `team_area` taxonomy).
+- `blocks/gallery-full`, `inc/gallery.php`, `templates/page-gallery.html`
+  — the two dedicated "view full gallery" pages (16-image grid + shared
+  lightbox modal) and the rotating 4-thumbnail preview strip used on
+  the hub itself.
+- Uploaded the 10 missing clinic gallery images
+  (`clinic-07.jpg`–`clinic-16.jpg` — only `clinic-01`–`06` had been
+  uploaded in an earlier session) so all 16 clinic images match the 16
+  hospital images already present.
+- Created the 8 real WordPress pages this content needed (en/fa/ar,
+  Polylang-linked, same `ensureTranslatedEntry`/`localizedSlug` pattern
+  as every other page): `clinic-services`, `hospital-services`,
+  `clinic-gallery`, `hospital-gallery` (`page-hub`/`page-gallery`
+  templates), and the four patient-resources pages `before-surgery`,
+  `after-surgery`, `faq`, `rehabilitation` (`page-hub` — their copy was
+  already written in `dam_clinic_subpages_copy()` from an earlier
+  session but the pages themselves never existed).
+
+**Four real bugs found and fixed while verifying all of this live**
+(not visible from reading the code — each confirmed with the browser's
+devtools before fixing):
+1. **Gallery lightbox modal stayed open on every page load.**
+   `.gallery-modal { display: grid }` unconditionally overrides the
+   browser's own `[hidden] { display: none }` default — author
+   stylesheet rules always beat user-agent rules regardless of
+   selector specificity or source order. The element's `hidden`
+   attribute was actually working correctly (`site.js`'s open/close
+   logic was never the problem); the CSS just ignored it. Fixed with
+   an explicit `.gallery-modal[hidden] { display: none; }` rule.
+2. **The hub's team section silently rendered nothing.** The
+   taxonomy lookup queried `team_area` by the slug "clinic" (matching
+   the `team-clinic` CSS class name convention used elsewhere), but the
+   real imported term slug is "clinical-care" — a mismatch, not a
+   missing-content problem (Polylang was already correctly resolving
+   the query to the current language's own term; confirmed by checking
+   the Persian hub page separately). Fixed in
+   `dam_render_team_section()` by mapping the CSS-class value to the
+   real term slug only for the taxonomy query, keeping the
+   `team-clinic` class name intact; `dam_team_member_back_slug()` had
+   the identical bug and got the same fix.
+3. **`/blog/` never rendered the new `blog-archive` block.** The
+   `home` FSE template had a stale customization saved in the database
+   from an earlier point in the project — WordPress's own default
+   Query Loop markup, `source: "custom"` in `/wp/v2/templates` — which
+   permanently shadows the theme's own `templates/home.html` file
+   until reverted, regardless of how many times the theme zip is
+   redeployed. Found by comparing the rendered page's HTML (plain
+   `post-featured-image`/`post-title`/`post-excerpt` core-block markup,
+   no `blog-grid` class anywhere) against `home.html`'s actual content.
+   Fixed with a `DELETE /wp/v2/templates/dr-ali-moradi//home`, which
+   WordPress treats as "revert to theme file" rather than an actual
+   delete (confirmed `source` flipped back to `"theme"` afterward). All
+   other templates were checked the same way and were not affected —
+   this was an isolated, one-time stray edit, not a systemic issue.
+4. **Every single blog post page rendered at ~60% of full width.**
+   `.single-post { max-width: 1120px; }` was written to size the
+   article's own wrapper `<article class="single-post ...">`, but
+   WordPress's `body_class()` also emits the literal string
+   `single-post` on every single post of post type `post` — so the
+   same selector matched `<body>` itself, capping the entire page
+   (header included) at 1120px instead of just the article column.
+   Confirmed via `getComputedStyle(document.body).width` returning the
+   exact `"1120px"` on a post page vs. the real viewport width
+   elsewhere. Fixed by renaming the wrapper's own class to
+   `single-post-article` (and the CSS selector to match) — a
+   collision worth remembering when naming any future block-wrapper
+   class against WordPress's own `body_class()` output (`home`,
+   `blog`, `archive`, `search`, `single`, `page`, `error404`, etc. are
+   all reserved this way).
+
+**One design gap found and closed, not a bug:** the footer's copy
+already had `Before surgery` / `After surgery` / `Frequently asked
+questions` / `Rehabilitation guidance` labels and a `Patient resources`
+column heading sitting unused since the homepage/footer redesign
+(`inc/homepage-content.php`'s `footer.before`/`.after`/`.faq`/`.rehab`),
+and the reference's own `app/site-page.tsx` confirms a fifth
+"Patient resources" footer column linking to exactly those four pages
+— it was disabled (`footer-grid--no-resources`, a 4-column layout) only
+because those pages didn't exist yet. Now that they do,
+`blocks/site-footer/render.php` renders the column conditionally (same
+`get_page_by_path()` existence-check pattern as the Explore column) and
+falls back to the 4-column layout automatically if any of the four
+pages is ever removed.
+
+**Verified live** on `tmp.saveon.me`: Clinical Care hub in English and
+Persian (pathway cards, team grid with correct per-locale members,
+both galleries with working rotation/lightbox/next-prev, "view full
+gallery" → real 16-image grid pages), a clinic-services sub-page, the
+blog archive and a single post (English), a team-profile page and its
+"back to the team" link, and the restored 5-column footer in both
+English and Persian (RTL-mirrored).
+
+**Not done in this phase:**
+- Arabic was not separately re-checked on any of today's new pages
+  (English and Persian were spot-checked).
+- The generic interior-page fallback copy for `clinical-care` in
+  `inc/interior-content.php` is now fully unused (the real hub page
+  always takes the `dam_render_clinical_care_body()` branch) but was
+  left in place rather than removed, since removing it isn't needed for
+  correctness and wasn't asked for.
