@@ -6,6 +6,7 @@ history, then use the focused documents for implementation details.
 
 ## Primary handoff documents
 
+- [گزارش تطبیق کامل WordPress با مرجع React — 2026-09-05](wordpress-react-parity-audit-2026-09-05-fa.md)
 - [بازطراحی کاورها و صفحه درباره من — 2026-08-25](change-log-2026-08-25-covers-and-about.md)
 - [آرشیو ساختاریافته گفت‌وگو و تصمیم‌های پروژه](project-conversation-archive-fa.md)
 - [گزارش اصلاح محتوا، تیم، نوآوری و راهنمای جراحی — 2026-08-23](change-log-2026-08-23.md)
