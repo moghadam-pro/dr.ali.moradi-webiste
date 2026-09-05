@@ -362,3 +362,59 @@ programmatically from the already-authenticated session instead).
   paths, so building it now would be premature, not skipped work.
   Revisit at the `dralimoradi.com` cutover, using the now-finalized
   slug scheme.
+
+## 2026-09-05 — a working "Blog" page, and a third Polylang gap found and fixed
+
+Closes the "no working posts listing / Blog nav item" item from
+`open-items.md`.
+
+- **`templates/home.html` added** — a query-loop template (post
+  featured image, category, title, excerpt, date; paginated) for
+  WordPress's standard Posts-page mechanism, modeled on `archive.html`.
+  First created directly via the `/wp/v2/templates` REST endpoint (no
+  theme re-zip/upload needed for a block-template-only change — worth
+  remembering for future template edits), then also committed as a real
+  theme file so a fresh theme deploy reproduces it.
+- **A real "Blog" page** now exists in all three languages
+  (`ensureTranslatedEntry`-based, same as every other page), plus a
+  small placeholder page to satisfy `page_on_front`'s requirement of a
+  real page id. Settings → Reading now has `show_on_front: page`,
+  `page_on_front`/`page_for_posts` pointing at these. The "Blog" nav
+  item (previously omitted — see the 2026-09-02 entry) is now in all
+  three Primary menus, linking correctly.
+- **Third Polylang free-tier gap found and fixed, in the theme's own
+  code**: confirmed by testing that Polylang has no per-language
+  mechanism at all for the static front page or posts page — unlike
+  Nav Menu locations (a distinct location per language, set from
+  Appearance → Menus), the classic Reading Settings screen has one
+  flat, language-mixed page picker, and saving it (via REST or through
+  that screen itself) only ever stores one global page id. Concretely:
+  with the placeholder correctly linked as a Polylang translation group
+  and `page_on_front` set to its English id, `/fa/` and `/ar/` still
+  rendered the posts listing instead of `front-page.html` — before *and
+  after* re-saving Reading Settings through wp-admin (ruling out "needs
+  a real save," the fix the menu-location gap needed). Fixed with
+  `dam_translate_front_page_option()` in `inc/polylang.php`: filters
+  `option_page_on_front` / `option_page_for_posts` to resolve to the
+  *current language's* Polylang translation of whichever page is
+  configured. Both `is_front_page()` and the posts-page query read
+  these options directly, so this one filter fixes both. Verified live
+  in all three languages after the fix.
+- **Known minor cosmetic side effect, not fixed**: visiting `/fa/` or
+  `/ar/` (not `/`) now 301-redirects once to that language's
+  placeholder page's own canonical URL (e.g.
+  `/fa/front-page-placeholder-fa/`) before rendering the real homepage.
+  Content and functionality are correct; only an extra redirect hop and
+  a not-quite-clean URL after landing. An empty placeholder-page slug
+  might avoid this; not tried.
+- **Caught before it shipped**: the placeholder page's title was
+  initially a long "do not delete" warning, which — since a page's
+  title is used for the browser tab and SEO `<title>` tag regardless of
+  whether `front-page.html` overrides the visible body — leaked that
+  warning into every homepage's `<title>`. Fixed: short clean titles
+  ("Home"/"خانه"/"الرئيسية"), with the warning moved into the page's
+  body content instead, seen only by an editor who opens it in
+  wp-admin.
+- Re-ran the full automated health check (141 URLs, all three
+  languages) after all of the above: 0 broken links, 0 PHP
+  errors/warnings, 0 pages missing `dir="rtl"`.

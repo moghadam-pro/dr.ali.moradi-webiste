@@ -69,7 +69,20 @@ decisions and time, not new access or approvals.
    start this. Confirm scope/priority with the operator before beginning
    it, rather than assuming how much of it to do.
 
-## Content decisions needed before Education and a "Blog" page can be built
+10. ~~**Menu location assignment needs a manual finishing step.**~~ See
+    item 6 above — same fix category, listed once.
+11. **Polylang has no per-language mechanism for the static front page
+    or posts page.** Fixed in the theme's own code (2026-09-05):
+    `dam_translate_front_page_option()` in `inc/polylang.php` filters
+    `option_page_on_front`/`option_page_for_posts` to the current
+    language's translation. One remaining, non-blocking cosmetic
+    side-effect: visiting `/fa/` or `/ar/` 301-redirects once to that
+    language's front-page-placeholder's own canonical URL before
+    rendering the homepage (content/functionality unaffected). See
+    `progress-log.md`'s 2026-09-05 entry for what was tried and why an
+    empty placeholder slug (a possible fix) wasn't attempted.
+
+## Content decisions needed before Education can be built
 
 7. **Education has no content anywhere.** Neither `tmp.saveon.me` nor
    the live reference site (`https://dralimoradi.moghadam.pro/education`,
@@ -77,14 +90,12 @@ decisions and time, not new access or approvals.
    not even homepage teaser text the way Clinical Care/Innovation/
    Research have. No Education hub page or nav item was created rather
    than inventing content. Needs real copy from the operator.
-8. **No "all posts" listing page exists, and building one is a design
-   decision, not a mechanical step.** `front-page.html` is the theme's
-   homepage and takes over the `/` URL, so there is currently no page a
-   "Blog"/"News" nav item could point to. Options: a dedicated posts
-   page at another slug (e.g. `/news/`, via Settings → Reading's "Posts
-   page"), or something else — needs a decision before it's built, so
-   the "Blog" nav item and a working posts archive are both still
-   missing.
+8. ~~**No "all posts" listing page exists.**~~ Resolved 2026-09-05: a
+   real "Blog" page (label as-is from `homepage-content.json`'s `nav`
+   array — the final wording is still an open content decision, see
+   below) now exists in all three languages via Settings → Reading's
+   "Posts page" mechanism, and the "Blog" nav item links to it in all
+   three Primary menus.
 
 ## Content decisions still open (carried over from `docs/content-strategy-and-sitemap.md`)
 
