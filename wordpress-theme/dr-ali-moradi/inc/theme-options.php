@@ -95,6 +95,15 @@ function dam_render_theme_options_page() {
 }
 
 /**
+ * Shared accessor so every block that links to the external booking
+ * service (header, mobile nav, homepage appointments, interior-page CTA)
+ * reads the same Theme Options field instead of repeating the default URL.
+ */
+function dam_appointment_url() {
+	return get_option( 'dam_appointment_url', 'https://nobat.ir/9705' );
+}
+
+/**
  * Parses a "Label|Value" per-line option into an array of [label, value]
  * pairs. Used by the impact-stats and contact-info blocks.
  */

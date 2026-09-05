@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DAM_THEME_VERSION', '0.1.0' );
+define( 'DAM_THEME_VERSION', '0.4.0' );
 define( 'DAM_THEME_DIR', get_template_directory() );
 define( 'DAM_THEME_URI', get_template_directory_uri() );
 
@@ -17,6 +17,9 @@ require_once DAM_THEME_DIR . '/inc/post-types.php';
 require_once DAM_THEME_DIR . '/inc/taxonomies.php';
 require_once DAM_THEME_DIR . '/inc/meta-fields.php';
 require_once DAM_THEME_DIR . '/inc/theme-options.php';
+require_once DAM_THEME_DIR . '/inc/icons.php';
+require_once DAM_THEME_DIR . '/inc/homepage-content.php';
+require_once DAM_THEME_DIR . '/inc/nav-walker.php';
 require_once DAM_THEME_DIR . '/inc/blocks.php';
 require_once DAM_THEME_DIR . '/inc/polylang.php';
 
@@ -62,5 +65,19 @@ add_action( 'after_setup_theme', 'dam_enqueue_editor_assets' );
  */
 function dam_enqueue_assets() {
 	wp_enqueue_style( 'dr-ali-moradi-style', DAM_THEME_URI . '/assets/css/style.css', array(), DAM_THEME_VERSION );
+	wp_enqueue_script( 'dr-ali-moradi-site', DAM_THEME_URI . '/assets/js/site.js', array(), DAM_THEME_VERSION, true );
 }
 add_action( 'wp_enqueue_scripts', 'dam_enqueue_assets' );
+
+/**
+ * Adds a `locale-{lang}` body class (matching the reference design's own
+ * `.locale-fa` / `.locale-ar` selectors) so Persian/Arabic pages pick up
+ * the Vazirmatn/Scheherazade font stack without per-template overrides.
+ */
+function dam_locale_body_class( $classes ) {
+	$locale     = dam_current_locale();
+	$classes[]  = 'locale-' . $locale;
+	$classes[]  = 'en' === $locale ? 'ltr' : 'rtl';
+	return $classes;
+}
+add_filter( 'body_class', 'dam_locale_body_class' );

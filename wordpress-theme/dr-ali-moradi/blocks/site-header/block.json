@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/site-header",
+	"title": "Site Header",
+	"category": "dr-ali-moradi",
+	"icon": "align-top",
+	"description": "The full site header: logo, primary navigation (Appearance -> Menus), language switcher, appointment button, and mobile menu -- matching the reference design's single-piece header markup.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

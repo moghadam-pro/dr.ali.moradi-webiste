@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/homepage-news",
+	"title": "Homepage News & Awards",
+	"category": "dr-ali-moradi",
+	"icon": "megaphone",
+	"description": "The 'Awards and certificates' news-card grid, pulling the latest posts.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

@@ -10,11 +10,17 @@
     },
     "color": {
       "palette": [
-        { "slug": "ink", "name": "Ink", "color": "#141414" },
-        { "slug": "paper", "name": "Paper", "color": "#ffffff" },
-        { "slug": "clinical-blue", "name": "Clinical Blue", "color": "#1b3a5c" },
-        { "slug": "accent-orange", "name": "Accent Orange", "color": "#d9662b" },
-        { "slug": "mist", "name": "Mist", "color": "#f4f6f8" }
+        { "slug": "ink", "name": "Ink", "color": "#102630" },
+        { "slug": "muted", "name": "Muted", "color": "#60747d" },
+        { "slug": "line", "name": "Line", "color": "#dce7eb" },
+        { "slug": "paper", "name": "Paper", "color": "#f8fbfc" },
+        { "slug": "clinical-blue", "name": "Blue", "color": "#4293c2" },
+        { "slug": "blue-2", "name": "Blue 2", "color": "#63a8cb" },
+        { "slug": "blue-dark", "name": "Blue Dark", "color": "#083b55" },
+        { "slug": "blue-deep", "name": "Blue Deep", "color": "#062b3e" },
+        { "slug": "accent-orange", "name": "Orange", "color": "#f7941d" },
+        { "slug": "mist", "name": "Mist", "color": "#f4f8fa" },
+        { "slug": "white", "name": "White", "color": "#ffffff" }
       ],
       "custom": true,
       "customDuotone": false

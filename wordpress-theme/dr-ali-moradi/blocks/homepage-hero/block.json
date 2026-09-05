@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/homepage-hero",
+	"title": "Homepage Hero",
+	"category": "dr-ali-moradi",
+	"icon": "cover-image",
+	"description": "The homepage hero: name, credentials, quote, facet bar, and credential list -- matching the reference design.",
+	"supports": { "html": false, "anchor": true },
+	"render": "file:./render.php"
+}
