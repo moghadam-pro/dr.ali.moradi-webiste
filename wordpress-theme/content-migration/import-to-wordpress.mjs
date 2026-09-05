@@ -595,6 +595,91 @@ async function importContactPage() {
 /* Menus                                                                  */
 /* ---------------------------------------------------------------------- */
 
+/* ---------------------------------------------------------------------- */
+/* Posts listing ("Blog") page                                            */
+/* ---------------------------------------------------------------------- */
+
+/**
+ * `front-page.html` renders at "/" and takes priority over WordPress's
+ * normal "latest posts" home, so there was previously no URL a "View all
+ * posts" or "Blog" link could point to. Fixes that the standard way: a
+ * dedicated Posts page (Settings -> Reading), rendered by the new
+ * templates/home.html. That requires `show_on_front` to be "page" (not
+ * "posts"), which in turn requires a real `page_on_front` id even though
+ * its own content is never shown — front-page.html still wins at "/"
+ * regardless of this setting, because is_front_page() is true for
+ * whichever page page_on_front names. A small placeholder page fills
+ * that requirement.
+ *
+ * Known cosmetic side effect, not fixed here: visiting "/fa/" or "/ar/"
+ * (as opposed to "/") 301-redirects once to that language's placeholder
+ * page's own canonical URL (e.g. "/fa/front-page-placeholder-fa/") before
+ * rendering the real homepage — WordPress's canonical-redirect logic
+ * doesn't know the placeholder's slug is meant to be invisible. Content
+ * and functionality are unaffected; only a minor extra redirect hop and a
+ * not-quite-clean URL in the address bar after landing. Giving the
+ * placeholder pages an empty slug might avoid this but wasn't tried.
+ *
+ * The "Blog" label (not "News" or "News & Insights") is the literal
+ * value already in homepage-content.json's own `nav` array — used as-is
+ * rather than picked, since the final label is an explicit open content
+ * decision for Dr. Moradi (see open-items.md) this script doesn't try to
+ * resolve.
+ */
+async function importBlogIndexPage() {
+  console.log(`\n=== Posts listing page ===`);
+
+  // Needs a translation in every language, not just English: `page_on_front`
+  // is a single global option, and neither the classic Reading Settings
+  // screen nor Polylang resolve it per-language on their own (confirmed by
+  // testing — see dam_translate_front_page_option() in inc/polylang.php,
+  // which is what actually makes "/fa/" and "/ar/" resolve to front-page.html
+  // instead of silently falling back to the posts listing). The title is
+  // kept short and clean ("Home"/"خانه"/"الرئيسية"), not a warning label:
+  // this page's own title/content are never shown to a visitor (front-page.html
+  // always wins at "/"), but the title still leaks into the browser tab and
+  // the SEO <title> tag, so a long "do not delete" label would be publicly
+  // visible. The warning instead lives in the page's body content, seen
+  // only by an editor who opens it in wp-admin.
+  const placeholderTitle = { en: "Home", fa: "خانه", ar: "الرئيسية" };
+  const placeholderNote = {
+    en: 'This page exists only to satisfy WordPress’s "static front page" requirement. front-page.html always renders the real homepage regardless of this page’s content. Do not delete it; if it is ever deleted, create a new page and reselect it in Settings → Reading → Homepage displays.',
+    fa: "این صفحه فقط برای برآورده کردن نیاز وردپرس به یک «صفحه اصلی ثابت» وجود دارد. front-page.html همیشه هوم‌پیج واقعی را نمایش می‌دهد، صرف‌نظر از محتوای این صفحه. این صفحه را حذف نکنید؛ در صورت حذف، یک صفحه جدید بسازید و آن را در تنظیمات ← خواندن ← نمایش صفحه اصلی انتخاب کنید.",
+    ar: "توجد هذه الصفحة فقط لتلبية متطلب ووردبريس لـ «صفحة أمامية ثابتة». يعرض front-page.html دائمًا الصفحة الرئيسية الحقيقية، بغض النظر عن محتوى هذه الصفحة. لا تحذف هذه الصفحة؛ إذا حُذفت، أنشئ صفحة جديدة وأعد اختيارها في الإعدادات ← القراءة ← تعرض الصفحة الرئيسية.",
+  };
+  const placeholderPayload = {};
+  for (const locale of LOCALES) {
+    placeholderPayload[locale] = {
+      status: "publish",
+      title: placeholderTitle[locale],
+      content: paragraphBlock(placeholderNote[locale]),
+    };
+  }
+  const placeholderIds = await ensureTranslatedEntry("pages", "front-page-placeholder", placeholderPayload);
+  const homeId = placeholderIds[DEFAULT_LOCALE];
+  console.log(`  front-page placeholder -> ${JSON.stringify(placeholderIds)}`);
+
+  const homepage = await readJson("homepage-content.json");
+  const blogLabel = { en: "Blog", fa: "وبلاگ", ar: "المدونة" };
+  const payloadByLocale = {};
+  for (const locale of LOCALES) {
+    payloadByLocale[locale] = { status: "publish", title: blogLabel[locale] };
+  }
+  const blogIds = await ensureTranslatedEntry("pages", "blog", payloadByLocale);
+  console.log(`  blog index -> ${JSON.stringify(blogIds)}`);
+
+  await wpFetch(`${WP_BASE_URL}/wp-json/wp/v2/settings`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      show_on_front: "page",
+      page_on_front: homeId,
+      page_for_posts: blogIds[DEFAULT_LOCALE],
+    }),
+  });
+  console.log(`  Reading settings: show_on_front=page, page_on_front=${homeId}, page_for_posts=${blogIds.en}`);
+}
+
 async function ensureMenu(name) {
   const existing = await wpFetch(`${WP_BASE_URL}/wp-json/wp/v2/menus?search=${encodeURIComponent(name)}`);
   const match = existing.find((m) => m.name === name);
@@ -628,12 +713,12 @@ async function ensureMenuItem(menuId, item) {
 /**
  * Primary nav mirrors the real, already-published `nav` labels from
  * homepage-content.json (["Clinic","Innovation","Research","Education",
- * "About me","Blog"]) for the items that have a destination page. Education
- * and Blog are intentionally left out: neither has a real page to link to
- * yet (see importHubPages()'s note on Education; there is no working
- * "all posts" archive URL because front-page.html takes over "/" — see
- * open-items.md). Footer repeats the same links plus Contact, which the
- * reference site's primary nav doesn't carry as a top-level item.
+ * "About me","Blog"]) for the items that have a destination page.
+ * Education is intentionally left out: it has no real page to link to
+ * (see importHubPages()'s note on Education). Blog now links to the
+ * page importBlogIndexPage() sets up as the Posts page. Footer repeats
+ * the same links plus Contact, which the reference site's primary nav
+ * doesn't carry as a top-level item.
  *
  * IMPORTANT — manual step still required after running this: this creates
  * the 6 menus, adds their items, and pre-seeds their location assignment
@@ -665,6 +750,7 @@ async function importMenus() {
       { title: nav[1], pageSlug: "innovations" },
       { title: nav[2], pageSlug: "research" },
       { title: nav[4], pageSlug: "about" },
+      { title: nav[5], pageSlug: "blog" },
     ];
 
     for (const kind of ["primary", "footer"]) {
@@ -740,6 +826,7 @@ async function main() {
   await importHubPages();
   await importContactPage();
   await importAboutPage();
+  await importBlogIndexPage();
   await importMenus();
   console.log("\nDone.");
 }

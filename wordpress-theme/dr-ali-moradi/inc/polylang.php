@@ -39,6 +39,48 @@ function dam_translate_string( $name, $fallback ) {
 }
 
 /**
+ * Makes the static front page (Settings -> Reading -> "Homepage displays")
+ * and the posts page ("Posts page") resolve to the current language's
+ * translation of whichever page is configured, instead of always the one
+ * page ID stored in the (single, global, not Polylang-aware) `page_on_front`
+ * / `page_for_posts` options.
+ *
+ * Confirmed by testing that Polylang does not do this on its own for
+ * either option: unlike Nav Menu locations (which Polylang gives a
+ * distinct location per language, set from Appearance -> Menus), the
+ * classic Reading Settings screen has one flat page picker with no
+ * per-language variant, and saving it — through the REST API or through
+ * that screen itself — only ever stores a single id. Confirmed
+ * concretely: with `page_on_front` set to the English translation of a
+ * placeholder page (all three languages linked as Polylang
+ * translations), `/fa/` and `/ar/` still rendered the posts listing
+ * instead of `front-page.html`, both before and after re-saving Reading
+ * Settings through wp-admin.
+ *
+ * `is_front_page()` and the query parsing behind `is_home()` both read
+ * these two options directly, so filtering the *option value itself* to
+ * the current-language translation fixes both without touching how
+ * WordPress otherwise decides what "the front page" or "the posts page"
+ * means — the theme's own code bridging a free-tier Polylang gap, same
+ * as the /link-translations and /set-menu-location REST routes above.
+ */
+function dam_translate_front_page_option( $post_id ) {
+	if ( ! $post_id || ! function_exists( 'pll_get_post' ) || ! function_exists( 'pll_current_language' ) ) {
+		return $post_id;
+	}
+
+	$language = pll_current_language();
+	if ( ! $language ) {
+		return $post_id;
+	}
+
+	$translated = pll_get_post( (int) $post_id, $language );
+	return $translated ? $translated : $post_id;
+}
+add_filter( 'option_page_on_front', 'dam_translate_front_page_option' );
+add_filter( 'option_page_for_posts', 'dam_translate_front_page_option' );
+
+/**
  * One-off REST bridge used by the content-migration import script
  * (wordpress-theme/content-migration/import-to-wordpress.mjs) to link
  * per-locale posts/pages/CPT entries into a single Polylang translation
