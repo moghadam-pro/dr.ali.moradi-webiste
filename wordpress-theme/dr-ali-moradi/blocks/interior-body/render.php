@@ -5,8 +5,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $locale   = dam_current_locale();
 $page_key = ! empty( $attributes['pageKey'] ) ? $attributes['pageKey'] : dam_current_page_key();
+
+// Clinical Care has its own dedicated design (pathway cards + team +
+// case galleries), not the generic numbered-sections layout below --
+// see blocks/clinic-pathways and inc/gallery.php.
+if ( 'clinical-care' === $page_key ) {
+	dam_render_clinical_care_body( $locale );
+	return;
+}
+
 $ic       = dam_interior_pages_copy( $locale );
-$data     = $ic['pages'][ $page_key ] ?? null;
+$data     = $ic['pages'][ $page_key ] ?? ( dam_clinic_subpages_copy( $locale )[ $page_key ] ?? null );
 
 if ( ! $data || empty( $data['sections'] ) ) {
 	return;
@@ -47,6 +56,14 @@ $nobat_url = dam_appointment_url();
 				<?php echo dam_icon( 'sparkles' ); ?>
 				<div><p><?php echo esc_html( $ic['nextLabel'] ); ?></p><h2><?php echo esc_html( $scholar['title'] ); ?></h2><span><?php echo esc_html( $scholar['text'] ); ?></span></div>
 				<a class="button" href="https://scholar.google.com/citations?user=UhXLjGEAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $scholar['action'] ); ?><?php echo dam_icon( 'external-link', 16 ); ?></a>
+			</div>
+		<?php elseif ( in_array( $page_key, array( 'clinic-services', 'hospital-services' ), true ) ) :
+			$t = dam_site_copy( $locale );
+			?>
+			<div class="next-step reveal">
+				<?php echo dam_icon( 'sparkles' ); ?>
+				<div><p><?php echo esc_html( $ic['nextLabel'] ); ?></p><h2><?php echo esc_html( $data['ctaTitle'] ); ?></h2><span><?php echo esc_html( $data['ctaText'] ); ?></span></div>
+				<a class="button" href="<?php echo esc_url( dam_appointment_url() ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $t['continueNobat'] ); ?><?php echo dam_icon( 'external-link', 16 ); ?></a>
 			</div>
 		<?php else :
 			$next_slug = 'about' === $page_key ? 'research' : 'contact';

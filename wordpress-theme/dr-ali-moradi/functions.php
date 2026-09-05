@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DAM_THEME_VERSION', '0.8.0' );
+define( 'DAM_THEME_VERSION', '0.9.4' );
 define( 'DAM_THEME_DIR', get_template_directory() );
 define( 'DAM_THEME_URI', get_template_directory_uri() );
 
@@ -22,6 +22,9 @@ require_once DAM_THEME_DIR . '/inc/homepage-content.php';
 require_once DAM_THEME_DIR . '/inc/interior-content.php';
 require_once DAM_THEME_DIR . '/inc/team.php';
 require_once DAM_THEME_DIR . '/inc/about-content.php';
+require_once DAM_THEME_DIR . '/inc/clinic-content.php';
+require_once DAM_THEME_DIR . '/inc/blog-content.php';
+require_once DAM_THEME_DIR . '/inc/gallery.php';
 require_once DAM_THEME_DIR . '/inc/nav-walker.php';
 require_once DAM_THEME_DIR . '/inc/blocks.php';
 require_once DAM_THEME_DIR . '/inc/polylang.php';

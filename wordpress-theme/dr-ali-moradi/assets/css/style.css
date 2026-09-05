@@ -295,7 +295,7 @@ header.wp-block-template-part:has(.site-header) { position: sticky; top: 0; z-in
 .content-links .text-link[download] { padding: 11px 16px; border-radius: 999px; background: #e7f2f6; }
 .interior-back { padding-top: 24px; }
 .interior-back a { display: inline-flex; align-items: center; gap: 9px; color: var(--blue); font-size: 13px; font-weight: 800; }
-.rtl .interior-back svg { transform: rotate(180deg); }
+.rtl .interior-back svg, .rtl .article-layout aside svg { transform: rotate(180deg); }
 
 /* Generic interior page hero + sidebar/content sections (page-hub etc.) */
 .page-hero { position: relative; min-height: 600px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
@@ -437,6 +437,7 @@ header.wp-block-template-part:has(.site-header) { position: sticky; top: 0; z-in
 .rtl .gallery-next { right: auto; left: 0; }
 .gallery-full-track { gap: 20px; }
 .gallery-modal { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; padding: 26px; background: rgba(2,19,28,.92); backdrop-filter: blur(8px); }
+.gallery-modal[hidden] { display: none; }
 .gallery-modal-panel { position: relative; width: min(1180px, 94vw); height: min(780px, 88vh); }
 .gallery-modal-image { position: absolute; inset: 0; overflow: hidden; border-radius: 20px; background: #061f2b; }
 .gallery-modal-image img { object-fit: contain; }
@@ -460,7 +461,7 @@ header.wp-block-template-part:has(.site-header) { position: sticky; top: 0; z-in
 .blog-card-copy > p:not(.card-tag) { display: -webkit-box; overflow: hidden; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.75; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
 .blog-card-meta { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: auto; padding-top: 26px; color: var(--muted); font-size: 12px; }
 .blog-card-meta a { display: inline-flex; align-items: center; gap: 7px; color: var(--blue); font-weight: 800; }
-.single-post { max-width: 1120px; }
+.single-post-article { max-width: 1120px; }
 .article-meta { display: flex; gap: 22px; padding-bottom: 24px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
 .article-layout { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 76px; padding-top: 50px; }
 .article-layout aside { position: sticky; top: 120px; height: fit-content; }

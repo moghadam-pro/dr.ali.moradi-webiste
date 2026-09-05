@@ -138,6 +138,11 @@
       "name": "page-about",
       "title": "About Page",
       "postTypes": ["page"]
+    },
+    {
+      "name": "page-gallery",
+      "title": "Full Gallery Page",
+      "postTypes": ["page"]
     }
   ]
 }

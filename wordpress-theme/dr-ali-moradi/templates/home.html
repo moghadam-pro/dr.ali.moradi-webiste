@@ -1,33 +1,7 @@
 <!-- wp:template-part {"slug":"header","tagName":"header"} /-->
 
-<!-- wp:group {"tagName":"main","layout":{"type":"constrained"}} -->
-<main class="wp-block-group">
-	<!-- wp:query-title {"type":"archive","align":"wide"} /-->
+<!-- wp:dr-ali-moradi/blog-archive /-->
 
-	<!-- wp:query {"query":{"perPage":9,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","inherit":true},"align":"wide"} -->
-	<div class="wp-block-query alignwide">
-		<!-- wp:post-template -->
-			<!-- wp:post-featured-image {"isLink":true} /-->
-			<!-- wp:post-terms {"term":"category","fontSize":"small"} /-->
-			<!-- wp:post-title {"level":3,"isLink":true} /-->
-			<!-- wp:post-excerpt /-->
-			<!-- wp:post-date {"fontSize":"small"} /-->
-		<!-- /wp:post-template -->
-
-		<!-- wp:query-pagination -->
-			<!-- wp:query-pagination-previous /-->
-			<!-- wp:query-pagination-numbers /-->
-			<!-- wp:query-pagination-next /-->
-		<!-- /wp:query-pagination -->
-
-		<!-- wp:query-no-results -->
-			<!-- wp:paragraph -->
-			<p></p>
-			<!-- /wp:paragraph -->
-		<!-- /wp:query-no-results -->
-	</div>
-	<!-- /wp:query -->
-</main>
-<!-- /wp:group -->
+<!-- wp:dr-ali-moradi/page-appointment-cta /-->
 
 <!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->

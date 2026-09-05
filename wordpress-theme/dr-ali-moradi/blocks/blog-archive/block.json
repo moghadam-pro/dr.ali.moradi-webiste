@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/blog-archive",
+	"title": "Blog Archive",
+	"category": "dr-ali-moradi",
+	"icon": "media-document",
+	"description": "The blog listing: cover + a grid of all published posts.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

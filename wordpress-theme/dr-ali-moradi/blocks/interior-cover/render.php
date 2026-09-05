@@ -16,7 +16,7 @@ if ( 'about' === $page_key ) {
 } elseif ( 'contact' === $page_key ) {
 	$data = $ic['contact'];
 } else {
-	$data = $ic['pages'][ $page_key ] ?? null;
+	$data = $ic['pages'][ $page_key ] ?? ( dam_clinic_subpages_copy( $locale )[ $page_key ] ?? null );
 }
 
 if ( ! $data ) {
@@ -28,13 +28,19 @@ if ( ! $data ) {
 // page keys 1:1 -- e.g. our "innovations" (plural, hub page) vs. its
 // "innovation-cover.jpg", and "clinical-care" vs. "clinic-cover.jpg".
 $cover_slugs = array(
-	'clinical-care' => 'clinic-cover',
-	'innovations'   => 'innovation-cover',
-	'research'      => 'research-cover',
-	'education'     => 'education-cover',
-	'about'         => 'about-cover',
-	'blog'          => 'blog-cover',
-	'contact'       => 'clinic-cover',
+	'clinical-care'    => 'clinic-cover',
+	'innovations'      => 'innovation-cover',
+	'research'         => 'research-cover',
+	'education'        => 'education-cover',
+	'about'            => 'about-cover',
+	'blog'             => 'blog-cover',
+	'contact'          => 'clinic-cover',
+	'clinic-services'  => 'clinic-08',
+	'hospital-services' => 'hospital-14',
+	'before-surgery'   => 'doctor',
+	'after-surgery'    => '04-life',
+	'faq'              => 'clinic-cover',
+	'rehabilitation'   => '04-life',
 );
 $cover_slug = $cover_slugs[ $page_key ] ?? ( $page_key . '-cover' );
 $image      = ! empty( $attributes['image'] ) ? $attributes['image'] : dam_media_url( $cover_slug );

@@ -20,6 +20,22 @@ foreach ( $explore_slugs as $slug ) {
 	}
 }
 
+// Same existence check for the Patient resources column.
+$resource_slugs = array(
+	'before'  => 'before-surgery',
+	'after'   => 'after-surgery',
+	'faq'     => 'faq',
+	'rehab'   => 'rehabilitation',
+);
+$resource_links = array();
+foreach ( $resource_slugs as $label_key => $slug ) {
+	if ( get_page_by_path( $slug ) ) {
+		$resource_links[ $label_key ] = dam_localized_page_url( $slug, $locale );
+	}
+}
+
+$footer_grid_class = 'footer-grid' . ( $resource_links ? '' : ' footer-grid--no-resources' );
+
 // Icons are the reference site's actual branded social-network SVGs
 // (fetched from /icons/social/ on the live site, which uses these
 // instead of the generic lucide icons that the git repo's copy of
@@ -34,7 +50,7 @@ $social = array(
 );
 ?>
 <footer <?php echo get_block_wrapper_attributes( array( 'class' => 'site-footer' ) ); ?>>
-	<div class="section-shell footer-grid footer-grid--no-resources">
+	<div class="section-shell <?php echo esc_attr( $footer_grid_class ); ?>">
 		<div class="footer-brand">
 			<img src="<?php echo esc_url( dam_theme_asset_url( '/assets/img/brand/' . $logo ) ); ?>" width="153" height="50" alt="Dr. Ali Moradi">
 			<p><?php echo esc_html( $t['footer']['bio'] ); ?></p>
@@ -46,6 +62,15 @@ $social = array(
 			<h3><?php echo esc_html( $t['footer']['explore'] ); ?></h3>
 			<?php foreach ( $explore_links as $slug => $url ) : ?>
 				<a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $t['footerExplore'][ $slug ] ?? $slug ); ?></a>
+			<?php endforeach; ?>
+		</div>
+		<?php endif; ?>
+
+		<?php if ( $resource_links ) : ?>
+		<div>
+			<h3><?php echo esc_html( $t['footer']['resources'] ); ?></h3>
+			<?php foreach ( $resource_links as $label_key => $url ) : ?>
+				<a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $t['footer'][ $label_key ] ?? $label_key ); ?></a>
 			<?php endforeach; ?>
 		</div>
 		<?php endif; ?>
