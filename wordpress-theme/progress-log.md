@@ -683,6 +683,75 @@ copy) all match the reference's layout and content closely.
   pages (Persian and English were spot-checked during the homepage
   pass; today's interior-page verification was English only).
 
+## 2026-09-05 (still going) — five real homepage bugs the operator caught
+
+The operator reviewed the homepage again and reported five concrete,
+reproducible bugs, correctly pushing back on the earlier "verified
+live" claim — the spot-checks that preceded it weren't thorough
+enough. Investigated each with the browser's devtools (computed styles,
+matched CSS rules, before/after screenshots against the reference at
+matching viewport sizes) rather than guessing, and found genuine CSS
+defects, not content or design differences:
+
+1. **Extra margin-top above every section.** WordPress core injects
+   `:where(.wp-site-blocks) > * { margin-block-start: 24px }` between
+   every top-level block in a template; the reference has no such
+   gap (its sections get all their visible spacing from their own
+   `.section-space`/`.section-shell` padding). Overridden with
+   `.wp-site-blocks > * { margin-block-start: 0; }` — a real selector
+   (non-`:where()`) beats WordPress's zero-specificity default
+   regardless of stylesheet order.
+2. **Part of the hero (facet bar, credential checklist) clipped and
+   hidden under the next section.** Root cause: `* { box-sizing:
+   border-box; }` — the very first rule in the reference's own
+   `globals.css` — was silently dropped when this file was first
+   ported. Without it, `.hero-layout`'s `height: 100%` plus its own
+   `padding-top`/`padding-bottom` (56px + 26px) rendered as `860px +
+   82px = 942px` instead of `860px` total, and the 82px of overflow got
+   clipped by `.hero { overflow: hidden }` — confirmed by comparing
+   `.hero-layout`'s `scrollHeight` against `.hero`'s own height on both
+   sites at an identical viewport size.
+3. **Header not sticky.** `position: sticky` was set on the *inner*
+   `.site-header` block, but a sticky element can't stick past the
+   bottom edge of its own containing block — and the *outer*
+   `<header class="wp-block-template-part">` that `wp:template-part`
+   auto-generates around it is only ~1px taller than the header
+   itself, leaving essentially no room to actually stick (confirmed by
+   watching `getBoundingClientRect().top` move in exact lockstep with
+   `scrollY` while scrolling, instead of clamping at 0). Moved
+   `position: sticky` to that outer wrapper instead — a direct child
+   of `.wp-site-blocks`, which spans the full page height — scoped
+   with `:has(.site-header)` so the footer's own auto-generated
+   wrapper isn't affected.
+4. **Appointment CTA button wider than its card, cut off on the
+   trailing edge.** Same root cause as #2: `.appointment-panel .button
+   { width: 100% }` without `box-sizing: border-box` added the
+   button's own horizontal padding and border on top of 100% instead
+   of inside it.
+5. **Footer had one empty column.** `.footer-grid`'s
+   `grid-template-columns` has 5 tracks (brand, Explore, Patient
+   resources, Contact, Social) copied from the reference, but only 4
+   divs are ever rendered — Patient resources has no source content
+   yet (see open-items.md) and was correctly left out — so the 5th
+   track sat empty and the Contact/Social columns silently landed in
+   the wrong tracks via grid auto-placement. Added a
+   `.footer-grid--no-resources` modifier (applied in
+   `site-footer/render.php`) with a matching 4-track template instead
+   of the reference's 5-track one, for the desktop layout and both
+   `820px`/`1120px` responsive breakpoints.
+
+While fixing these, also re-audited the *entire* file against the
+reference's original `app/globals.css` per the operator's request and
+found several other base resets the first port had silently dropped —
+`html`/`body`/`main`'s `overflow-x`/sizing rules and
+`button, input, select, textarea { font: inherit }` — added them back
+even though no specific visible symptom had been reported for them yet.
+
+**Verified live** on `tmp.saveon.me`, English and Persian: hero fully
+visible with no clipping, header now stays fixed while scrolling, the
+appointment button fits its card exactly, the footer's four columns
+are evenly sized with no gap, and no section has a stray gap above it.
+
 **Verified live** on `tmp.saveon.me` in English and Persian: hero
 (background photo, orbits, credentials, quote card, facet bar),
 connected-practice journey strip, pathways cards, innovation cards,
