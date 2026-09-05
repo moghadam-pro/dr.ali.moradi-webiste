@@ -558,6 +558,30 @@ async function importHubPages() {
 /* Contact page                                                           */
 /* ---------------------------------------------------------------------- */
 
+/**
+ * The MPro Forms shortcode for the real contact form (built once, by hand,
+ * in wp-admin -> Forms -> New form -> "Contact us (complete)" template,
+ * then relabeled to match the fields/copy already in homepage-content.json's
+ * `contact` object: Enquiry type options ("Research collaboration",
+ * "Education and training", "Media and professional enquiry"), the
+ * sensitive-medical-information notice as the message field's placeholder,
+ * and as the consent checkbox's label — adapted from the old React site's
+ * consent text, which specifically described a mailto-style form ("opens my
+ * email application"); MPro Forms stores entries server-side instead, so
+ * that description no longer applied, but the underlying instruction (don't
+ * send sensitive medical info, use Nobat.ir for a real visit) still does.
+ * Not scripted end-to-end: MPro Forms' form builder has no REST/CLI API,
+ * only its own wp-admin UI, so the form itself (id 1 on tmp.saveon.me) was
+ * built by hand once; this constant just records the resulting shortcode
+ * so re-running the importer keeps embedding it.
+ *
+ * One known limitation, not solved here: the form's field labels are only
+ * in English — MPro Forms doesn't hook into Polylang string translation,
+ * so `fa`/`ar` visitors see an English-labelled form embedded in their
+ * otherwise-translated Contact page.
+ */
+const CONTACT_FORM_SHORTCODE = '[mpro_form id="1"]';
+
 async function importContactPage() {
   const homepage = await readJson("homepage-content.json");
 
@@ -573,11 +597,7 @@ async function importContactPage() {
     if (c.clinic) blocks.push(paragraphBlock(c.clinic));
     if (c.beforeTitle) blocks.push(headingBlock(c.beforeTitle, 3));
     if (c.beforeText) blocks.push(paragraphBlock(c.beforeText));
-    blocks.push(
-      paragraphBlock(
-        "MPro Forms placeholder: insert the contact form block/shortcode here once available."
-      )
-    );
+    blocks.push(`<!-- wp:shortcode -->${CONTACT_FORM_SHORTCODE}<!-- /wp:shortcode -->`);
 
     payloadByLocale[locale] = {
       status: "publish",
