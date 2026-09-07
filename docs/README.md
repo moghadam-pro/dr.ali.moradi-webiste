@@ -6,6 +6,7 @@ history, then use the focused documents for implementation details.
 
 ## Primary handoff documents
 
+- [گزارش تطبیق کامل WordPress با مرجع React — 2026-09-05](wordpress-react-parity-audit-2026-09-05-fa.md)
 - [اصلاح تیم‌ها، تصاویر و راهنمای جراحی — 2026-09-01](change-log-2026-09-01-team-and-surgery.md)
 - [بازطراحی کاورها و صفحه درباره من — 2026-08-25](change-log-2026-08-25-covers-and-about.md)
 - [آرشیو ساختاریافته گفت‌وگو و تصمیم‌های پروژه](project-conversation-archive-fa.md)
@@ -39,6 +40,19 @@ history, then use the focused documents for implementation details.
 
 - [گزارش روند شناخت و طراحی](progress-report-fa.md)
 - [Client-ready Word report](dr.ali-moradi-report-20250802.docx)
+
+## WordPress implementation and handoff
+
+- [WordPress implementation documentation](wordpress-theme/README.md)
+- [WordPress architecture](wordpress-theme/architecture.md)
+- [Content migration plan](wordpress-theme/content-migration-plan.md)
+- [Decision log](wordpress-theme/decisions-log.md)
+- [Open items](wordpress-theme/open-items.md)
+- [Progress log](wordpress-theme/progress-log.md)
+- [Homepage v2 static handoff](handoff/homepage-v2/README.md)
+
+The actively developed WordPress theme source lives in `../wordpress-theme/`.
+The homepage-v2 material under `handoff/` is reference/handoff material, not the canonical production theme.
 
 ## Documentation policy
 

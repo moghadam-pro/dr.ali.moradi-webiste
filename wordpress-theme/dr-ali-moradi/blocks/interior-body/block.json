@@ -1,0 +1,14 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/interior-body",
+	"title": "Interior Page Body",
+	"category": "dr-ali-moradi",
+	"icon": "list-view",
+	"description": "The numbered content sections with a sticky sidebar table of contents, plus the closing 'next step' card -- used on Research and Innovation.",
+	"attributes": {
+		"pageKey": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

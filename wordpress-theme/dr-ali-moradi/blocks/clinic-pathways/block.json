@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/clinic-pathways",
+	"title": "Clinic Care Pathways",
+	"category": "dr-ali-moradi",
+	"icon": "networking",
+	"description": "The two pathway cards linking to Clinic services and Hospital services.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

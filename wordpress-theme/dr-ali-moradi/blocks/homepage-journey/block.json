@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/homepage-journey",
+	"title": "Homepage Connected Practice",
+	"category": "dr-ali-moradi",
+	"icon": "networking",
+	"description": "The dark 'Connected Practice' journey strip (injury -> innovation -> application -> life).",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

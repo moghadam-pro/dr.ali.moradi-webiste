@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/homepage-about-preview",
+	"title": "Homepage About Preview",
+	"category": "dr-ali-moradi",
+	"icon": "admin-users",
+	"description": "The dark 'About Dr. Ali Moradi' closing section with office photo.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

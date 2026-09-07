@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/about-journey",
+	"title": "About: Training Timeline",
+	"category": "dr-ali-moradi",
+	"icon": "clock",
+	"description": "The training-and-leadership timeline with a sticky intro column.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

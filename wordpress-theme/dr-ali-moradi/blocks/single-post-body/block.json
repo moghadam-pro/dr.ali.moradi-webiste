@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/single-post-body",
+	"title": "Single Post Body",
+	"category": "dr-ali-moradi",
+	"icon": "media-document",
+	"description": "The single blog-post layout: cover, meta, a back link, and the Overview/Assessment/Next-steps article body.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}
