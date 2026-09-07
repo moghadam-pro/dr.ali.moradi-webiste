@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/homepage-impact",
+	"title": "Homepage Impact Numbers",
+	"category": "dr-ali-moradi",
+	"icon": "chart-bar",
+	"description": "The 'Evidence, not decoration' CV-figures section.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

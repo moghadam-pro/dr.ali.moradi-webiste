@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/contact-details",
+	"title": "Contact Details",
+	"category": "dr-ali-moradi",
+	"icon": "email",
+	"description": "The left-hand column on the Contact page: office/clinic address, booking button, and direct contact details.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

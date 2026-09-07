@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/about-story",
+	"title": "About: Story",
+	"category": "dr-ali-moradi",
+	"icon": "admin-users",
+	"description": "The About page's opening story section with the doctor's portrait.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

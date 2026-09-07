@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/appointment-cta",
+	"title": "Appointment Button",
+	"category": "dr-ali-moradi",
+	"icon": "calendar-alt",
+	"description": "Links to the external appointment URL set in Theme Options.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

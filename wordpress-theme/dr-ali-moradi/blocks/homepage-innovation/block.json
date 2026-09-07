@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/homepage-innovation",
+	"title": "Homepage Innovation Stories",
+	"category": "dr-ali-moradi",
+	"icon": "lightbulb",
+	"description": "The 'Selected innovation stories' three-card section.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

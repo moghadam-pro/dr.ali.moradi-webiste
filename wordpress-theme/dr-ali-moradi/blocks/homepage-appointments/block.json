@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/homepage-appointments",
+	"title": "Homepage Appointments",
+	"category": "dr-ali-moradi",
+	"icon": "calendar",
+	"description": "The appointment-pathway accordion with portrait image.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

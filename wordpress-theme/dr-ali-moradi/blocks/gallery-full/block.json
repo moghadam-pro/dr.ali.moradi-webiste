@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/gallery-full",
+	"title": "Full Gallery Page",
+	"category": "dr-ali-moradi",
+	"icon": "format-gallery",
+	"description": "A dedicated 'view full gallery' page: cover, back link, and the complete grid of gallery images.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

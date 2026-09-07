@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/homepage-pathways",
+	"title": "Homepage Pathways",
+	"category": "dr-ali-moradi",
+	"icon": "networking",
+	"description": "The 'Choose the path that fits your visit' three-card section.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

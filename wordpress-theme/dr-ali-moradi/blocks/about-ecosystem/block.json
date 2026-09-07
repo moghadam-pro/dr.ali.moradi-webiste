@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/about-ecosystem",
+	"title": "About: Fields of Work",
+	"category": "dr-ali-moradi",
+	"icon": "networking",
+	"description": "The three-card 'fields of work' grid linking to Research/Innovation/Education.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

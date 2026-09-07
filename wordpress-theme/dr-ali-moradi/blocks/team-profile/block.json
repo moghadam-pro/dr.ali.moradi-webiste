@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/team-profile",
+	"title": "Team Member Profile",
+	"category": "dr-ali-moradi",
+	"icon": "admin-users",
+	"description": "The full team-member profile page: cover, back link, photo + bio, and a collaboration note.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}
