@@ -198,7 +198,21 @@ Rollback زمانی اجرا شود که خطای گسترده، خرابی دی
   دیتابیس، ایمیل، FTP و Trash در ۲۰۲۶-۰۹-۱۲ ساخته شد. فایل
   `/backups/backup-Sep-12-2026-1.tar.gz` با حجم `512.75 MB` و مجوز `0640` ثبت شد
   و DirectAdmin در ساعت نمایش‌داده‌شده `2:00 PM` پیام آماده‌بودن Backup را صادر کرد.
-- این نسخه فعلاً روی همان سرور است؛ پیش از Cutover باید یک کپی Off-host نیز تهیه
-  و قابلیت خوانده‌شدن Archive آن کنترل شود.
-- مرحله بعدی، ساخت دیتابیس مستقل برای Legacy و اتصال ایمن کپی آرشیو به آن است.
-- هیچ Cutover یا تغییر DNS/Production در زمان نگارش این سند انجام نشده است.
+- کپی Off-host بکاپ توسط مالک پروژه روی سیستم محلی دانلود شد.
+- دیتابیس موجود و پُر `dralimor_dmsdralimoradi` به نسخه آرشیو اختصاص یافت. در جدول
+  `dmswp_options` هر دو مقدار `home` و `siteurl` به
+  `https://legacy.dralimoradi.com` تغییر داده و نتیجه مجدداً از دیتابیس خوانده شد.
+- فایل‌های اصلی `wp-config.php` و `.htaccess` آرشیو از بکاپ Off-host
+  `old-site-backup_20260910.zip` بازیابی شدند. هیچ رمز، Salt یا مقدار محرمانه‌ای
+  در Repository ثبت نشده است.
+- آزمون عملی آرشیو در ۲۰۲۶-۰۹-۱۲ موفق بود: صفحه اصلی، مسیر `/en/`، مسیر
+  `/wp-json/` و صفحه ورود همگی پاسخ `200` دادند؛ `/wp-admin/` نیز کاربر ناشناس را
+  به صفحه ورود هدایت کرد. تنظیم `blog_public=0` (متای `noindex,nofollow`) و
+  `users_can_register=0` نیز تأیید شد.
+- تا زمان جایگزینی فایل‌های Production، نصب قدیمی در `dralimoradi.com` به‌علت
+  استفاده از دیتابیس منتقل‌شده با `301` به آرشیو هدایت می‌شود. این وضعیت موقت و
+  بخشی از پنجره Cutover است، نه Redirect تعریف‌شده در DirectAdmin.
+- دیتابیس خالی `dralimor_base` با صفر جدول برای نصب تازه Production آماده است.
+- مرحله بعدی پس از Gate تأیید: محدودکردن مجوز `wp-config.php` آرشیو، تخلیه دقیق
+  `/domains/dralimoradi.com/public_html`، نصب WordPress تازه روی `dralimor_base`
+  و مهاجرت Serialization-safe از `tmp.saveon.me` است.
