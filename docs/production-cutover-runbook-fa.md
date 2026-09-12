@@ -234,3 +234,17 @@ Rollback زمانی اجرا شود که خطای گسترده، خرابی دی
   مهاجرت: ساخت بسته کامل و Serialization-safe با Duplicator در Staging، انتقال
   Archive و Installer از طریق DirectAdmin، Restore روی Production و سپس بررسی
   سه‌زبانه، فرم‌ها، Media، SEO و HTTPS است.
+- افزونه Duplicator Lite نسخه `5.0.2` روی Staging نصب و فعال شد. بسته نهایی
+  رمزگذاری‌شده با شناسه `5` در ۲۰۲۶-۰۹-۱۲ ساعت `15:50` ساخته شد؛ اسکن پیش از
+  ساخت بدون خطای مسدودکننده پایان یافت. حجم Archive برابر `78.86 MB` و حجم
+  Installer برابر `131.29 KB` است. رمز بسته، Token دانلود و سایر Secretها فقط
+  خارج از Git نگهداری می‌شوند.
+- دانلود مستقیم سروربه‌سرور به‌دلیل حفاظت مسیر Backup در Staging و جداسازی
+  دسترسی PHP بین Vhostها استفاده نشد. هر دو فایل از نشست احراز‌شده wp-admin
+  دریافت و با Upload رمزگذاری‌شده DirectAdmin به
+  `/domains/dralimoradi.com/public_html` منتقل شدند. DirectAdmin موفقیت آپلود هر
+  دو فایل و اندازه‌های فوق را تأیید کرد.
+- Restore هنوز اجرا نشده است. پیش از اجرای Installer باید تأیید لحظه‌ای مالک
+  برای بازنویسی فایل‌های WordPress تازه و جدول‌های دیتابیس
+  `dralimor_ayqkbKS` گرفته شود. فایل‌های انتقال موقت نیز هم‌زمان با Cutover
+  پاک و فایل‌های Installer/Archive پس از پایان موفق Duplicator حذف می‌شوند.
