@@ -40,6 +40,28 @@
   از Polylang را ثبت کرده‌اند. دیتابیس، `wp-content` و تنظیمات افزونه‌های این دو
   نصب نباید با هم ادغام شوند.
 
+### بررسی DirectAdmin در ۲۰۲۶-۰۹-۱۲
+
+- پنل Hosting سایت اصلی DirectAdmin Evolution در
+  <https://server141i.irwebspace.com:2223/> است.
+- فهرست **Site Redirects** خالی است؛ ریدایرکت Legacy در DirectAdmin تعریف نشده است.
+- Subdomain با نام `legacy.dralimoradi.com` وجود دارد و Document Root مستقل آن
+  `/domains/legacy.dralimoradi.com/public_html` است.
+- داخل Document Root آرشیو یک نصب کامل WordPress شامل `wp-admin`، `wp-content`،
+  `wp-includes` و فایل‌های Root وجود دارد.
+- فایل `.htaccess` آرشیو فقط Rewrite استاندارد WordPress را دارد و هیچ قانون
+  Redirect به دامنه اصلی در آن ثبت نشده است.
+- پاسخ عمومی Legacy با هدر `X-Redirect-By: WordPress` به دامنه اصلی منتقل می‌شود.
+  بنابراین علت محتمل، باقی‌ماندن مقادیر `home`/`siteurl` یا ثابت‌های متناظر روی
+  `https://dralimoradi.com` در نصب کپی‌شده است، نه تنظیمات DirectAdmin یا `.htaccess`.
+- DirectAdmin فقط یک دیتابیس پُر با حدود `223.84 MB` و `47` جدول نشان می‌دهد؛
+  دیتابیس دوم خالی و بدون جدول است. تا زمان بررسی امن `wp-config.php` فرض عملیاتی
+  این است که کپی Legacy هنوز دیتابیس مستقل ندارد و احتمالاً به دیتابیس Production
+  متصل است.
+- مجوز `wp-config.php` در هر دو Document Root برابر `0666` و بیش‌ازحد باز است.
+  بدون نمایش یا تغییر محتوای فایل، باید پس از Backup به مجوز محدود متناسب با
+  تنظیمات هاست (معمولاً `0640` یا `0600` با Owner/Group صحیح) اصلاح شود.
+
 ## تصمیم پیشنهادی
 
 روش کم‌ریسک، **Clone کامل WordPress Staging به یک Production مستقل** است؛ نه
