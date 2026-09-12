@@ -109,6 +109,7 @@ failure modes are documented in
 ## Documentation
 
 - [Documentation hub](docs/README.md)
+- [Production cutover and legacy runbook (Persian)](docs/production-cutover-runbook-fa.md)
 - [Persian project conversation archive](docs/project-conversation-archive-fa.md)
 - [Private-repository server update runbook (Persian)](docs/private-repository-server-update-runbook-fa.md)
 - [Clinic, templates, galleries, and unified content — 2026-08-22](docs/change-log-2026-08-22-structure-and-clinic.md)

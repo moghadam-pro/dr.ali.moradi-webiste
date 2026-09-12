@@ -6,6 +6,7 @@ history, then use the focused documents for implementation details.
 
 ## Primary handoff documents
 
+- [برنامه انتقال نسخه WordPress به دامنه اصلی و نگهداری Legacy](production-cutover-runbook-fa.md)
 - [گزارش تطبیق کامل WordPress با مرجع React — 2026-09-05](wordpress-react-parity-audit-2026-09-05-fa.md)
 - [اصلاح تیم‌ها، تصاویر و راهنمای جراحی — 2026-09-01](change-log-2026-09-01-team-and-surgery.md)
 - [بازطراحی کاورها و صفحه درباره من — 2026-08-25](change-log-2026-08-25-covers-and-about.md)
