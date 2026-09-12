@@ -212,10 +212,25 @@ Rollback زمانی اجرا شود که خطای گسترده، خرابی دی
 - مجوز `wp-config.php` آرشیو از حالت قابل‌خواندن برای عموم به `0640`
   (`-rw-r-----`) محدود شد. پس از تغییر مجوز، صفحه اصلی، `/en/`، `/wp-json/` و
   `wp-login.php` مجدداً بررسی شدند و همگی پاسخ `200` دادند.
-- تا زمان جایگزینی فایل‌های Production، نصب قدیمی در `dralimoradi.com` به‌علت
-  استفاده از دیتابیس منتقل‌شده با `301` به آرشیو هدایت می‌شود. این وضعیت موقت و
-  بخشی از پنجره Cutover است، نه Redirect تعریف‌شده در DirectAdmin.
-- دیتابیس خالی `dralimor_base` با صفر جدول برای نصب تازه Production آماده است.
-- مرحله بعدی پس از Gate تأیید: محدودکردن مجوز `wp-config.php` آرشیو، تخلیه دقیق
-  `/domains/dralimoradi.com/public_html`، نصب WordPress تازه روی `dralimor_base`
-  و مهاجرت Serialization-safe از `tmp.saveon.me` است.
+- محتوای قدیمی Document Root اصلی، پس از تأیید مالک، از
+  `/domains/dralimoradi.com/public_html` به Trash پنل DirectAdmin منتقل شد؛ این
+  حذف تا زمان پاک‌سازی Trash قابل بازیابی است.
+- WordPress تازه فارسی با HTTPS روی `dralimoradi.com` نصب شد. نصب تازه از دیتابیس
+  ایجادشده خودکار `dralimor_ayqkbKS` و پیشوند جدول `vph2_` استفاده می‌کند و
+  مجوز `wp-config.php` آن `0600` است. اطلاعات ورود و Secretها در Repository ثبت
+  نشده‌اند.
+- پاسخ HTTPS صفحه اصلی `200` و هدایت `/wp-admin/` به صفحه ورود تأیید شد. در این
+  مقطع HTTP هنوز پاسخ `200` می‌دهد؛ اجبار Redirect به HTTPS پس از Restore و Smoke
+  Test نهایی اعمال خواهد شد.
+- دیتابیس خالی `dralimor_base` همچنان صفر جدول دارد. مالک پروژه اجازه حذف آن را
+  داده است؛ حذف نهایی بعد از موفقیت Restore انجام می‌شود تا مسیر Rollback ساده
+  باقی بماند.
+- بررسی Site Health روی `tmp.saveon.me` نشان داد حجم کل نصب `161.31 MB`، حجم
+  Uploadها `26.67 MB`، حجم پوسته‌ها `8.83 MB`، حجم افزونه‌ها `17.21 MB` و حجم
+  دیتابیس `2.66 MB` است. PHP 8.3 با Memory Limit برابر `512M` فعال است، اما
+  `upload_max_filesize` و `post_max_size` هر دو `64M` هستند و همه مسیرهای موردنیاز
+  WordPress قابل نوشتن‌اند.
+- به‌دلیل بزرگ‌تر بودن بسته کامل از محدودیت آپلود WordPress، مسیر انتخابی برای
+  مهاجرت: ساخت بسته کامل و Serialization-safe با Duplicator در Staging، انتقال
+  Archive و Installer از طریق DirectAdmin، Restore روی Production و سپس بررسی
+  سه‌زبانه، فرم‌ها، Media، SEO و HTTPS است.
