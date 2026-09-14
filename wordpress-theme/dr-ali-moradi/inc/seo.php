@@ -12,8 +12,11 @@
  *      (`/fa/`, `/ar/`) to that placeholder page's own permalink
  *      (`/fa/front-page-placeholder-fa/`), so the indexable URL is the
  *      internal one, not the clean one.
- *   2. Rank Math then emits that placeholder URL as the canonical link
- *      and in the hreflang alternates.
+ *   2. Rank Math then emits a wrong URL as the canonical link and og:url
+ *      -- confirmed to be a *different* wrong value per install (the
+ *      fa/ar placeholder's own broken permalink on one site, the
+ *      English placeholder's home_url() on another), so the fix
+ *      rewrites the tags themselves rather than one specific string.
  *   3. The placeholder page's own body text -- a note explaining it only
  *      exists to satisfy WordPress's "static front page" requirement --
  *      leaks out as the meta description, og:description, and
@@ -95,12 +98,34 @@ function dam_front_page_start_buffer() {
 add_action( 'template_redirect', 'dam_front_page_start_buffer' );
 
 function dam_front_page_rewrite_placeholder_urls( $html ) {
+	$clean = dam_front_page_clean_url();
+
+	// Canonical link tag -- force its href to the current locale's clean URL
+	// regardless of what value Rank Math computed (confirmed the wrong
+	// value differs by site: the fa/ar placeholder's own broken permalink
+	// on one install, the *English* placeholder's home_url() on another --
+	// this targets the tag itself instead of one specific bad string).
+	$html = preg_replace(
+		'#(<link[^>]*\srel="canonical"[^>]*\shref=")[^"]*(")#',
+		'${1}' . $clean . '${2}',
+		$html
+	);
+
+	// Open Graph URL.
+	$html = preg_replace(
+		'#(<meta[^>]*\sproperty="og:url"[^>]*\scontent=")[^"]*(")#',
+		'${1}' . $clean . '${2}',
+		$html
+	);
+
+	// hreflang alternates -- each rewritten to its own language's clean URL.
 	foreach ( array( 'en', 'fa', 'ar' ) as $lang ) {
 		$html = preg_replace(
-			'#https?://[^"\'\s]+/front-page-placeholder-' . preg_quote( $lang, '#' ) . '/#',
-			dam_front_page_clean_url( $lang ),
+			'#(<link rel="alternate" href=")[^"]*(" hreflang="' . preg_quote( $lang, '#' ) . '")#',
+			'${1}' . dam_front_page_clean_url( $lang ) . '${2}',
 			$html
 		);
 	}
+
 	return $html;
 }
