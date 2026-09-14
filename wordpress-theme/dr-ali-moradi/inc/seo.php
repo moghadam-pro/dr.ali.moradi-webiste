@@ -41,11 +41,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  * default language and stays unprefixed (see reference_urls memory);
  * Persian and Arabic use their locale code as the prefix, matching
  * Polylang's actual URLs everywhere else on this site.
+ *
+ * The English case can't use home_url('/') either: Polylang filters
+ * home_url() itself to resolve a bare root path through the *current
+ * request's* language front page -- so calling it while viewing /fa/
+ * or /ar/ routes back through the same broken permalink this function
+ * exists to avoid (confirmed live: hreflang="en" came out pointing at
+ * the fa placeholder while viewing the Persian homepage). get_option()
+ * on the raw 'home' value sidesteps that filter entirely.
  */
 function dam_front_page_clean_url( $locale = null ) {
 	$locale = $locale ? $locale : dam_current_locale();
 	if ( 'en' === $locale ) {
-		return home_url( '/' );
+		return trailingslashit( get_option( 'home' ) );
 	}
 	return home_url( '/' . $locale . '/' );
 }
