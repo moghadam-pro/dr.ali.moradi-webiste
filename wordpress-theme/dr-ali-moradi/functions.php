@@ -29,6 +29,7 @@ require_once DAM_THEME_DIR . '/inc/nav-walker.php';
 require_once DAM_THEME_DIR . '/inc/blocks.php';
 require_once DAM_THEME_DIR . '/inc/polylang.php';
 require_once DAM_THEME_DIR . '/inc/seo.php';
+require_once DAM_THEME_DIR . '/inc/i18n.php';
 
 /**
  * Theme setup: text domain, supports, nav menu locations.
