@@ -44,7 +44,7 @@ $posts = get_posts(
 				<div class="blog-card-copy">
 					<?php if ( $category ) : ?><p class="card-tag"><?php echo esc_html( $category ); ?></p><?php endif; ?>
 					<h2><a href="<?php echo esc_url( $link ); ?>"><?php echo esc_html( get_the_title( $post ) ); ?></a></h2>
-					<p><?php echo esc_html( wp_trim_words( wp_strip_all_tags( $post->post_content ), 24 ) ); ?></p>
+					<p><?php echo esc_html( get_the_excerpt( $post ) ); ?></p>
 					<div class="blog-card-meta">
 						<?php if ( $read_minutes ) : ?><span><?php echo esc_html( $read_minutes . ' ' . $labels['minutes'] ); ?></span><?php endif; ?>
 						<a href="<?php echo esc_url( $link ); ?>"><?php echo esc_html( $labels['read'] ); ?><?php echo dam_icon( 'arrow-right', 15 ); ?></a>

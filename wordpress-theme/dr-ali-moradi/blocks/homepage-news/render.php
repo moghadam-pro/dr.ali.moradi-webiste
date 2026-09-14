@@ -43,7 +43,7 @@ if ( empty( $posts ) ) {
 					<span class="news-card-gradient" aria-hidden="true"></span>
 					<span class="news-card-content">
 						<?php if ( $category ) : ?><small><?php echo esc_html( $category ); ?></small><?php endif; ?>
-						<strong><?php echo esc_html( get_the_title( $post ) ); ?></strong>
+						<strong><?php echo esc_html( get_the_title( $post ) ); ?></strong><em><?php echo esc_html( get_the_excerpt( $post ) ); ?></em>
 					</span>
 				</a>
 			</div>

@@ -15,7 +15,7 @@ $labels          = dam_blog_labels( $locale );
 $categories      = get_the_category( $post->ID );
 $category        = $categories ? $categories[0]->name : '';
 $read_minutes    = get_post_meta( $post->ID, 'dam_read_minutes', true );
-$excerpt         = trim( wp_strip_all_tags( $post->post_content ) );
+$excerpt         = get_the_excerpt( $post );
 $blog_url        = dam_localized_page_url( 'blog', $locale );
 $post_tags       = get_the_tags( $post->ID );
 $blog_categories = get_categories( array( 'hide_empty' => true ) );

@@ -230,6 +230,7 @@ header.wp-block-template-part:has(.site-header) { position: sticky; top: 0; z-in
 .news-card-content { position: absolute; z-index: 1; inset-inline: 22px; bottom: 24px; display: flex; flex-direction: column; gap: 9px; }
 .news-card-content small { color: #a8d5ec; font-size: 10px; font-weight: 820; text-transform: uppercase; letter-spacing: .08em; }
 .news-card-content strong { display: -webkit-box; overflow: hidden; color: white; font-size: clamp(18px, 1.65vw, 23px); line-height: 1.35; font-weight: 700; -webkit-box-orient: vertical; -webkit-line-clamp: 3; text-shadow: 0 2px 18px rgba(0,0,0,.28); }
+.news-card-content em { display: -webkit-box; overflow: hidden; color: rgba(255,255,255,.82); font-size: 13px; font-style: normal; line-height: 1.6; -webkit-box-orient: vertical; -webkit-line-clamp: 2; text-shadow: 0 2px 14px rgba(0,0,0,.3); }
 
 /* About preview */
 .about-preview { position: relative; overflow: hidden; background: var(--blue-deep); color: white; }
