@@ -27,13 +27,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * The clean, canonical URL for a language's homepage -- `/`, `/fa/`,
  * `/ar/` -- never the internal front-page-placeholder permalink.
+ *
+ * Deliberately does not call get_permalink()/get_page_link() or
+ * Polylang's own pll_home_url() for this: confirmed live (by making
+ * this function return an unmistakable marker string and checking the
+ * response) that every one of those still resolves to the placeholder
+ * page's own permalink for this front-page placeholder post, not a
+ * clean URL -- so building the URL by hand from the known, fixed
+ * per-language prefix is the only reliable option here. English is the
+ * default language and stays unprefixed (see reference_urls memory);
+ * Persian and Arabic use their locale code as the prefix, matching
+ * Polylang's actual URLs everywhere else on this site.
  */
 function dam_front_page_clean_url( $locale = null ) {
 	$locale = $locale ? $locale : dam_current_locale();
-	if ( function_exists( 'pll_home_url' ) ) {
-		return pll_home_url( $locale );
+	if ( 'en' === $locale ) {
+		return home_url( '/' );
 	}
-	return home_url( '/' );
+	return home_url( '/' . $locale . '/' );
 }
 
 /**
@@ -62,34 +73,34 @@ function dam_front_page_seo_description( $description ) {
 add_filter( 'rank_math/frontend/description', 'dam_front_page_seo_description' );
 
 /**
- * Fix the placeholder page's permalink at the source, rather than
- * chasing every plugin that reads it. get_permalink() on a "static
- * front page" placeholder is what Rank Math's canonical/OG tags,
- * Polylang's hreflang alternates, and the XML sitemap all ultimately
- * read -- so once this returns the clean language root, every one of
- * those is correct with no per-plugin filter to keep in sync.
+ * Rewrite the placeholder URL directly in the rendered front-page HTML.
+ *
+ * Filtering this at the source (page_link/_get_page_link, which
+ * get_permalink() is documented to call for a page; also Rank Math's
+ * own rank_math/frontend/canonical, rank_math/opengraph/url, and
+ * Polylang's pll_home_url()/pll_hreflang_array) never changed the
+ * output -- confirmed live with an unconditional test filter returning
+ * a fixed marker string, which still never appeared anywhere in the
+ * response. On this install, get_permalink() for this placeholder page
+ * genuinely resolves to its own hierarchical permalink rather than the
+ * front page's home_url() shortcut, and every plugin above (correctly)
+ * reads that same value. Rewriting the finished HTML is what actually
+ * fixes the output regardless of which internal function produced it.
  */
-function dam_front_page_permalink( $link, $post_id ) {
-	if ( (int) $post_id === (int) get_option( 'page_on_front' ) ) {
-		return dam_front_page_clean_url();
+function dam_front_page_start_buffer() {
+	if ( is_front_page() ) {
+		ob_start( 'dam_front_page_rewrite_placeholder_urls' );
 	}
-	return $link;
 }
-add_filter( 'page_link', 'dam_front_page_permalink', 10, 2 );
-add_filter( '_get_page_link', 'dam_front_page_permalink', 10, 2 );
+add_action( 'template_redirect', 'dam_front_page_start_buffer' );
 
-/**
- * Belt-and-braces: Polylang's hreflang alternates must point at each
- * language's clean root too, not its placeholder permalink, even if
- * something builds them without calling get_permalink() per page.
- */
-function dam_front_page_hreflang( $hreflangs ) {
-	if ( ! is_front_page() || ! is_array( $hreflangs ) ) {
-		return $hreflangs;
+function dam_front_page_rewrite_placeholder_urls( $html ) {
+	foreach ( array( 'en', 'fa', 'ar' ) as $lang ) {
+		$html = preg_replace(
+			'#https?://[^"\'\s]+/front-page-placeholder-' . preg_quote( $lang, '#' ) . '/#',
+			dam_front_page_clean_url( $lang ),
+			$html
+		);
 	}
-	foreach ( $hreflangs as $lang => $url ) {
-		$hreflangs[ $lang ] = dam_front_page_clean_url( $lang );
-	}
-	return $hreflangs;
+	return $html;
 }
-add_filter( 'pll_hreflang_array', 'dam_front_page_hreflang' );
