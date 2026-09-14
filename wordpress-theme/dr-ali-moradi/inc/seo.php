@@ -62,20 +62,26 @@ function dam_front_page_seo_description( $description ) {
 add_filter( 'rank_math/frontend/description', 'dam_front_page_seo_description' );
 
 /**
- * Canonical and Open Graph URLs must point at the clean language root.
+ * Fix the placeholder page's permalink at the source, rather than
+ * chasing every plugin that reads it. get_permalink() on a "static
+ * front page" placeholder is what Rank Math's canonical/OG tags,
+ * Polylang's hreflang alternates, and the XML sitemap all ultimately
+ * read -- so once this returns the clean language root, every one of
+ * those is correct with no per-plugin filter to keep in sync.
  */
-function dam_front_page_seo_canonical( $url ) {
-	if ( is_front_page() ) {
+function dam_front_page_permalink( $link, $post_id ) {
+	if ( (int) $post_id === (int) get_option( 'page_on_front' ) ) {
 		return dam_front_page_clean_url();
 	}
-	return $url;
+	return $link;
 }
-add_filter( 'rank_math/frontend/canonical', 'dam_front_page_seo_canonical' );
-add_filter( 'rank_math/opengraph/url', 'dam_front_page_seo_canonical' );
+add_filter( 'page_link', 'dam_front_page_permalink', 10, 2 );
+add_filter( '_get_page_link', 'dam_front_page_permalink', 10, 2 );
 
 /**
- * Polylang's hreflang alternates must point at each language's clean
- * root too, not its placeholder permalink.
+ * Belt-and-braces: Polylang's hreflang alternates must point at each
+ * language's clean root too, not its placeholder permalink, even if
+ * something builds them without calling get_permalink() per page.
  */
 function dam_front_page_hreflang( $hreflangs ) {
 	if ( ! is_front_page() || ! is_array( $hreflangs ) ) {
