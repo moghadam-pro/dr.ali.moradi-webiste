@@ -31,6 +31,7 @@ require_once DAM_THEME_DIR . '/inc/polylang.php';
 require_once DAM_THEME_DIR . '/inc/seo.php';
 require_once DAM_THEME_DIR . '/inc/i18n.php';
 require_once DAM_THEME_DIR . '/inc/slug-redirects.php';
+require_once DAM_THEME_DIR . '/inc/multilang-editor.php';
 
 /**
  * Theme setup: text domain, supports, nav menu locations.
