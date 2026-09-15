@@ -13,25 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function dam_team_labels( $locale ) {
 	$labels = array(
-		'en' => array( 'kicker' => 'People', 'title' => 'Meet the team', 'intro' => 'Clinical, research, and engineering work is delivered through coordinated specialist roles.', 'readProfile' => 'Read More', 'back' => 'Back to the team', 'profileIntro' => 'Professional profile', 'expertise' => 'Area of work', 'collaboration' => 'Contribution to the team' ),
-		'fa' => array( 'kicker' => 'اعضای تیم', 'title' => 'آشنایی با تیم', 'intro' => 'فعالیت بالینی، پژوهشی و مهندسی با همکاری نقش‌های تخصصی و هماهنگ پیش می‌رود.', 'readProfile' => 'بیشتر بخوانید', 'back' => 'بازگشت به اعضای تیم', 'profileIntro' => 'پروفایل حرفه‌ای', 'expertise' => 'حوزه فعالیت', 'collaboration' => 'نقش در تیم' ),
-		'ar' => array( 'kicker' => 'الفريق', 'title' => 'تعرّف إلى الفريق', 'intro' => 'تتقدم الأعمال السريرية والبحثية والهندسية عبر أدوار تخصصية منسقة.', 'readProfile' => 'اقرأ المزيد', 'back' => 'العودة إلى الفريق', 'profileIntro' => 'الملف المهني', 'expertise' => 'مجال العمل', 'collaboration' => 'الدور في الفريق' ),
+		'en' => array( 'kicker' => 'People', 'title' => 'Meet the team', 'intro' => 'Clinical, research, and engineering work is delivered through coordinated specialist roles.', 'readProfile' => 'Read More', 'back' => 'Back to the team', 'profileIntro' => 'Professional profile', 'expertise' => 'Area of work', 'collaboration' => 'Contribution to the team', 'relatedLinks' => 'Related links' ),
+		'fa' => array( 'kicker' => 'اعضای تیم', 'title' => 'آشنایی با تیم', 'intro' => 'فعالیت بالینی، پژوهشی و مهندسی با همکاری نقش‌های تخصصی و هماهنگ پیش می‌رود.', 'readProfile' => 'بیشتر بخوانید', 'back' => 'بازگشت به اعضای تیم', 'profileIntro' => 'پروفایل حرفه‌ای', 'expertise' => 'حوزه فعالیت', 'collaboration' => 'نقش در تیم', 'relatedLinks' => 'لینک‌های مرتبط' ),
+		'ar' => array( 'kicker' => 'الفريق', 'title' => 'تعرّف إلى الفريق', 'intro' => 'تتقدم الأعمال السريرية والبحثية والهندسية عبر أدوار تخصصية منسقة.', 'readProfile' => 'اقرأ المزيد', 'back' => 'العودة إلى الفريق', 'profileIntro' => 'الملف المهني', 'expertise' => 'مجال العمل', 'collaboration' => 'الدور في الفريق', 'relatedLinks' => 'روابط ذات صلة' ),
 	);
 	return $labels[ $locale ] ?? $labels['en'];
-}
-
-/**
- * The draft-background disclosure shown on a team profile page when no
- * verified CV has been supplied yet -- transcribed from the reference's
- * own TeamProfilePage component, which shows this for every member.
- */
-function dam_team_draft_background( $locale ) {
-	$text = array(
-		'en' => 'This background text is an intentionally provisional draft until a verified CV is supplied. The final version will document education, appointments, selected projects, and relevant areas of contribution. All dates, affiliations, and professional titles will be reviewed with the team member before final publication.',
-		'fa' => 'این متن سابقه فعلاً پیش‌نویس است و پس از دریافت رزومه تأییدشده جایگزین می‌شود. نسخه نهایی، تحصیلات، مسئولیت‌ها، پروژه‌های منتخب و زمینه‌های مرتبط فعالیت را ثبت خواهد کرد. همه تاریخ‌ها، وابستگی‌های سازمانی و عناوین حرفه‌ای پیش از انتشار نهایی با خود عضو تیم بازبینی می‌شوند.',
-		'ar' => 'هذا النص المهني مسودة مؤقتة إلى أن تصل السيرة الذاتية الموثقة. ستوثق النسخة النهائية التعليم والمسؤوليات والمشاريع المختارة ومجالات المساهمة ذات الصلة. وستُراجع جميع التواريخ والجهات والصفات المهنية مع عضو الفريق قبل النشر النهائي.',
-	);
-	return $text[ $locale ] ?? $text['en'];
 }
 
 /** Which hub page a team member's "back" link should point to, based on
