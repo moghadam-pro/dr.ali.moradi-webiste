@@ -68,21 +68,32 @@ function dam_enqueue_editor_assets() {
 add_action( 'after_setup_theme', 'dam_enqueue_editor_assets' );
 
 /**
+ * Cache-busting version string for a theme-bundled asset, based on the
+ * file's own last-modified time rather than the static DAM_THEME_VERSION
+ * constant. Confirmed live: with a static version, the browser (and this
+ * host's 14-day Cache-Control) kept serving a stale style.css across
+ * several theme re-uploads in the same session -- new CSS rules existed
+ * in the deployed file but never reached the browser because the
+ * enqueued URL hadn't changed. filemtime() changes on every deploy
+ * automatically, so this can't be forgotten the way bumping a constant
+ * by hand can.
+ */
+function dam_asset_version( $relative_path ) {
+	$file = DAM_THEME_DIR . $relative_path;
+	return file_exists( $file ) ? (string) filemtime( $file ) : DAM_THEME_VERSION;
+}
+
+/**
  * Front-end stylesheet. theme.json/Global Styles cover most presentation;
  * this file only holds the handful of rules block support doesn't reach
  * (e.g. component-specific layout for the theme's own dynamic blocks).
  */
 function dam_enqueue_assets() {
-	wp_enqueue_style( 'dr-ali-moradi-style', DAM_THEME_URI . '/assets/css/style.css', array(), DAM_THEME_VERSION );
-	wp_enqueue_script( 'dr-ali-moradi-site', DAM_THEME_URI . '/assets/js/site.js', array(), DAM_THEME_VERSION, true );
+	wp_enqueue_style( 'dr-ali-moradi-style', DAM_THEME_URI . '/assets/css/style.css', array(), dam_asset_version( '/assets/css/style.css' ) );
+	wp_enqueue_script( 'dr-ali-moradi-site', DAM_THEME_URI . '/assets/js/site.js', array(), dam_asset_version( '/assets/js/site.js' ), true );
 }
 add_action( 'wp_enqueue_scripts', 'dam_enqueue_assets' );
 
-/**
- * Adds a `locale-{lang}` body class (matching the reference design's own
- * `.locale-fa` / `.locale-ar` selectors) so Persian/Arabic pages pick up
- * the Vazirmatn/Scheherazade font stack without per-template overrides.
- */
 /**
  * URL for a theme-bundled asset with the same `?ver=` cache-busting the
  * enqueued CSS/JS already use. Without this, a file that 404s once (e.g.
@@ -92,9 +103,14 @@ add_action( 'wp_enqueue_scripts', 'dam_enqueue_assets' );
  * never fixes it for anyone who already hit the 404. See progress-log.md.
  */
 function dam_theme_asset_url( $relative_path ) {
-	return DAM_THEME_URI . $relative_path . '?ver=' . DAM_THEME_VERSION;
+	return DAM_THEME_URI . $relative_path . '?ver=' . dam_asset_version( $relative_path );
 }
 
+/**
+ * Adds a `locale-{lang}` body class (matching the reference design's own
+ * `.locale-fa` / `.locale-ar` selectors) so Persian/Arabic pages pick up
+ * the Abar VF/Scheherazade font stack without per-template overrides.
+ */
 function dam_locale_body_class( $classes ) {
 	$locale     = dam_current_locale();
 	$classes[]  = 'locale-' . $locale;
