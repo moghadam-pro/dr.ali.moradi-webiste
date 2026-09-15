@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/archive-content",
+	"title": "Archive Content",
+	"category": "dr-ali-moradi",
+	"icon": "grid-view",
+	"description": "Category/tag/date/author/search archive listing, styled to match the blog archive (cover, card grid, pagination).",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

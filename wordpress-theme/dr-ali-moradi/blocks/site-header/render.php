@@ -7,7 +7,7 @@ $locale = dam_current_locale();
 $rtl    = 'en' !== $locale;
 $t      = dam_site_copy( $locale );
 $logo   = 'en' === $locale ? 'logo.en.svg' : 'logo.fa-ar.svg';
-$home   = function_exists( 'pll_home_url' ) ? pll_home_url( $locale ) : home_url( '/' );
+$home   = dam_front_page_clean_url( $locale );
 
 $menu_icon_open  = dam_icon( 'menu', 24 );
 $menu_icon_close = dam_icon( 'x', 24 );

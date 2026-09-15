@@ -73,6 +73,12 @@ img { display: block; max-width: 100%; }
  * height), so sticky there works for the whole scroll range. */
 header.wp-block-template-part:has(.site-header) { position: sticky; top: 0; z-index: 50; }
 .site-header { height: 86px; padding: 0 max(32px, calc((100vw - 1320px) / 2)); display: flex; align-items: center; justify-content: space-between; gap: 28px; border-bottom: 1px solid rgba(220,231,235,.85); background: rgba(248,251,252,.91); backdrop-filter: blur(18px); }
+.site-breadcrumbs { padding: 14px 0; background: var(--mist); border-bottom: 1px solid var(--line); }
+.site-breadcrumbs, .site-breadcrumbs a, .rank-math-breadcrumb, .rank-math-breadcrumb a { font-size: 12px; font-weight: 650; color: var(--muted); }
+.rank-math-breadcrumb { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.rank-math-breadcrumb a { color: var(--blue); }
+.rank-math-breadcrumb a:hover { text-decoration: underline; }
+.rank-math-breadcrumb .separator { color: var(--muted); opacity: .6; }
 .brand { flex: 0 0 170px; }
 .brand img { width: 153px; height: 50px; object-fit: contain; object-position: left center; }
 .rtl .brand img { object-position: right center; }
@@ -419,6 +425,12 @@ header.wp-block-template-part:has(.site-header) { position: sticky; top: 0; z-in
 .team-profile-note > svg { color: var(--orange); }
 .team-profile-note h3 { margin: 0 0 8px; font-size: 20px; }
 .team-profile-note p { margin: 0; color: var(--muted); line-height: 1.75; }
+.team-profile-excerpt { margin: 0 0 28px; color: var(--muted); font-size: 18px; line-height: 1.75; }
+.team-profile-links { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--line); }
+.team-profile-links h3 { margin: 0 0 16px; font-size: 20px; }
+.team-profile-links ul { display: flex; flex-direction: column; gap: 10px; list-style: none; margin: 0; padding: 0; }
+.team-profile-links a { color: var(--blue); font-size: 15px; font-weight: 700; }
+.team-profile-links a:hover { text-decoration: underline; }
 
 /* Galleries */
 .clinic-gallery-row { background: white; }
@@ -452,6 +464,16 @@ header.wp-block-template-part:has(.site-header) { position: sticky; top: 0; z-in
 
 /* Blog archive + single post */
 .blog-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.archive-empty { padding: 60px 0; text-align: center; color: var(--muted); font-size: 16px; }
+.archive-pagination { margin-top: 48px; display: flex; justify-content: center; }
+.archive-pagination .page-numbers { display: flex; align-items: center; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.archive-pagination a.page-numbers, .archive-pagination span.page-numbers { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; height: 40px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--line); color: #2f4a54; font-size: 13px; font-weight: 700; }
+.archive-pagination a.page-numbers:hover { border-color: var(--blue); color: var(--blue); }
+.archive-pagination span.page-numbers.current { background: var(--blue); border-color: var(--blue); color: #fff; }
+.archive-pagination span.page-numbers.dots { border: 0; color: var(--muted); }
+.archive-pagination .prev, .archive-pagination .next { color: var(--blue); }
+.archive-pagination svg { width: 16px; height: 16px; }
+.rtl .archive-pagination .prev svg, .rtl .archive-pagination .next svg { transform: rotate(180deg); }
 .blog-card { min-height: 530px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: white; transition: transform .25s ease, box-shadow .25s ease; }
 .blog-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
 .blog-card-image { position: relative; height: 220px; flex: 0 0 220px; overflow: hidden; background: #e4eff3; }

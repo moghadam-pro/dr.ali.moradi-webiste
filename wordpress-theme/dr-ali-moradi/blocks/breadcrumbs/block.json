@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/breadcrumbs",
+	"title": "Breadcrumbs",
+	"category": "dr-ali-moradi",
+	"icon": "list-view",
+	"description": "Rank Math's breadcrumb trail, styled to match the theme. Renders nothing on the front page.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

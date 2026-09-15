@@ -194,5 +194,11 @@ msgstr "صفحه اصلی دکتر علی مرادی"
 msgid "Dr. Ali Moradi"
 msgstr "دکتر علی مرادی"
 
+msgid "Nothing found."
+msgstr "چیزی یافت نشد."
+
+msgid "Pagination"
+msgstr "صفحه‌بندی"
+
 msgid "Multilingual (English, Persian, Arabic) block theme for Dr. Ali Moradi's clinical, research, innovation, and education presence. Built as a Full Site Editing theme so the clinic operator can control layout, header, footer, and content without a page builder."
 msgstr "قالب بلوکی چندزبانه (انگلیسی، فارسی، عربی) برای معرفی فعالیت‌های بالینی، پژوهشی، نوآوری و آموزشی دکتر علی مرادی. این قالب به‌صورت Full Site Editing ساخته شده تا مسئول کلینیک بتواند چیدمان، هدر، فوتر و محتوا را بدون نیاز به افزونه صفحه‌ساز مدیریت کند."
