@@ -173,6 +173,27 @@ function dam_breadcrumb_post_type_label( $post_type ) {
  * mirroring the same relationship gallery-full/render.php's own back-link
  * already assumed (they all sit under Clinical Care).
  */
+/**
+ * About and Contact are the only interior pages whose WP page title is a
+ * full marketing sentence written for the cover <h1> ("A surgeon shaped by
+ * curiosity, evidence, and making.") rather than a short label -- every
+ * other interior page's actual page title (Research, Clinic services,
+ * Rehabilitation guidance, ...) is already breadcrumb-length. Reuses the
+ * short label already shown for the same page elsewhere (footer nav /
+ * the page's own kicker) instead of maintaining a separate label set.
+ */
+function dam_breadcrumb_page_label( $page_key, $locale, $fallback_title ) {
+	if ( 'about' === $page_key ) {
+		$label = dam_site_copy( $locale )['footerExplore']['about'] ?? null;
+		return $label ? $label : $fallback_title;
+	}
+	if ( 'contact' === $page_key ) {
+		$label = dam_interior_pages_copy( $locale )['contact']['kicker'] ?? null;
+		return $label ? $label : $fallback_title;
+	}
+	return $fallback_title;
+}
+
 function dam_interior_page_parent_key( $page_key ) {
 	$map = array(
 		'clinic-services'   => 'clinical-care',
@@ -246,10 +267,10 @@ function dam_get_breadcrumb_items() {
 		if ( $parent_key ) {
 			$parent = dam_localized_page( $parent_key, $locale );
 			if ( $parent ) {
-				$items[] = array( 'label' => get_the_title( $parent ), 'url' => get_permalink( $parent ) );
+				$items[] = array( 'label' => dam_breadcrumb_page_label( $parent_key, $locale, get_the_title( $parent ) ), 'url' => get_permalink( $parent ) );
 			}
 		}
-		$items[] = array( 'label' => get_the_title(), 'url' => null );
+		$items[] = array( 'label' => dam_breadcrumb_page_label( $page_key, $locale, get_the_title() ), 'url' => null );
 	} elseif ( is_singular() ) {
 		$items[] = array( 'label' => get_the_title(), 'url' => null );
 	}
