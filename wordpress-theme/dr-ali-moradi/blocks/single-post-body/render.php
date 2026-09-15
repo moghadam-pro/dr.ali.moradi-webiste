@@ -19,6 +19,9 @@ $excerpt         = get_the_excerpt( $post );
 $blog_url        = dam_localized_page_url( 'blog', $locale );
 $post_tags       = get_the_tags( $post->ID );
 $blog_categories = get_categories( array( 'hide_empty' => true ) );
+$author_name     = get_the_author_meta( 'display_name', $post->post_author );
+$author_url      = get_author_posts_url( $post->post_author );
+$comment_count   = get_comments_number( $post );
 
 $date_format = 'ar' === $locale ? 'j F Y' : ( 'fa' === $locale ? 'j F Y' : 'F j, Y' );
 $date        = get_the_date( $date_format, $post );
@@ -42,20 +45,54 @@ $date        = get_the_date( $date_format, $post );
 	</div>
 	<div class="article-layout">
 		<aside>
+			<div class="article-sidebar-group article-post-info">
+				<h3><?php echo esc_html( $labels['postInfo'] ); ?></h3>
+				<ul class="article-post-info-list">
+					<li>
+						<span class="article-post-info-label"><?php echo esc_html( $labels['publishedOn'] ); ?></span>
+						<time datetime="<?php echo esc_attr( get_the_date( 'c', $post ) ); ?>"><?php echo esc_html( $date ); ?></time>
+					</li>
+					<?php if ( $read_minutes ) : ?>
+					<li>
+						<span class="article-post-info-label"><?php echo esc_html( $labels['readTime'] ); ?></span>
+						<span><?php echo esc_html( $read_minutes . ' ' . $labels['minutes'] ); ?></span>
+					</li>
+					<?php endif; ?>
+					<li>
+						<span class="article-post-info-label"><?php echo esc_html( $labels['author'] ); ?></span>
+						<a href="<?php echo esc_url( $author_url ); ?>"><?php echo esc_html( $author_name ); ?></a>
+					</li>
+					<?php if ( $post_tags ) : ?>
+					<li>
+						<span class="article-post-info-label"><?php echo esc_html( $labels['tags'] ); ?></span>
+						<div class="article-tag-list">
+							<?php foreach ( $post_tags as $tag ) : ?>
+								<a href="<?php echo esc_url( get_tag_link( $tag ) ); ?>"><?php echo esc_html( $tag->name ); ?></a>
+							<?php endforeach; ?>
+						</div>
+					</li>
+					<?php endif; ?>
+					<?php if ( $categories ) : ?>
+					<li>
+						<span class="article-post-info-label"><?php echo esc_html( $labels['category'] ); ?></span>
+						<div class="article-tag-list">
+							<?php foreach ( $categories as $cat ) : ?>
+								<a href="<?php echo esc_url( get_category_link( $cat ) ); ?>"><?php echo esc_html( $cat->name ); ?></a>
+							<?php endforeach; ?>
+						</div>
+					</li>
+					<?php endif; ?>
+					<li>
+						<span class="article-post-info-label"><?php echo esc_html( $labels['comments'] ); ?></span>
+						<span><?php echo esc_html( $comment_count ); ?></span>
+					</li>
+				</ul>
+			</div>
+
 			<a class="article-back" href="<?php echo esc_url( $blog_url ); ?>"><?php echo dam_icon( 'chevron-left', 16 ); ?><?php echo esc_html( $labels['back'] ); ?></a>
 
-			<?php if ( $post_tags ) : ?>
-			<div class="article-sidebar-group">
-				<h3><?php echo esc_html( $labels['tags'] ); ?></h3>
-				<div class="article-tag-list">
-					<?php foreach ( $post_tags as $tag ) : ?>
-						<a href="<?php echo esc_url( get_tag_link( $tag ) ); ?>"><?php echo esc_html( $tag->name ); ?></a>
-					<?php endforeach; ?>
-				</div>
-			</div>
-			<?php endif; ?>
-
 			<?php if ( $blog_categories ) : ?>
+			<hr class="article-sidebar-divider" />
 			<div class="article-sidebar-group">
 				<h3><?php echo esc_html( $labels['categories'] ); ?></h3>
 				<ul class="article-category-list">
