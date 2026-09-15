@@ -137,3 +137,158 @@ function dam_front_page_rewrite_placeholder_urls( $html ) {
 
 	return $html;
 }
+
+/**
+ * Custom breadcrumb trail, replacing rank_math_the_breadcrumbs().
+ *
+ * Rank Math's own breadcrumb only ever produced "Home / Current Item" --
+ * confirmed live on both a plain page and a team_member profile -- because
+ * this site's archive-less CPTs (team_member) have nothing for it to
+ * insert a middle crumb from, and its "Home" text plus separator are one
+ * global string never translated per Polylang language (confirmed: showed
+ * English "Home" and an en-dash separator on the Persian site). Building
+ * the trail from the theme's own already-localized page/CPT/taxonomy data
+ * gives every page a correct, fully-translated hierarchy instead.
+ */
+function dam_breadcrumb_home_label( $locale ) {
+	$labels = array( 'en' => 'Home', 'fa' => 'خانه', 'ar' => 'الرئيسية' );
+	return $labels[ $locale ] ?? $labels['en'];
+}
+
+/** LTR (English) reads "/"; RTL (Persian/Arabic) reads "\" instead. */
+function dam_breadcrumb_separator( $locale ) {
+	return 'en' === $locale ? '/' : '\\';
+}
+
+function dam_breadcrumb_post_type_label( $post_type ) {
+	$object = get_post_type_object( $post_type );
+	return $object ? $object->labels->name : '';
+}
+
+/**
+ * The generic-interior-page sub-pages (clinic/hospital pathway pages, the
+ * four patient-resource pages, the two case-study galleries) don't have a
+ * real WP page_parent set -- every page in the DB is a flat top-level
+ * post -- so their place in the hierarchy is declared here instead,
+ * mirroring the same relationship gallery-full/render.php's own back-link
+ * already assumed (they all sit under Clinical Care).
+ */
+function dam_interior_page_parent_key( $page_key ) {
+	$map = array(
+		'clinic-services'   => 'clinical-care',
+		'hospital-services' => 'clinical-care',
+		'before-surgery'    => 'clinical-care',
+		'after-surgery'     => 'clinical-care',
+		'faq'               => 'clinical-care',
+		'rehabilitation'    => 'clinical-care',
+		'clinic-gallery'    => 'clinical-care',
+		'hospital-gallery'  => 'clinical-care',
+	);
+	return $map[ $page_key ] ?? null;
+}
+
+/**
+ * Builds the ordered crumb list ( array of ['label' => ..., 'url' => ...
+ * or null for the current, non-linked page] ) for whatever WordPress is
+ * currently rendering. Empty on the front page and on 404s -- neither has
+ * a real trail to show.
+ */
+function dam_get_breadcrumb_items() {
+	if ( is_front_page() || is_404() ) {
+		return array();
+	}
+
+	$locale = dam_current_locale();
+	$items  = array(
+		array( 'label' => dam_breadcrumb_home_label( $locale ), 'url' => dam_front_page_clean_url( $locale ) ),
+	);
+
+	if ( is_singular( 'post' ) ) {
+		$items[] = array( 'label' => dam_blog_labels( $locale )['kicker'], 'url' => dam_localized_page_url( 'blog', $locale ) );
+		$cats    = get_the_category();
+		if ( $cats ) {
+			$items[] = array( 'label' => $cats[0]->name, 'url' => get_category_link( $cats[0] ) );
+		}
+		$items[] = array( 'label' => get_the_title(), 'url' => null );
+	} elseif ( is_singular( 'team_member' ) ) {
+		$hub_key = dam_team_member_back_slug( get_the_ID() );
+		$hub     = dam_localized_page( $hub_key, $locale );
+		$items[] = array(
+			'label' => dam_breadcrumb_post_type_label( 'team_member' ),
+			'url'   => $hub ? get_permalink( $hub ) : null,
+		);
+		$items[] = array( 'label' => get_the_title(), 'url' => null );
+	} elseif ( is_singular( array( 'condition', 'innovation', 'publication', 'patient_resource' ) ) ) {
+		$post_type = get_post_type();
+		$items[]   = array( 'label' => dam_breadcrumb_post_type_label( $post_type ), 'url' => get_post_type_archive_link( $post_type ) );
+		$items[]   = array( 'label' => get_the_title(), 'url' => null );
+	} elseif ( is_post_type_archive() ) {
+		$items[] = array( 'label' => post_type_archive_title( '', false ), 'url' => null );
+	} elseif ( is_category() || is_tag() ) {
+		$items[] = array( 'label' => dam_blog_labels( $locale )['kicker'], 'url' => dam_localized_page_url( 'blog', $locale ) );
+		$items[] = array( 'label' => single_term_title( '', false ), 'url' => null );
+	} elseif ( is_tax( 'condition_category' ) ) {
+		$items[] = array( 'label' => dam_breadcrumb_post_type_label( 'condition' ), 'url' => get_post_type_archive_link( 'condition' ) );
+		$items[] = array( 'label' => single_term_title( '', false ), 'url' => null );
+	} elseif ( is_tax( 'publication_type' ) ) {
+		$items[] = array( 'label' => dam_breadcrumb_post_type_label( 'publication' ), 'url' => get_post_type_archive_link( 'publication' ) );
+		$items[] = array( 'label' => single_term_title( '', false ), 'url' => null );
+	} elseif ( is_tax() ) {
+		$items[] = array( 'label' => single_term_title( '', false ), 'url' => null );
+	} elseif ( is_search() ) {
+		/* translators: %s: the visitor's search query. */
+		$items[] = array( 'label' => sprintf( __( 'Search results for "%s"', 'dr-ali-moradi' ), get_search_query() ), 'url' => null );
+	} elseif ( is_home() ) {
+		$items[] = array( 'label' => dam_blog_labels( $locale )['kicker'], 'url' => null );
+	} elseif ( is_page() ) {
+		$page_key   = dam_current_page_key();
+		$parent_key = dam_interior_page_parent_key( $page_key );
+		if ( $parent_key ) {
+			$parent = dam_localized_page( $parent_key, $locale );
+			if ( $parent ) {
+				$items[] = array( 'label' => get_the_title( $parent ), 'url' => get_permalink( $parent ) );
+			}
+		}
+		$items[] = array( 'label' => get_the_title(), 'url' => null );
+	} elseif ( is_singular() ) {
+		$items[] = array( 'label' => get_the_title(), 'url' => null );
+	}
+
+	return $items;
+}
+
+/**
+ * Renders the crumb list built above. Placed just under each page's cover
+ * image (interior-cover/team-profile/single-post-body/archive-content/
+ * blog-archive/gallery-full all call this directly right after their own
+ * <section class="interior-cover">; pages without a cover get it via the
+ * dr-ali-moradi/breadcrumbs block instead) rather than in the shared
+ * header part, so it reads as part of the page instead of a header bar.
+ */
+function dam_render_breadcrumbs() {
+	$items = dam_get_breadcrumb_items();
+	if ( count( $items ) < 2 ) {
+		return;
+	}
+	$locale    = dam_current_locale();
+	$separator = dam_breadcrumb_separator( $locale );
+	$last      = count( $items ) - 1;
+	?>
+	<nav class="site-breadcrumbs" aria-label="<?php esc_attr_e( 'Breadcrumb', 'dr-ali-moradi' ); ?>">
+		<div class="section-shell">
+			<ol class="dam-breadcrumb-list">
+				<?php foreach ( $items as $i => $item ) : ?>
+					<li>
+						<?php if ( $item['url'] && $i !== $last ) : ?>
+							<a href="<?php echo esc_url( $item['url'] ); ?>"><?php echo esc_html( $item['label'] ); ?></a>
+						<?php else : ?>
+							<span aria-current="page"><?php echo esc_html( $item['label'] ); ?></span>
+						<?php endif; ?>
+						<?php if ( $i !== $last ) : ?><span class="dam-breadcrumb-sep" aria-hidden="true"><?php echo esc_html( $separator ); ?></span><?php endif; ?>
+					</li>
+				<?php endforeach; ?>
+			</ol>
+		</div>
+	</nav>
+	<?php
+}

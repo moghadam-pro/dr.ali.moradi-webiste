@@ -5,7 +5,7 @@
 	"title": "Breadcrumbs",
 	"category": "dr-ali-moradi",
 	"icon": "list-view",
-	"description": "Rank Math's breadcrumb trail, styled to match the theme. Renders nothing on the front page.",
+	"description": "The theme's own localized breadcrumb trail. Renders nothing on the front page or 404.",
 	"supports": { "html": false },
 	"render": "file:./render.php"
 }

@@ -16,3 +16,9 @@ msgstr "لم يتم العثور على شيء."
 
 msgid "Pagination"
 msgstr "ترقيم الصفحات"
+
+msgid "Breadcrumb"
+msgstr "مسار التصفح"
+
+msgid "Search results for \"%s\""
+msgstr "نتائج البحث عن \"%s\""

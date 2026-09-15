@@ -17,8 +17,6 @@ $summary      = get_post_meta( $post->ID, 'dam_summary', true );
 $excerpt      = has_excerpt( $post ) ? get_the_excerpt( $post ) : '';
 $related_links = get_post_meta( $post->ID, 'dam_related_links', true );
 $cover        = dam_media_url( 'team-profile-cover' );
-$back_slug    = dam_team_member_back_slug( $post->ID );
-$back_url     = dam_localized_page_url( $back_slug, $locale );
 ?>
 <section class="interior-cover">
 	<img class="fill-img" src="<?php echo esc_url( $cover ); ?>" alt="">
@@ -29,8 +27,7 @@ $back_url     = dam_localized_page_url( $back_slug, $locale );
 		<?php if ( $role ) : ?><p><?php echo esc_html( $role ); ?></p><?php endif; ?>
 	</div>
 </section>
-
-<div class="interior-back section-shell"><a href="<?php echo esc_url( $back_url ); ?>"><?php echo dam_icon( 'chevron-left', 16 ); ?><?php echo esc_html( $labels['back'] ); ?></a></div>
+<?php dam_render_breadcrumbs(); ?>
 
 <section <?php echo get_block_wrapper_attributes( array( 'class' => 'team-profile section-space section-shell' ) ); ?>>
 	<div class="team-profile-image reveal">

@@ -37,6 +37,7 @@ $date        = get_the_date( $date_format, $post );
 		<?php if ( $excerpt ) : ?><p><?php echo esc_html( $excerpt ); ?></p><?php endif; ?>
 	</div>
 </section>
+<?php dam_render_breadcrumbs(); ?>
 
 <article <?php echo get_block_wrapper_attributes( array( 'class' => 'single-post-article section-space section-shell' ) ); ?>>
 	<div class="article-meta">

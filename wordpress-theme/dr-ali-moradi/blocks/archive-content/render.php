@@ -28,6 +28,7 @@ $description = get_the_archive_description();
 		<?php if ( $description ) : ?><p><?php echo wp_kses_post( $description ); ?></p><?php endif; ?>
 	</div>
 </section>
+<?php dam_render_breadcrumbs(); ?>
 
 <section <?php echo get_block_wrapper_attributes( array( 'class' => 'blog-archive section-space section-shell' ) ); ?>>
 	<?php if ( have_posts() ) : ?>

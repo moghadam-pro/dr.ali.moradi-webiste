@@ -316,22 +316,33 @@ function dam_media_url( $slug, $fallback = '' ) {
 }
 
 /**
+ * Resolves a page slug (always the English one -- get_page_by_path()
+ * matches by post_name regardless of language) to that page's post object
+ * in the given locale, following Polylang's translation link. Falls back
+ * to the English page itself when no translation exists yet.
+ */
+function dam_localized_page( $slug, $locale = null ) {
+	$locale = $locale ? $locale : dam_current_locale();
+	$page   = get_page_by_path( $slug );
+	if ( ! $page ) {
+		return null;
+	}
+	if ( function_exists( 'pll_get_post' ) ) {
+		$translated = pll_get_post( $page->ID, $locale );
+		if ( $translated ) {
+			return get_post( $translated );
+		}
+	}
+	return $page;
+}
+
+/**
  * Builds a localized front-end URL for a page slug the way the reference
  * site does (English un-prefixed, fa/ar prefixed) -- Polylang's own
  * pll_home_url()/home_url() already add the right prefix once the page is
  * resolved, so this just resolves the slug's translated page permalink.
  */
 function dam_localized_page_url( $slug, $locale = null ) {
-	$locale = $locale ? $locale : dam_current_locale();
-	$page   = get_page_by_path( $slug );
-	if ( ! $page ) {
-		return home_url( '/' . $slug . '/' );
-	}
-	if ( function_exists( 'pll_get_post' ) ) {
-		$translated = pll_get_post( $page->ID, $locale );
-		if ( $translated ) {
-			return get_permalink( $translated );
-		}
-	}
-	return get_permalink( $page );
+	$page = dam_localized_page( $slug, $locale );
+	return $page ? get_permalink( $page ) : home_url( '/' . $slug . '/' );
 }

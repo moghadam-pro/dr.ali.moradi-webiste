@@ -20,17 +20,33 @@ function dam_team_labels( $locale ) {
 	return $labels[ $locale ] ?? $labels['en'];
 }
 
-/** Which hub page a team member's "back" link should point to, based on
- * the team_area taxonomy terms on their post (first match wins, in this
+/** Which hub page a team member's own team_area hub is, based on the
+ * team_area taxonomy terms on their post (first match wins, in this
  * priority order -- mirrors the reference's own
- * `member.areas.includes("clinic") ? ... : ...` fallback chain). */
+ * `member.areas.includes("clinic") ? ... : ...` fallback chain).
+ *
+ * Terms are matched by their *English* slug via pll_get_term(), never the
+ * slug wp_get_post_terms() itself returns -- on a non-English post that
+ * call returns the Persian/Arabic term (its own, differently-slugged
+ * translation), so comparing it against the hardcoded English slugs below
+ * silently never matched and every non-English member fell through to the
+ * "research" default (confirmed live: a Persian Innovation-team member's
+ * hub incorrectly resolved to /fa/research/). */
 function dam_team_member_back_slug( $post_id ) {
-	$terms = wp_get_post_terms( $post_id, 'team_area', array( 'fields' => 'slugs' ) );
-	if ( in_array( 'clinical-care', $terms, true ) ) {
-		return 'clinical-care';
-	}
-	if ( in_array( 'innovation', $terms, true ) ) {
-		return 'innovations';
+	$terms = wp_get_post_terms( $post_id, 'team_area', array( 'fields' => 'ids' ) );
+	foreach ( $terms as $term_id ) {
+		$en_term_id = function_exists( 'pll_get_term' ) ? pll_get_term( $term_id, 'en' ) : $term_id;
+		$term       = $en_term_id ? get_term( $en_term_id, 'team_area' ) : null;
+		$slug       = ( $term && ! is_wp_error( $term ) ) ? $term->slug : null;
+		if ( 'clinical-care' === $slug ) {
+			return 'clinical-care';
+		}
+		if ( 'innovation' === $slug ) {
+			return 'innovations';
+		}
+		if ( 'research' === $slug ) {
+			return 'research';
+		}
 	}
 	return 'research';
 }

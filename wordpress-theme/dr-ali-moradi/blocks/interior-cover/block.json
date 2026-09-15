@@ -8,8 +8,7 @@
 	"description": "The photo cover (kicker/title/intro) used at the top of every interior page, with the scroll-shrink effect.",
 	"attributes": {
 		"pageKey": { "type": "string", "default": "" },
-		"image": { "type": "string", "default": "" },
-		"backLink": { "type": "string", "default": "" }
+		"image": { "type": "string", "default": "" }
 	},
 	"supports": { "html": false },
 	"render": "file:./render.php"

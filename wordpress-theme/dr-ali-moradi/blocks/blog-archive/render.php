@@ -26,6 +26,7 @@ $posts = get_posts(
 		<p><?php echo esc_html( $labels['intro'] ); ?></p>
 	</div>
 </section>
+<?php dam_render_breadcrumbs(); ?>
 
 <section <?php echo get_block_wrapper_attributes( array( 'class' => 'blog-archive section-space section-shell' ) ); ?>>
 	<div class="blog-grid">
