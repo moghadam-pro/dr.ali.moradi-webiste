@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DAM_THEME_VERSION', '0.2.0' );
+define( 'DAM_THEME_VERSION', '0.2.1' );
 define( 'DAM_THEME_DIR', get_template_directory() );
 define( 'DAM_THEME_URI', get_template_directory_uri() );
 

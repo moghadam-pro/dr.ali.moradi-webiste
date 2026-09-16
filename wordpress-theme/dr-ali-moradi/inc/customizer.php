@@ -7,17 +7,22 @@
  * unlike Theme Options' contact/impact fields (one value shared across all
  * languages) this is real narrative copy that already reads differently
  * per language today, so a single shared value would silently overwrite
- * the other two languages' text the first time anyone edited it. Settings
- * are therefore stored as theme_mods suffixed with the language currently
- * being PREVIEWED ("dam_hero_description_fa", not "dam_hero_description"),
- * resolved via dam_current_locale() -- which correctly reports the
- * previewed language because WP passes the previewed URL to customize.php
- * (`?url=https://dralimoradi.com/fa/`) and Polylang reads that to set the
- * current language for the whole Customizer request, sidebar included, not
- * only the live-preview iframe. In practice: to edit the Persian or Arabic
- * homepage, browse to that language's front page first, then open
- * Customize from the admin toolbar from there (rather than opening
- * Customize from wp-admin, which previews English).
+ * the other two languages' text the first time anyone edited it.
+ *
+ * Three independent top-level panels -- "Homepage Content (English)",
+ * "(فارسی)", "(العربية)" -- rather than one panel whose target language
+ * depends on which front-end URL the Customizer happened to be opened
+ * from. That URL-detection approach was tried first and dropped: it needs
+ * Polylang to correctly resolve the *previewed* language for the sidebar's
+ * own request (not just the live-preview iframe), which is an easy thing
+ * for an operator to get wrong silently (edit Persian, actually save to
+ * English). Three fixed, always-visible panels remove that failure mode
+ * entirely at the cost of the live-preview iframe only ever showing the
+ * language of the page Customize was opened from -- editing Persian or
+ * Arabic copy here won't visually preview live; check the live site after
+ * Publish instead. Settings are stored as theme_mods suffixed with the
+ * language the FIELD belongs to ("dam_hero_description_fa"), fixed at
+ * registration time per panel, not derived from the current request.
  *
  * Repeating rows (credential bullets, journey steps, pathway cards,
  * appointment cards) reuse the same "one row per line, `field|field`"
@@ -151,57 +156,78 @@ function dam_customizer_field( $wp_customize, $key, $section, $label, $type, $lo
 	);
 }
 
+/**
+ * One independent top-level panel per language, each holding the same 5
+ * sections -- rather than one panel that edits "whichever language you're
+ * currently previewing". Three fixed, always-visible panels are simpler
+ * and more reliable for a non-technical operator than a single panel
+ * whose target language depends on which front-end URL the Customizer
+ * happened to be opened from: nothing to get wrong, and no dependency on
+ * Polylang correctly detecting the previewed language for the sidebar's
+ * own request. The trade-off, accepted deliberately: the live-preview
+ * iframe only ever shows the language of the page Customize was opened
+ * from, so editing Persian or Arabic copy here won't visually preview
+ * live -- check the result on the live site after Publish instead.
+ */
 function dam_customize_register( $wp_customize ) {
-	$locale = dam_current_locale();
-
-	$wp_customize->add_panel(
-		'dam_homepage',
-		array(
-			'title'       => __( 'Homepage Content', 'dr-ali-moradi' ),
-			'description' => __( 'Editing the language of the page you opened Customize from. To edit Persian or Arabic, browse to /fa/ or /ar/ on the live site first, then open Customize from there.', 'dr-ali-moradi' ),
-			'priority'    => 50,
-		)
+	$panel_titles = array(
+		'en' => __( 'Homepage Content (English)', 'dr-ali-moradi' ),
+		'fa' => __( 'Homepage Content (فارسی)', 'dr-ali-moradi' ),
+		'ar' => __( 'Homepage Content (العربية)', 'dr-ali-moradi' ),
 	);
 
-	// Hero.
-	$wp_customize->add_section( 'dam_hero', array( 'title' => __( 'Hero', 'dr-ali-moradi' ), 'panel' => 'dam_homepage' ) );
-	dam_customizer_field( $wp_customize, 'hero_name_first', 'dam_hero', __( 'Name -- first part (e.g. "Dr.")', 'dr-ali-moradi' ), 'text', $locale );
-	dam_customizer_field( $wp_customize, 'hero_name_last', 'dam_hero', __( 'Name -- highlighted part', 'dr-ali-moradi' ), 'text', $locale );
-	dam_customizer_field( $wp_customize, 'hero_credentials', 'dam_hero', __( 'Credential bullets -- one per line, "Bold part|Rest of line"', 'dr-ali-moradi' ), 'textarea', $locale );
-	dam_customizer_field( $wp_customize, 'hero_description', 'dam_hero', __( 'Description paragraph', 'dr-ali-moradi' ), 'textarea', $locale );
-	dam_customizer_field( $wp_customize, 'hero_quote', 'dam_hero', __( 'Pull-quote', 'dr-ali-moradi' ), 'textarea', $locale );
-	dam_customizer_field( $wp_customize, 'hero_facets', 'dam_hero', __( 'Facet strip (4 items) -- one per line, "Small label|Bold label"', 'dr-ali-moradi' ), 'textarea', $locale );
-	dam_customizer_field( $wp_customize, 'hero_credential_list', 'dam_hero', __( 'Checkmark credential list -- one per line', 'dr-ali-moradi' ), 'textarea', $locale );
+	foreach ( $panel_titles as $locale => $panel_title ) {
+		$panel_id = 'dam_homepage_' . $locale;
 
-	// Connected practice / journey.
-	$wp_customize->add_section( 'dam_journey', array( 'title' => __( 'Connected Practice', 'dr-ali-moradi' ), 'panel' => 'dam_homepage' ) );
-	dam_customizer_field( $wp_customize, 'journey_kicker', 'dam_journey', __( 'Kicker', 'dr-ali-moradi' ), 'text', $locale );
-	dam_customizer_field( $wp_customize, 'journey_intro', 'dam_journey', __( 'Intro text', 'dr-ali-moradi' ), 'textarea', $locale );
-	dam_customizer_field( $wp_customize, 'journey_link_label', 'dam_journey', __( '"Explore the journey" link label', 'dr-ali-moradi' ), 'text', $locale );
-	dam_customizer_field( $wp_customize, 'journey_steps', 'dam_journey', __( 'Steps (4 cards) -- one per line, "Small label|Title"', 'dr-ali-moradi' ), 'textarea', $locale );
+		$wp_customize->add_panel(
+			$panel_id,
+			array(
+				'title'    => $panel_title,
+				'priority' => 50,
+			)
+		);
 
-	// Pathways.
-	$wp_customize->add_section( 'dam_pathways', array( 'title' => __( 'Pathways', 'dr-ali-moradi' ), 'panel' => 'dam_homepage' ) );
-	dam_customizer_field( $wp_customize, 'pathways_kicker', 'dam_pathways', __( 'Kicker', 'dr-ali-moradi' ), 'text', $locale );
-	dam_customizer_field( $wp_customize, 'pathways_title', 'dam_pathways', __( 'Title', 'dr-ali-moradi' ), 'text', $locale );
-	dam_customizer_field( $wp_customize, 'pathways_body', 'dam_pathways', __( 'Body text', 'dr-ali-moradi' ), 'textarea', $locale );
-	dam_customizer_field( $wp_customize, 'pathway_cards', 'dam_pathways', __( 'Cards -- one per line, "Title|Text|Button label" (keep exactly 3 lines, in Clinic/Innovation/Research order)', 'dr-ali-moradi' ), 'textarea', $locale );
+		$hero_section         = 'dam_hero_' . $locale;
+		$journey_section      = 'dam_journey_' . $locale;
+		$pathways_section     = 'dam_pathways_' . $locale;
+		$appointments_section = 'dam_appointments_' . $locale;
+		$about_section        = 'dam_about_preview_' . $locale;
 
-	// Appointments.
-	$wp_customize->add_section( 'dam_appointments', array( 'title' => __( 'Appointments', 'dr-ali-moradi' ), 'panel' => 'dam_homepage' ) );
-	dam_customizer_field( $wp_customize, 'appointments_kicker', 'dam_appointments', __( 'Kicker', 'dr-ali-moradi' ), 'text', $locale );
-	dam_customizer_field( $wp_customize, 'appointment_title', 'dam_appointments', __( 'Title', 'dr-ali-moradi' ), 'text', $locale );
-	dam_customizer_field( $wp_customize, 'appointment_body', 'dam_appointments', __( 'Body text', 'dr-ali-moradi' ), 'textarea', $locale );
-	dam_customizer_field( $wp_customize, 'appointment_cards', 'dam_appointments', __( 'Accordion cards (4 items) -- one per line, "Small label|Title|Description" (keep exactly 4 lines, in Planned/Online/Urgent/Screening order)', 'dr-ali-moradi' ), 'textarea', $locale );
-	dam_customizer_field( $wp_customize, 'appointment_cta_label', 'dam_appointments', __( '"Continue to Nobat.ir" button label', 'dr-ali-moradi' ), 'text', $locale );
-	dam_customizer_field( $wp_customize, 'appointment_urgent_days', 'dam_appointments', __( 'Urgent-triage days', 'dr-ali-moradi' ), 'text', $locale );
-	dam_customizer_field( $wp_customize, 'appointment_urgent_hours', 'dam_appointments', __( 'Urgent-triage hours', 'dr-ali-moradi' ), 'text', $locale );
+		$wp_customize->add_section( $hero_section, array( 'title' => __( 'Hero', 'dr-ali-moradi' ), 'panel' => $panel_id ) );
+		dam_customizer_field( $wp_customize, 'hero_name_first', $hero_section, __( 'Name -- first part (e.g. "Dr.")', 'dr-ali-moradi' ), 'text', $locale );
+		dam_customizer_field( $wp_customize, 'hero_name_last', $hero_section, __( 'Name -- highlighted part', 'dr-ali-moradi' ), 'text', $locale );
+		dam_customizer_field( $wp_customize, 'hero_credentials', $hero_section, __( 'Credential bullets -- one per line, "Bold part|Rest of line"', 'dr-ali-moradi' ), 'textarea', $locale );
+		dam_customizer_field( $wp_customize, 'hero_description', $hero_section, __( 'Description paragraph', 'dr-ali-moradi' ), 'textarea', $locale );
+		dam_customizer_field( $wp_customize, 'hero_quote', $hero_section, __( 'Pull-quote', 'dr-ali-moradi' ), 'textarea', $locale );
+		dam_customizer_field( $wp_customize, 'hero_facets', $hero_section, __( 'Facet strip (4 items) -- one per line, "Small label|Bold label"', 'dr-ali-moradi' ), 'textarea', $locale );
+		dam_customizer_field( $wp_customize, 'hero_credential_list', $hero_section, __( 'Checkmark credential list -- one per line', 'dr-ali-moradi' ), 'textarea', $locale );
 
-	// About preview.
-	$wp_customize->add_section( 'dam_about_preview', array( 'title' => __( 'About Preview', 'dr-ali-moradi' ), 'panel' => 'dam_homepage' ) );
-	dam_customizer_field( $wp_customize, 'about_kicker', 'dam_about_preview', __( 'Kicker', 'dr-ali-moradi' ), 'text', $locale );
-	dam_customizer_field( $wp_customize, 'about_body', 'dam_about_preview', __( 'Body text', 'dr-ali-moradi' ), 'textarea', $locale );
-	dam_customizer_field( $wp_customize, 'about_cta_label', 'dam_about_preview', __( '"Meet the doctor" button label', 'dr-ali-moradi' ), 'text', $locale );
-	dam_customizer_field( $wp_customize, 'about_research_label', 'dam_about_preview', __( '"Research profile" link label', 'dr-ali-moradi' ), 'text', $locale );
+		$wp_customize->add_section( $journey_section, array( 'title' => __( 'Connected Practice', 'dr-ali-moradi' ), 'panel' => $panel_id ) );
+		dam_customizer_field( $wp_customize, 'journey_kicker', $journey_section, __( 'Kicker', 'dr-ali-moradi' ), 'text', $locale );
+		dam_customizer_field( $wp_customize, 'journey_intro', $journey_section, __( 'Intro text', 'dr-ali-moradi' ), 'textarea', $locale );
+		dam_customizer_field( $wp_customize, 'journey_link_label', $journey_section, __( '"Explore the journey" link label', 'dr-ali-moradi' ), 'text', $locale );
+		dam_customizer_field( $wp_customize, 'journey_steps', $journey_section, __( 'Steps (4 cards) -- one per line, "Small label|Title"', 'dr-ali-moradi' ), 'textarea', $locale );
+
+		$wp_customize->add_section( $pathways_section, array( 'title' => __( 'Pathways', 'dr-ali-moradi' ), 'panel' => $panel_id ) );
+		dam_customizer_field( $wp_customize, 'pathways_kicker', $pathways_section, __( 'Kicker', 'dr-ali-moradi' ), 'text', $locale );
+		dam_customizer_field( $wp_customize, 'pathways_title', $pathways_section, __( 'Title', 'dr-ali-moradi' ), 'text', $locale );
+		dam_customizer_field( $wp_customize, 'pathways_body', $pathways_section, __( 'Body text', 'dr-ali-moradi' ), 'textarea', $locale );
+		dam_customizer_field( $wp_customize, 'pathway_cards', $pathways_section, __( 'Cards -- one per line, "Title|Text|Button label" (keep exactly 3 lines, in Clinic/Innovation/Research order)', 'dr-ali-moradi' ), 'textarea', $locale );
+
+		$wp_customize->add_section( $appointments_section, array( 'title' => __( 'Appointments', 'dr-ali-moradi' ), 'panel' => $panel_id ) );
+		dam_customizer_field( $wp_customize, 'appointments_kicker', $appointments_section, __( 'Kicker', 'dr-ali-moradi' ), 'text', $locale );
+		dam_customizer_field( $wp_customize, 'appointment_title', $appointments_section, __( 'Title', 'dr-ali-moradi' ), 'text', $locale );
+		dam_customizer_field( $wp_customize, 'appointment_body', $appointments_section, __( 'Body text', 'dr-ali-moradi' ), 'textarea', $locale );
+		dam_customizer_field( $wp_customize, 'appointment_cards', $appointments_section, __( 'Accordion cards (4 items) -- one per line, "Small label|Title|Description" (keep exactly 4 lines, in Planned/Online/Urgent/Screening order)', 'dr-ali-moradi' ), 'textarea', $locale );
+		dam_customizer_field( $wp_customize, 'appointment_cta_label', $appointments_section, __( '"Continue to Nobat.ir" button label', 'dr-ali-moradi' ), 'text', $locale );
+		dam_customizer_field( $wp_customize, 'appointment_urgent_days', $appointments_section, __( 'Urgent-triage days', 'dr-ali-moradi' ), 'text', $locale );
+		dam_customizer_field( $wp_customize, 'appointment_urgent_hours', $appointments_section, __( 'Urgent-triage hours', 'dr-ali-moradi' ), 'text', $locale );
+
+		$wp_customize->add_section( $about_section, array( 'title' => __( 'About Preview', 'dr-ali-moradi' ), 'panel' => $panel_id ) );
+		dam_customizer_field( $wp_customize, 'about_kicker', $about_section, __( 'Kicker', 'dr-ali-moradi' ), 'text', $locale );
+		dam_customizer_field( $wp_customize, 'about_body', $about_section, __( 'Body text', 'dr-ali-moradi' ), 'textarea', $locale );
+		dam_customizer_field( $wp_customize, 'about_cta_label', $about_section, __( '"Meet the doctor" button label', 'dr-ali-moradi' ), 'text', $locale );
+		dam_customizer_field( $wp_customize, 'about_research_label', $about_section, __( '"Research profile" link label', 'dr-ali-moradi' ), 'text', $locale );
+	}
 }
 add_action( 'customize_register', 'dam_customize_register' );
