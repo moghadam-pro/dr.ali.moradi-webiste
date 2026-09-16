@@ -12,26 +12,35 @@ $images = array(
 	dam_media_url( '04-life', DAM_THEME_URI . '/assets/img/connected-practice/04-life.jpg' ),
 );
 $innovation_url = dam_localized_page_url( 'innovations', $locale );
+
+$kicker     = dam_theme_mod( 'journey_kicker', $locale );
+$intro      = dam_theme_mod( 'journey_intro', $locale );
+$link_label = dam_theme_mod( 'journey_link_label', $locale );
+$steps      = dam_theme_mod_rows( 'journey_steps', $locale );
 ?>
 <section <?php echo get_block_wrapper_attributes( array( 'class' => 'journey section-space' ) ); ?>>
 	<div class="section-shell">
 		<div class="section-heading split-heading journey-heading reveal">
 			<div>
-				<p class="section-index light"><?php echo esc_html( $t['connectedIndex'] ); ?></p>
-				<p><?php echo esc_html( $t['storyBody'] ); ?></p>
+				<p class="section-index light"><?php echo esc_html( $kicker ); ?></p>
+				<p><?php echo esc_html( $intro ); ?></p>
 			</div>
-			<a class="text-link light" href="<?php echo esc_url( $innovation_url ); ?>"><?php echo esc_html( $t['journeyLink'] ); ?><?php echo dam_icon( 'arrow-right', 17 ); ?></a>
+			<a class="text-link light" href="<?php echo esc_url( $innovation_url ); ?>"><?php echo esc_html( $link_label ); ?><?php echo dam_icon( 'arrow-right', 17 ); ?></a>
 		</div>
 		<div class="connected-grid">
-			<?php foreach ( $t['journey'] as $index => $step ) : ?>
+			<?php foreach ( $steps as $index => $step ) :
+				if ( ! isset( $images[ $index ] ) ) {
+					break;
+				}
+				?>
 				<div class="connected-card reveal">
-					<div class="connected-image"><img class="fill-img" src="<?php echo esc_url( $images[ $index ] ); ?>" alt="<?php echo esc_attr( $step[1] ); ?>"></div>
+					<div class="connected-image"><img class="fill-img" src="<?php echo esc_url( $images[ $index ] ); ?>" alt="<?php echo esc_attr( $step[1] ?? '' ); ?>"></div>
 					<?php if ( $index < 3 ) : ?>
 						<span class="connected-arrow"><?php echo dam_icon( 'chevron-right', 48, 1 ); ?></span>
 					<?php endif; ?>
 					<div class="connected-meta">
-						<span><?php echo esc_html( $t['journeyStepNumbers'][ $index ] ); ?></span>
-						<div><small><?php echo esc_html( $step[0] ); ?></small><h3><?php echo esc_html( $step[1] ); ?></h3></div>
+						<span><?php echo esc_html( $t['journeyStepNumbers'][ $index ] ?? '' ); ?></span>
+						<div><small><?php echo esc_html( $step[0] ?? '' ); ?></small><h3><?php echo esc_html( $step[1] ?? '' ); ?></h3></div>
 					</div>
 				</div>
 			<?php endforeach; ?>

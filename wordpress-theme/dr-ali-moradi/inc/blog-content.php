@@ -14,26 +14,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * The "Innovation" category (seeded as 'innovation-news' by
- * dam_seed_post_categories()) an operator tags a post with from the normal
- * Categories panel in the post editor. Resolved to the current locale's own
- * translated term the same way dam_team_member_back_slug() resolves
- * team_area terms -- Polylang gives every language its own term object
- * with its own (differently-slugged) name, so the English slug only
- * matches the English term directly.
+ * Resolves a category by its *English* slug to its term ID in the given
+ * locale -- shared by every "operator tags a post with category X, the
+ * theme shows the latest ones somewhere" section (Innovation, Recognition).
+ *
+ * get_term_by() is subject to the same Polylang current-language term
+ * filtering as get_terms() -- confirmed live: looking up an English slug
+ * while browsing /fa/ or /ar/ returned nothing, because that term object
+ * only exists in the English language. get_terms() with an explicit
+ * `lang => ''` bypasses Polylang's filter so the lookup finds the term
+ * regardless of which language is being viewed, then pll_get_term() steps
+ * across to that locale's own translated term.
  */
-function dam_innovation_category_id( $locale = null ) {
+function dam_category_id_by_slug( $slug, $locale = null ) {
 	$locale = $locale ? $locale : dam_current_locale();
-	// get_term_by() is subject to the same Polylang current-language term
-	// filtering as get_terms() -- confirmed live: looking up the English
-	// 'innovation-news' slug while browsing /fa/ or /ar/ returned nothing,
-	// because that term only exists in the English language. get_terms()
-	// with an explicit `lang => ''` bypasses Polylang's filter so the
-	// lookup finds the term regardless of which language is being viewed.
-	$terms = get_terms(
+	$terms  = get_terms(
 		array(
 			'taxonomy'   => 'category',
-			'slug'       => 'innovation-news',
+			'slug'       => $slug,
 			'hide_empty' => false,
 			'lang'       => '',
 		)
@@ -49,6 +47,15 @@ function dam_innovation_category_id( $locale = null ) {
 		}
 	}
 	return $term_id;
+}
+
+/**
+ * The "Innovation" category (seeded as 'innovation-news' by
+ * dam_seed_post_categories()) an operator tags a post with from the normal
+ * Categories panel in the post editor.
+ */
+function dam_innovation_category_id( $locale = null ) {
+	return dam_category_id_by_slug( 'innovation-news', $locale );
 }
 
 /**

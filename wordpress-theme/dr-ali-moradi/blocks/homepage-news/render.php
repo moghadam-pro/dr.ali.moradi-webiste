@@ -5,7 +5,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $locale = dam_current_locale();
 $t      = dam_site_copy( $locale );
-$news_url = dam_localized_page_url( 'blog', $locale );
+
+$cat_id = dam_category_id_by_slug( 'awards-certificates', $locale );
+if ( ! $cat_id ) {
+	return;
+}
 
 $posts = get_posts(
 	array(
@@ -14,12 +18,15 @@ $posts = get_posts(
 		'orderby'        => 'date',
 		'order'          => 'DESC',
 		'no_found_rows'  => true,
+		'cat'            => $cat_id,
 	)
 );
 
 if ( empty( $posts ) ) {
 	return;
 }
+
+$news_url = get_category_link( $cat_id );
 ?>
 <section <?php echo get_block_wrapper_attributes( array( 'class' => 'news section-space section-shell' ) ); ?>>
 	<div class="section-heading split-heading reveal">

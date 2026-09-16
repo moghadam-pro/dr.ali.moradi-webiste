@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DAM_THEME_VERSION', '0.9.5' );
+define( 'DAM_THEME_VERSION', '0.2.0' );
 define( 'DAM_THEME_DIR', get_template_directory() );
 define( 'DAM_THEME_URI', get_template_directory_uri() );
 
@@ -17,6 +17,7 @@ require_once DAM_THEME_DIR . '/inc/post-types.php';
 require_once DAM_THEME_DIR . '/inc/taxonomies.php';
 require_once DAM_THEME_DIR . '/inc/meta-fields.php';
 require_once DAM_THEME_DIR . '/inc/theme-options.php';
+require_once DAM_THEME_DIR . '/inc/customizer.php';
 require_once DAM_THEME_DIR . '/inc/icons.php';
 require_once DAM_THEME_DIR . '/inc/homepage-content.php';
 require_once DAM_THEME_DIR . '/inc/interior-content.php';
