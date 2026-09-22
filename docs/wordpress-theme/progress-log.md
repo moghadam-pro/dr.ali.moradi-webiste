@@ -1044,3 +1044,33 @@ repository copy instead had a `0.1.0` header and a separate `0.9.4` cache
 constant. Replacing the active theme from that older tree would cause a
 regression, so no production files or database records were changed in this
 stage.
+
+## 2026-09-22 — production theme snapshot reconciled
+
+Exported the active production theme directory from DirectAdmin as
+`dr-ali-moradi-production-snapshot-20260922.zip` (2,986,197 bytes). Its SHA-256
+is `EF9612A7D6FA0970BF5708E64F1F323AB3D71AE5F35554CA9CD9498017DB601A`.
+The 182-entry archive contained no `.env`, `wp-config.php`, private-key file,
+or credential-like string found by the pre-merge scan.
+
+Reconciled the production-only work into release `1.0.0` in commit `425f6f8`:
+
+- retained the versioned CPT-to-Post migration, localized destination
+  categories, legacy redirects, and `team_member` as the only public theme CPT;
+- imported production SEO, breadcrumbs, archive pagination, real single-post
+  content, post metadata/sidebar, team related links, locale-aware team hub
+  routing, Customizer controls, translations, the Abar variable font, and the
+  production screenshot;
+- combined production's `filemtime()` asset cache busting with the theme header
+  remaining the only release-version source;
+- separated real source differences from line-ending-only changes before the
+  commit.
+
+Validation passed: PHP syntax for every theme PHP file, JSON parsing for every
+theme JSON file, Vinext production build, all five rendered-HTML tests, the
+WordPress release contract, and `git diff --check`. The normal `npm` launcher
+on this workstation is broken because its global `npm-cli.js` is missing, so
+the same build and test commands were invoked directly from the checked-in
+`node_modules` binaries. No production theme or database content was changed;
+deployment remains blocked until the database/theme rollback backup and the
+pre-migration content audit in Stage C are complete.

@@ -10,6 +10,11 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- The production-only SEO, breadcrumb, generic archive, Customizer,
+  multilingual-editor, slug-redirect, translation, and team-link features
+  recovered from the active `0.2.1` theme snapshot.
+- The Abar variable font, Persian and Arabic translation catalogs, and the
+  production theme screenshot.
 - A versioned, idempotent content-schema migration for legacy `condition`,
   `innovation`, `publication`, and `patient_resource` records.
 - Localized Post categories for Clinical Conditions, Innovation,
@@ -21,6 +26,11 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Production rendering improvements now preserve real post content and
+  excerpts, paginated archives, localized breadcrumbs, richer post metadata,
+  team related links, and locale-aware team navigation.
+- Bundled CSS and JavaScript use per-file modification times for cache
+  invalidation while the `style.css` header remains the release-version source.
 - Conditions, innovations, publications, and patient resources now use native
   WordPress Posts and categories. Team Members remains the only public custom
   post type owned by the theme.
