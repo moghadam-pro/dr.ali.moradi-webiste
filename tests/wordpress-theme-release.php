@@ -44,7 +44,27 @@ dam_test_assert(
 );
 
 $style = file_get_contents( dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/style.css' );
-dam_test_assert( 1 === preg_match( '/^Version:\s*1\.0\.0\r?$/m', $style ), 'Theme header is not version 1.0.0.' );
+dam_test_assert( 1 === preg_match( '/^Version:\s*1\.1\.0\r?$/m', $style ), 'Theme header is not version 1.1.0.' );
+
+$customizer = file_get_contents( dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/inc/customizer.php' );
+foreach ( array(
+	'dam_homepage_content', 'hero_background_image', 'hero_orbits_enabled',
+	'journey_step_', 'journey_link_url', 'pathway_', 'innovation_source',
+	'innovation_category', '{$prefix}_post_', 'impact_',
+	'appointment_', 'appointment_image', 'recognition_source',
+	'recognition_category', 'about_cta_url',
+	'about_image', 'footer_credit_url', 'footer_social_',
+) as $required_setting ) {
+	dam_test_assert(
+		false !== strpos( $customizer, $required_setting ),
+		'Required Customizer contract is missing: ' . $required_setting
+	);
+}
+
+dam_test_assert(
+	false !== strpos( $customizer, 'api.previewer.previewUrl.set' ),
+	'Language sections do not switch the live preview URL.'
+);
 
 $functions = file_get_contents( dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/functions.php' );
 dam_test_assert(

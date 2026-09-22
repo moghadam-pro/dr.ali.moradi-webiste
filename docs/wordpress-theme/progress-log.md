@@ -1097,3 +1097,19 @@ under the required `dr-ali-moradi/` root, a root `style.css` declaring version
 
 Stages A-C are complete. Production deployment and the first authenticated
 administrator request remain pending explicit owner confirmation.
+
+## 2026-09-22 — multilingual homepage Customizer 1.1.0 prepared
+
+Reworked the homepage editing workflow into one Homepage Content panel with
+English, Persian, and Arabic sections. Opening a language section now switches
+the live preview to that locale's actual homepage. Added granular controls for
+Hero media/orbits, all Connected Practice stages, Pathways cards, Innovation
+and Recognition sources/layouts, Impact values, Appointments, About actions,
+and the complete footer.
+
+The previous delimiter-based Journey, Pathways, and Appointment values remain
+usable as upgrade defaults; all new edits use independently sanitized fields.
+The release is versioned as `1.1.0` and documented in
+`homepage-customizer.md` and the theme changelog. Local validation and the
+production deployment record are appended after the final release artifact is
+built and verified.

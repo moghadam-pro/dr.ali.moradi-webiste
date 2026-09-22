@@ -5,9 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $locale  = dam_current_locale();
 $t       = dam_site_copy( $locale );
-$about_url    = dam_localized_page_url( 'about', $locale );
-$research_url = dam_localized_page_url( 'research', $locale );
-$office_image = dam_media_url( 'office', DAM_THEME_URI . '/assets/img/about/office.jpg' );
+$about_url       = dam_theme_mod( 'about_cta_url', $locale );
+$research_url    = dam_theme_mod( 'about_research_url', $locale );
+$office_fallback = dam_media_url( 'office', DAM_THEME_URI . '/assets/img/about/office.jpg' );
+$office_image    = dam_theme_mod( 'about_image', $locale ) ?: $office_fallback;
 
 $kicker          = dam_theme_mod( 'about_kicker', $locale );
 $body            = dam_theme_mod( 'about_body', $locale );

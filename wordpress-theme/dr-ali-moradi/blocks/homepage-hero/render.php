@@ -6,7 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 $locale = dam_current_locale();
 $t      = dam_site_copy( $locale );
 $facet_icons = array( 'hand', 'brain-circuit', 'lightbulb', 'microscope' );
-$hero_image  = dam_media_url( 'hero-bg-v2', DAM_THEME_URI . '/assets/img/hero/hero-bg-v2.jpg' );
+$hero_fallback = dam_media_url( 'hero-bg-v2', DAM_THEME_URI . '/assets/img/hero/hero-bg-v2.jpg' );
+$hero_image    = dam_theme_mod( 'hero_background_image', $locale ) ?: $hero_fallback;
+$show_orbits   = (bool) dam_theme_mod( 'hero_orbits_enabled', $locale );
 
 $name_first  = dam_theme_mod( 'hero_name_first', $locale );
 $name_last   = dam_theme_mod( 'hero_name_last', $locale );
@@ -19,12 +21,12 @@ $check_list  = array_filter( array_map( 'trim', explode( "\n", dam_theme_mod( 'h
 <section <?php echo get_block_wrapper_attributes( array( 'class' => 'hero' ) ); ?>>
 	<img class="hero-background fill-img" src="<?php echo esc_url( $hero_image ); ?>" alt="">
 	<div class="hero-wash" aria-hidden="true"></div>
-	<div class="hero-orbits" aria-hidden="true">
+	<?php if ( $show_orbits ) : ?><div class="hero-orbits" aria-hidden="true">
 		<div class="orbit orbit-one"></div>
 		<div class="orbit orbit-two"></div>
 		<div class="hero-dot dot-one"></div>
 		<div class="hero-dot dot-two"></div>
-	</div>
+	</div><?php endif; ?>
 	<div class="hero-layout section-shell">
 		<div class="hero-copy">
 			<h1><span><?php echo esc_html( $name_first ); ?></span> <strong><?php echo esc_html( $name_last ); ?></strong></h1>

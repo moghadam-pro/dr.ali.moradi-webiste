@@ -19,9 +19,9 @@ operator. Updated as items are resolved.
    the bulk content import still runs as a script via the REST API,
    which remains the right tool for a one-shot bulk import.
 
-## Blocking
+## Resolved production prerequisite
 
-14. **Production theme source must be reconciled before replacement.** On
+14. ~~**Production theme source must be reconciled before replacement.**~~ On
     2026-09-22 the installed theme reports version `0.2.1`, uses a file-time
     asset cache key, and exposes newer CSS, JavaScript, templates, block
     metadata, fonts, and logo files than repository `main` (whose header still
@@ -29,7 +29,9 @@ operator. Updated as items are resolved.
     a zip built directly from the repository would overwrite those uncommitted
     production changes. Export the active `dr-ali-moradi` theme directory (or
     provide authenticated file-manager access), merge it into the 1.0.0 branch,
-    then deploy and run the content migration.
+    then deploy and run the content migration. Resolved on 2026-09-22: the
+    active production theme was exported, reviewed, reconciled into `main`,
+    and a full DirectAdmin rollback backup was verified before release 1.1.0.
 
 ## Not blocking, but flagged
 

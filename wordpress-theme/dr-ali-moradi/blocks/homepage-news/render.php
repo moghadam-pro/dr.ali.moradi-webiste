@@ -4,40 +4,33 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $locale = dam_current_locale();
-$t      = dam_site_copy( $locale );
 
-$cat_id = dam_category_id_by_slug( 'awards-certificates', $locale );
-if ( ! $cat_id ) {
-	return;
+$cat_id = (int) dam_theme_mod( 'recognition_category', $locale );
+if ( $cat_id && function_exists( 'pll_get_term' ) ) {
+	$cat_id = (int) ( pll_get_term( $cat_id, $locale ) ?: $cat_id );
 }
-
-$posts = get_posts(
-	array(
-		'post_type'      => 'post',
-		'posts_per_page' => 4,
-		'orderby'        => 'date',
-		'order'          => 'DESC',
-		'no_found_rows'  => true,
-		'cat'            => $cat_id,
-	)
-);
+$posts = dam_customizer_section_posts( 'recognition', $locale );
 
 if ( empty( $posts ) ) {
 	return;
 }
 
-$news_url = get_category_link( $cat_id );
+$news_url = $cat_id ? get_category_link( $cat_id ) : home_url( '/' );
+if ( is_wp_error( $news_url ) ) {
+	$news_url = home_url( '/' );
+}
+$columns  = max( 1, min( 3, (int) dam_theme_mod( 'recognition_columns', $locale ) ) );
 ?>
 <section <?php echo get_block_wrapper_attributes( array( 'class' => 'news section-space section-shell' ) ); ?>>
 	<div class="section-heading split-heading reveal">
 		<div>
-			<p class="section-index"><?php echo esc_html( $t['awardsKicker'] ); ?></p>
-			<p><?php echo esc_html( $t['awardsTitle'] ); ?></p>
-			<span class="section-heading-intro"><?php echo esc_html( $t['awardsIntro'] ); ?></span>
+			<p class="section-index"><?php echo esc_html( dam_theme_mod( 'recognition_kicker', $locale ) ); ?></p>
+			<p><?php echo esc_html( dam_theme_mod( 'recognition_title', $locale ) ); ?></p>
+			<span class="section-heading-intro"><?php echo esc_html( dam_theme_mod( 'recognition_subtitle', $locale ) ); ?></span>
 		</div>
-		<a class="text-link" href="<?php echo esc_url( $news_url ); ?>"><?php echo esc_html( $t['allUpdates'] ); ?><?php echo dam_icon( 'arrow-right', 17 ); ?></a>
+		<a class="text-link" href="<?php echo esc_url( $news_url ); ?>"><?php echo esc_html( dam_theme_mod( 'recognition_link_label', $locale ) ); ?><?php echo dam_icon( 'arrow-right', 17 ); ?></a>
 	</div>
-	<div class="news-grid">
+	<div class="news-grid card-grid-columns-<?php echo esc_attr( $columns ); ?>">
 		<?php foreach ( $posts as $post ) :
 			$categories = get_the_category( $post->ID );
 			$category   = $categories ? $categories[0]->name : '';

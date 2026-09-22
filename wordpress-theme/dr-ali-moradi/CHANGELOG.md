@@ -6,6 +6,34 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-22
+
+### Added
+
+- One Homepage Content Customizer panel containing English, Persian, and
+  Arabic sections; opening a language section switches the live preview to
+  that language's real homepage.
+- Hero background-image selection and a switch for the circular orbit artwork.
+- Individual Connected Practice stage text and image controls plus an editable
+  full-journey link.
+- Individual title, body, button label, and button URL controls for all three
+  Pathways cards.
+- Dynamic-by-category and manual-post modes, card count, and grid column
+  controls for Innovation and Recognition.
+- Full Impact controls for the section heading and all four value/label pairs.
+- An appointment image control and separate enable, eyebrow, title, and body
+  controls for each of the four appointment options.
+- About-preview image and button URL controls.
+- Detailed footer controls for branding, booking, navigation, resources,
+  contact information, addresses, map, social links, legal copy, and credit.
+
+### Changed
+
+- Legacy delimiter-based Connected Practice, Pathways, and Appointments values
+  remain readable as defaults while new edits use independent fields.
+- Homepage card grids now support one, two, or three configured columns while
+  retaining their responsive single-column layout on small screens.
+
 ## [1.0.0] - 2026-09-22
 
 ### Added
