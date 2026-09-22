@@ -82,3 +82,21 @@ covers what would normally need Pro, etc.).
 - Final acceptance test: compare the finished temporary site, page by page
   and language by language, against the live reference at
   https://dralimoradi.moghadam.pro/ for content parity.
+
+## 6. Production simplification — 2026-09-22 (current)
+
+The operator requested that Conditions, Innovations, Publications, and Patient
+Resources no longer appear as separate WordPress admin content types. The
+current model is:
+
+- keep Team Members as the only public theme-owned CPT;
+- manage the other four families as standard Posts;
+- distinguish them with localized categories;
+- migrate existing database records in place so IDs and attached data remain
+  stable;
+- preserve retired CPT URLs with permanent redirects;
+- version the theme with SemVer from the `style.css` header and record every
+  release in the theme changelog.
+
+This current decision supersedes the corresponding CPT rows in the original
+architecture decision, while retaining the earlier record for history.

@@ -9,7 +9,8 @@ https://github.com/moghadam-pro/dr.ali.moradi-webiste/blob/docs/wordpress-theme/
 ## Layout
 
 - `dr-ali-moradi/` — the WordPress block theme.
-  - `style.css`, `theme.json` — theme header, Global Styles, custom
+  - `style.css`, `CHANGELOG.md`, `theme.json` — canonical SemVer header,
+    release history, Global Styles, and custom
     templates/template-parts declarations.
   - `templates/` — block templates (front-page, page, page-hub,
     page-contact, page-full-width, single, archive, single-team_member,
@@ -17,7 +18,8 @@ https://github.com/moghadam-pro/dr.ali.moradi-webiste/blob/docs/wordpress-theme/
   - `parts/` — header and footer template parts.
   - `blocks/` — the theme's own dynamic Gutenberg blocks (contact-info,
     impact-stats, appointment-cta, site-navigation).
-  - `inc/` — post types, taxonomies, native custom-field registration,
+  - `inc/` — the Team Member post type, Post categories, versioned content
+    migrations, native custom-field registration,
     Theme Options admin page, block registration, Polylang string
     registration.
   - `assets/` — CSS, JS (the custom-fields editor panel), and the
@@ -28,9 +30,13 @@ https://github.com/moghadam-pro/dr.ali.moradi-webiste/blob/docs/wordpress-theme/
   script (scaffolded, blocked on WordPress site credentials). See its own
   `README.md`.
 
-## Status
+## Content model
 
-Scaffolding is complete enough to install the theme and see real pages
-render; visual/CSS polish to match the approved design, and the actual
-deployment + content import to `tmp.saveon.me`, are the next steps — see
-`progress-log.md` on the `docs` branch for the up-to-date state.
+- Posts hold articles, conditions, innovations, publications, and patient
+  resources; categories distinguish those families.
+- `team_member` is the only public custom post type retained by the theme.
+- Version 1.0.0 migrates the four retired custom post types without changing
+  record IDs and preserves their old URLs with permanent redirects.
+
+See `docs/wordpress-theme/progress-log.md` for deployment state and
+`docs/wordpress-theme/versioning.md` for the release policy.

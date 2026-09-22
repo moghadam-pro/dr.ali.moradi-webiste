@@ -58,11 +58,11 @@ Pages → Add New, with a template assigned from Page Attributes.
 | `page-hub.html` | Section-hub pages (Clinical Care, Research, Innovation, Education overviews) — card grids, sub-sections |
 | `page-contact.html` | Contact page: locations, map placeholder, MPro Forms contact form |
 | `page-full-width.html` | Full-width page, no title/cover treatment |
-| `single.html` | Single blog/news post (shared across all categories); also the fallback for the `publication` and `patient_resource` CPTs until they need a bespoke layout |
+| `single.html` | Single Post for articles, conditions, innovations, publications, and patient resources |
 | `archive.html` | Blog/News listing, filterable by category |
 | `single-team_member.html` | Single Team Member (CPT) |
-| `single-condition.html` | Single Condition (CPT) |
-| `single-innovation.html` | Single Innovation project (CPT) |
+| `single-condition.html` | Retired compatibility template; unused after the 1.0.0 migration |
+| `single-innovation.html` | Retired compatibility template; unused after the 1.0.0 migration |
 | `search.html`, `404.html`, `index.html` | Utility templates (`index.html` is the required block-theme fallback) |
 
 Filenames follow WordPress's own block-template hierarchy convention
@@ -75,29 +75,27 @@ list, so the visual system cannot be broken by accident.
 
 ## Content model
 
-Rule used to decide "standard Post" vs "custom post type": anything with
-blog-like, chronological, categorized character is a **Post**; anything
-that is a structured catalogue entry with fixed fields is a **CPT**.
+As of theme 1.0.0, all visitor-facing editorial and educational content uses
+native **Posts** plus categories. Only team profiles remain a structured CPT.
 
 | Content | Type | Notes |
 |---|---|---|
-| News / blog / research & innovation updates | Standard Post | Categories: Research, Innovation, Recognition, Clinic Update — matches the current unified blog/news model in `app/blog-content.ts` |
+| News / blog / research updates | Standard Post | Existing editorial categories from the unified blog/news model |
+| Clinical conditions | Standard Post | Localized Clinical Conditions category |
+| Innovation projects | Standard Post | Existing localized Innovation category |
+| Publications | Standard Post | Localized Publications category |
+| Patient resources | Standard Post | Localized Patient Resources category |
 | Team members | CPT `team_member` | role, summary, bio, photo, areas (clinic/research/innovation) |
-| Clinical conditions | CPT `condition` + taxonomy `condition_category` | matches `docs/content-strategy-and-sitemap.md` condition groups |
-| Innovation projects | CPT `innovation` | problem, idea, development status, evidence |
-| Publications (articles/books/patents) | CPT `publication` + taxonomy `publication_type` | |
-| Patient resources (Before/After Surgery, FAQ, downloads) | CPT `patient_resource` | supports file/PDF attachment |
 
-All CPTs and taxonomies are registered in the theme itself
-(`inc/post-types.php`, `inc/taxonomies.php`) — not a separate plugin, per
-instruction. This does mean the content types stop being registered (though
-the data itself stays in the database) if the theme were ever deactivated;
-accepted trade-off given the explicit "inside the theme" requirement.
+The Team Member CPT and Team Area taxonomy are registered in the theme itself
+(`inc/post-types.php`, `inc/taxonomies.php`). The versioned migration in
+`inc/content-migrations.php` converts the four retired CPT families in place,
+adds localized categories, and stores their old paths for 301 redirects.
 
 ## Custom fields without ACF
 
-- **Scalar fields** (publication year, patent link, project status, team
-  member role) use `register_post_meta()` plus a small custom panel in the
+- **Scalar fields** (read time, team member role and summary) use
+  `register_post_meta()` plus a small custom panel in the
   block editor sidebar (`PluginDocumentSettingPanel`), built once in the
   theme. Same editing experience as ACF, no plugin dependency.
 - **Repeating structured content** (e.g. project milestones, team grids)

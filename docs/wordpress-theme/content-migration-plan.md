@@ -1,5 +1,31 @@
 # Content Migration Plan
 
+## Current production consolidation — theme 1.0.0
+
+The original import created four custom post types that are no longer wanted
+in the WordPress operator workflow. Theme 1.0.0 moves their records in place to
+native Posts and assigns localized categories:
+
+| Retired post type | Replacement category |
+|---|---|
+| `condition` | Clinical Conditions / بیماری‌ها / الحالات المرضية |
+| `innovation` | existing Innovation / نوآوری / الابتكار category group |
+| `publication` | Publications / انتشارات / المنشورات |
+| `patient_resource` | Patient Resources / منابع بیماران / موارد المرضى |
+
+The migration is versioned and idempotent. It changes only `post_type`, adds
+the destination category, records the legacy path, and refreshes Polylang
+translation links. Existing IDs and all attached content remain unchanged.
+Legacy CPT paths issue permanent redirects to the resulting Post permalinks.
+
+The pre-migration production inventory on 2026-09-22 is 18 Conditions, 9
+Innovations, 0 Publications, and 0 Patient Resources. The empty categories are
+still created so future content uses Posts from the outset.
+
+The remainder of this document records the original React-to-WordPress import
+plan for historical traceability. Where it refers to those four CPTs, the 1.0.0
+consolidation above is the current rule.
+
 ## Source of truth
 
 All current content lives in typed, already-localized (`en`/`fa`/`ar`)

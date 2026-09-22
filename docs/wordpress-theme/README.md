@@ -19,6 +19,8 @@ the `claude/wordpress-doctor-site-architecture-m4766g` branch, under
   needed before work can continue past the current point.
 - [`progress-log.md`](progress-log.md) — running log of what has been built,
   updated as work proceeds.
+- [`versioning.md`](versioning.md) — Semantic Versioning policy, release
+  checklist, and the single-source-of-truth rule.
 
 ## Source site
 

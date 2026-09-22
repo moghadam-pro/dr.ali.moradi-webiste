@@ -21,9 +21,15 @@ operator. Updated as items are resolved.
 
 ## Blocking
 
-None currently — see `progress-log.md`'s "Not yet done" list for
-sequenced next work (hub pages, menus, parity check) that needs content
-decisions and time, not new access or approvals.
+14. **Production theme source must be reconciled before replacement.** On
+    2026-09-22 the installed theme reports version `0.2.1`, uses a file-time
+    asset cache key, and exposes newer CSS, JavaScript, templates, block
+    metadata, fonts, and logo files than repository `main` (whose header still
+    reported `0.1.0` and whose internal cache constant was `0.9.4`). Uploading
+    a zip built directly from the repository would overwrite those uncommitted
+    production changes. Export the active `dr-ali-moradi` theme directory (or
+    provide authenticated file-manager access), merge it into the 1.0.0 branch,
+    then deploy and run the content migration.
 
 ## Not blocking, but flagged
 
@@ -119,6 +125,11 @@ decisions and time, not new access or approvals.
     only reachable by a direct URL or through the XML sitemap. Not
     fixed here since it's a new chunk of design work, not a bug in
     something already built; flagged for a decision on priority.
+
+    Theme 1.0.0 resolves this structurally by converting those records to
+    standard Posts, which use the maintained single-post template. Verification
+    and closure remain pending until the production source reconciliation and
+    deployment in item 14 are complete.
 
 ## Content decisions needed before Education can be built
 

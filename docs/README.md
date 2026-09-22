@@ -50,6 +50,7 @@ history, then use the focused documents for implementation details.
 - [Decision log](wordpress-theme/decisions-log.md)
 - [Open items](wordpress-theme/open-items.md)
 - [Progress log](wordpress-theme/progress-log.md)
+- [WordPress theme versioning and release policy](wordpress-theme/versioning.md)
 - [Homepage v2 static handoff](handoff/homepage-v2/README.md)
 
 The actively developed WordPress theme source lives in `../wordpress-theme/`.

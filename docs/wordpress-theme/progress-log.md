@@ -994,3 +994,32 @@ Persian/Arabic team grids' correct per-locale members (the
 restored 5-column footer in Persian and Arabic (RTL-mirrored), and
 every team member's "back to the team" link resolving to the correct
 locale-appropriate hub page.
+
+## 2026-09-22 — version standardization and CPT-to-Post consolidation prepared
+
+The production WordPress inventory was inspected read-only before changing the
+content model. It contains 70 published Posts, 18 Conditions, 9 Innovations,
+0 Publications, and 0 Patient Resources. The 18/9 records are three-language
+groups (6/3 subjects respectively). Existing Post category groups and Polylang
+translation fields were confirmed through the public REST API.
+
+Prepared theme release `1.0.0` with:
+
+- the `style.css` theme header as the only SemVer source; `functions.php` now
+  reads it with `wp_get_theme()` for cache-busting;
+- an idempotent, admin-only content migration that changes the four retired
+  post types to native Posts without changing record IDs;
+- localized destination categories and Polylang category/post translation
+  relinking;
+- retained legacy paths plus 301 redirects to the new Post permalinks;
+- removal of the four CPT menus and the two obsolete taxonomy menus;
+- a Keep a Changelog file and a release/versioning runbook.
+
+Deployment is deliberately blocked pending a production-theme export. The
+installed theme identifies itself as `0.2.1` and several publicly readable
+files differ from Git: `assets/css/style.css`, `assets/js/theme-fields.js`,
+multiple templates and block definitions, `theme.json`, fonts, and logos. The
+repository copy instead had a `0.1.0` header and a separate `0.9.4` cache
+constant. Replacing the active theme from that older tree would cause a
+regression, so no production files or database records were changed in this
+stage.
