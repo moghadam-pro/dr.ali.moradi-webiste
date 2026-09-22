@@ -1113,3 +1113,14 @@ The release is versioned as `1.1.0` and documented in
 `homepage-customizer.md` and the theme changelog. Local validation and the
 production deployment record are appended after the final release artifact is
 built and verified.
+
+Implementation commit `f7dd4f9` was pushed to `main` and tagged
+`theme-v1.1.0`. Validation passed for every theme PHP file, all theme JSON,
+the WordPress release contract, the five rendered-HTML tests, the Vinext
+production build, and `git diff --check`.
+
+Built `dr-ali-moradi-1.1.0-f7dd4f9.zip` directly from the tagged theme tree.
+It is 3,076,014 bytes with 190 entries, every entry is below the required
+`dr-ali-moradi/` root, `style.css` declares `1.1.0`, and no `.git`, `.env`, or
+`wp-config.php` entry is present. SHA-256:
+`DA94BFEEE7D2CB5EC10F3CFE7A3F362EE367166E65B9FA71DB6062C6B4E97F31`.
