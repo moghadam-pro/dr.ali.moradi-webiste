@@ -1,7 +1,7 @@
 # تحویل ادامه کار قالب WordPress دکتر علی مرادی
 
 تاریخ: ۲۰۲۶-۰۹-۲۲  
-وضعیت: Snapshot قالب Production با Git ادغام شده؛ هنوز روی Production منتشر نشده است.
+وضعیت: مراحل A تا C کامل شده‌اند؛ بسته ۱.۰.۰ هنوز روی Production منتشر نشده است.
 
 ## نقطه شروع Git
 
@@ -40,7 +40,20 @@ Branch پشتیبان `codex/content-types-to-posts` نیز در ریپوی اص
   post، Team related links، و فونت Abar به Git منتقل شدند.
 - PHP lint، JSON parse، Vinext build، پنج تست rendered HTML و قرارداد انتشار
   WordPress همگی پاس شدند.
-- مرحله بعد از این به‌روزرسانی «مرحله C — آماده‌سازی و Backup قبل از مهاجرت» است.
+- ادغام Snapshot و بازبینی فنی مراحل A و B تکمیل شده‌اند.
+- Backup قابل بازیابی فایل‌های دامنه و دیتابیس با نام
+  `/backups/backup-Sep-22-2026-1.tar.gz` و حجم ۶۶٫۷۵ مگابایت در DirectAdmin
+  تأیید شد.
+- audit محلی ۲۷ رکورد مهاجرتی خارج از Git ذخیره شد و شمارش مجدد همچنان
+  Posts=70، Conditions=18، Innovations=9، Publications=0 و
+  Patient Resources=0 است.
+- بسته نصب از Commit نهایی با نام
+  `dr-ali-moradi-1.0.0-c0c9b1d.zip` ساخته شد؛ ۱۹۰ entry دارد، ریشه آن
+  `dr-ali-moradi/` است و SHA-256 آن
+  `4F821A238EA506CC0E3DA2F931BA595B1F95DF67016A91FE780CCFBA04A8BE76`
+  است.
+- مرحله بعد «مرحله D — انتشار و اجرای مهاجرت» است و پیش از تغییر Production
+  نیاز به تأیید صریح مالک دارد.
 
 ## درخواست اصلی مالک پروژه
 
@@ -243,7 +256,7 @@ commit‌نشده را overwrite کند. به همین دلیل هیچ فایل 
 5. یک Commit مستقل برای «sync production theme snapshot» بسازید و Push کنید.
 6. مستندات و Changelog را با نتیجه ادغام به‌روزرسانی، Commit و Push کنید.
 
-### مرحله C — آماده‌سازی و Backup قبل از مهاجرت
+### مرحله C — آماده‌سازی و Backup قبل از مهاجرت (تکمیل شد)
 
 1. از دیتابیس Production و پوشه فعال قالب Backup قابل بازیابی بگیرید.
 2. قبل از تغییر، دوباره تعدادها را ثبت کنید:

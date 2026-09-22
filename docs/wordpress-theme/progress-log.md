@@ -1074,3 +1074,26 @@ the same build and test commands were invoked directly from the checked-in
 `node_modules` binaries. No production theme or database content was changed;
 deployment remains blocked until the database/theme rollback backup and the
 pre-migration content audit in Stage C are complete.
+
+## 2026-09-22 — pre-migration backup and audit complete
+
+Created and verified the DirectAdmin rollback archive
+`/backups/backup-Sep-22-2026-1.tar.gz` (66.75 MB). It contains the domain
+directory plus database settings and database data; e-mail, FTP, and Trash
+data were intentionally excluded. The earlier standalone active-theme ZIP is
+also still available on the server.
+
+Repeated the public REST inventory immediately before deployment: 70 Posts,
+18 Conditions, 9 Innovations, 0 Publications, and 0 Patient Resources. A
+local, non-Git audit of all 27 migration candidates records IDs, languages,
+translation relationships, titles, statuses, dates, slugs, and current
+permalinks.
+
+Built the installable release artifact directly from commit `c0c9b1d` as
+`dr-ali-moradi-1.0.0-c0c9b1d.zip`. Validation found 190 entries, every entry
+under the required `dr-ali-moradi/` root, a root `style.css` declaring version
+`1.0.0`, and no `.git`, `.env`, or `wp-config.php` entry. Artifact SHA-256:
+`4F821A238EA506CC0E3DA2F931BA595B1F95DF67016A91FE780CCFBA04A8BE76`.
+
+Stages A-C are complete. Production deployment and the first authenticated
+administrator request remain pending explicit owner confirmation.
