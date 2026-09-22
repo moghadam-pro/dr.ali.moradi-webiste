@@ -29,7 +29,7 @@ function dam_register_post_types() {
 			'menu_icon'     => 'dashicons-groups',
 			'has_archive'   => false,
 			'rewrite'       => array( 'slug' => 'team' ),
-			'supports'      => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
+			'supports'      => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields' ),
 			'template'      => array(
 				array( 'core/paragraph', array( 'placeholder' => __( 'Biography...', 'dr-ali-moradi' ) ) ),
 			),

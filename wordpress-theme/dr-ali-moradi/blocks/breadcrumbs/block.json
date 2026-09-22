@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/breadcrumbs",
+	"title": "Breadcrumbs",
+	"category": "dr-ali-moradi",
+	"icon": "list-view",
+	"description": "The theme's own localized breadcrumb trail. Renders nothing on the front page or 404.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

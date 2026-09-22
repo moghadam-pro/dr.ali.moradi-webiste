@@ -80,6 +80,7 @@ $nobat_url = dam_appointment_url();
 <?php
 if ( 'innovations' === $page_key ) {
 	dam_render_team_section( 'innovation' );
+	dam_render_innovation_posts_section( $locale );
 } elseif ( 'research' === $page_key ) {
 	dam_render_team_section( 'research' );
 }

@@ -54,9 +54,4 @@ $image      = ! empty( $attributes['image'] ) ? $attributes['image'] : dam_media
 		<?php if ( ! empty( $data['intro'] ) ) : ?><p><?php echo esc_html( $data['intro'] ); ?></p><?php endif; ?>
 	</div>
 </section>
-<?php if ( ! empty( $attributes['backLink'] ) ) :
-	$back_url = dam_localized_page_url( $attributes['backLink'], $locale );
-	$back_copy = dam_interior_pages_copy( $locale );
-	?>
-	<div class="interior-back section-shell"><a href="<?php echo esc_url( $back_url ); ?>"><?php echo dam_icon( 'chevron-left', 16 ); ?><?php echo esc_html( $back_copy['pages'][ $attributes['backLink'] ]['title'] ?? '' ); ?></a></div>
-<?php endif; ?>
+<?php dam_render_breadcrumbs(); ?>

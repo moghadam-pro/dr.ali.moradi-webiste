@@ -11,7 +11,6 @@ $area      = $is_clinic ? 'clinic' : 'hospital';
 $title     = $is_clinic ? $hub['clinicGalleryTitle'] : $hub['hospitalGalleryTitle'];
 $intro     = $is_clinic ? $hub['clinicGalleryIntro'] : $hub['hospitalGalleryIntro'];
 $cover     = dam_media_url( $is_clinic ? 'clinic-08' : 'hospital-14' );
-$back_url  = dam_localized_page_url( 'clinical-care', $locale );
 ?>
 <section class="interior-cover">
 	<img class="fill-img" src="<?php echo esc_url( $cover ); ?>" alt="">
@@ -22,5 +21,5 @@ $back_url  = dam_localized_page_url( 'clinical-care', $locale );
 		<p><?php echo esc_html( $intro ); ?></p>
 	</div>
 </section>
-<div class="interior-back section-shell"><a href="<?php echo esc_url( $back_url ); ?>"><?php echo dam_icon( 'chevron-left', 16 ); ?><?php echo esc_html( $hub['backToClinic'] ); ?></a></div>
+<?php dam_render_breadcrumbs(); ?>
 <?php dam_render_gallery_full( $area, $title ); ?>

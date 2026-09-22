@@ -1,0 +1,210 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Dr. Ali Moradi Theme 0.9.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-14T00:00:00+00:00\n"
+"PO-Revision-Date: 2026-09-14T00:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fa_IR\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Domain: dr-ali-moradi\n"
+
+msgid "Team Members"
+msgstr "اعضای تیم"
+
+msgid "Team Member"
+msgstr "عضو تیم"
+
+msgid "Add New Team Member"
+msgstr "افزودن عضو تیم"
+
+msgid "Edit Team Member"
+msgstr "ویرایش عضو تیم"
+
+msgid "Biography..."
+msgstr "بیوگرافی..."
+
+msgid "Conditions"
+msgstr "بیماری‌ها"
+
+msgid "Condition"
+msgstr "بیماری"
+
+msgid "Add New Condition"
+msgstr "افزودن بیماری"
+
+msgid "Edit Condition"
+msgstr "ویرایش بیماری"
+
+msgid "Innovations"
+msgstr "نوآوری‌ها"
+
+msgid "Innovation"
+msgstr "نوآوری"
+
+msgid "Add New Innovation"
+msgstr "افزودن نوآوری"
+
+msgid "Edit Innovation"
+msgstr "ویرایش نوآوری"
+
+msgid "Publications"
+msgstr "انتشارات"
+
+msgid "Publication"
+msgstr "انتشار"
+
+msgid "Add New Publication"
+msgstr "افزودن انتشار"
+
+msgid "Edit Publication"
+msgstr "ویرایش انتشار"
+
+msgid "Patient Resources"
+msgstr "منابع بیماران"
+
+msgid "Patient Resource"
+msgstr "منبع بیمار"
+
+msgid "Add New Patient Resource"
+msgstr "افزودن منبع بیمار"
+
+msgid "Edit Patient Resource"
+msgstr "ویرایش منبع بیمار"
+
+msgid "Condition Categories"
+msgstr "دسته‌بندی‌های بیماری"
+
+msgid "Condition Category"
+msgstr "دسته‌بندی بیماری"
+
+msgid "Publication Types"
+msgstr "انواع انتشار"
+
+msgid "Publication Type"
+msgstr "نوع انتشار"
+
+msgid "Team Areas"
+msgstr "حوزه‌های تیم"
+
+msgid "Team Area"
+msgstr "حوزه تیم"
+
+msgid "Clinical Education"
+msgstr "آموزش بالینی"
+
+msgid "Recovery"
+msgstr "بهبودی"
+
+msgid "Research Literacy"
+msgstr "سواد پژوهشی"
+
+msgid "Awards & Certificates"
+msgstr "جوایز و گواهینامه‌ها"
+
+msgid "Role"
+msgstr "نقش"
+
+msgid "Short summary"
+msgstr "خلاصه کوتاه"
+
+msgid "Read time (minutes)"
+msgstr "زمان مطالعه (دقیقه)"
+
+msgid "Category"
+msgstr "دسته‌بندی"
+
+msgid "Development Status"
+msgstr "وضعیت توسعه"
+
+msgid "Select a status"
+msgstr "یک وضعیت را انتخاب کنید"
+
+msgid "Concept"
+msgstr "ایده اولیه"
+
+msgid "Prototype"
+msgstr "نمونه اولیه"
+
+msgid "Clinical validation"
+msgstr "اعتبارسنجی بالینی"
+
+msgid "Deployed"
+msgstr "استقرار یافته"
+
+msgid "Evidence link (patent / publication)"
+msgstr "لینک مستندات (ثبت اختراع / انتشار)"
+
+msgid "External link"
+msgstr "لینک خارجی"
+
+msgid "Year"
+msgstr "سال"
+
+msgid "Theme Options"
+msgstr "تنظیمات قالب"
+
+msgid "Clinic phone"
+msgstr "تلفن کلینیک"
+
+msgid "WhatsApp number"
+msgstr "شماره واتس‌اپ"
+
+msgid "Private office address"
+msgstr "آدرس مطب خصوصی"
+
+msgid "Hospital address"
+msgstr "آدرس بیمارستان"
+
+msgid "Appointment booking URL"
+msgstr "لینک رزرو نوبت"
+
+msgid "Social links (one per line, \"Label|URL\")"
+msgstr "لینک‌های شبکه‌های اجتماعی (هر خط، «برچسب|لینک»)"
+
+msgid "Impact numbers (one per line, \"Label|Value\")"
+msgstr "آمار تأثیرگذاری (هر خط، «برچسب|مقدار»)"
+
+msgid "Impact numbers as of (date)"
+msgstr "تاریخ به‌روزرسانی آمار"
+
+msgid "These values are used across the site (header, footer, homepage) by the theme's contact-info, appointment, and impact-stats blocks. Changing a value here updates every place it appears."
+msgstr "این مقادیر در سراسر سایت (هدر، فوتر، صفحه اصلی) توسط بلوک‌های اطلاعات تماس، نوبت‌دهی و آمار تأثیرگذاری قالب استفاده می‌شوند. تغییر هر مقدار در اینجا، همه‌جا که استفاده شده به‌روزرسانی می‌شود."
+
+msgid "Primary Navigation"
+msgstr "منوی اصلی"
+
+msgid "Footer Navigation"
+msgstr "منوی فوتر"
+
+msgid "Primary navigation"
+msgstr "منوی اصلی"
+
+msgid "Footer navigation"
+msgstr "منوی فوتر"
+
+msgid "Mobile navigation"
+msgstr "منوی موبایل"
+
+msgid "Dr. Ali Moradi home"
+msgstr "صفحه اصلی دکتر علی مرادی"
+
+msgid "Dr. Ali Moradi"
+msgstr "دکتر علی مرادی"
+
+msgid "Nothing found."
+msgstr "چیزی یافت نشد."
+
+msgid "Pagination"
+msgstr "صفحه‌بندی"
+
+msgid "Breadcrumb"
+msgstr "مسیر صفحه"
+
+msgid "Search results for \"%s\""
+msgstr "نتایج جست‌وجو برای «%s»"
+
+msgid "Multilingual (English, Persian, Arabic) block theme for Dr. Ali Moradi's clinical, research, innovation, and education presence. Built as a Full Site Editing theme so the clinic operator can control layout, header, footer, and content without a page builder."
+msgstr "قالب بلوکی چندزبانه (انگلیسی، فارسی، عربی) برای معرفی فعالیت‌های بالینی، پژوهشی، نوآوری و آموزشی دکتر علی مرادی. این قالب به‌صورت Full Site Editing ساخته شده تا مسئول کلینیک بتواند چیدمان، هدر، فوتر و محتوا را بدون نیاز به افزونه صفحه‌ساز مدیریت کند."
