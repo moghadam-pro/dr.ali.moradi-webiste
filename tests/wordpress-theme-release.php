@@ -44,7 +44,7 @@ dam_test_assert(
 );
 
 $style = file_get_contents( dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/style.css' );
-dam_test_assert( 1 === preg_match( '/^Version:\s*1\.0\.0$/m', $style ), 'Theme header is not version 1.0.0.' );
+dam_test_assert( 1 === preg_match( '/^Version:\s*1\.0\.0\r?$/m', $style ), 'Theme header is not version 1.0.0.' );
 
 $functions = file_get_contents( dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/functions.php' );
 dam_test_assert(

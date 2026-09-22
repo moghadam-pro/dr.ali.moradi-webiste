@@ -84,50 +84,27 @@ operator. Updated as items are resolved.
     `progress-log.md`'s 2026-09-05 entry for what was tried and why an
     empty placeholder slug (a possible fix) wasn't attempted.
 
-12. **MPro Forms contact form built; its labels aren't localized —
-    and on Arabic, part of it silently falls back to Persian, not
-    English.** A real form (`[mpro_form id="1"]`, built by hand — MPro
+12. **MPro Forms contact form built; its labels aren't localized.** A real
+    form (`[mpro_form id="1"]`, built by hand — MPro
     Forms has no REST/CLI API) is embedded on all three Contact pages,
     fields matching `homepage-content.json`'s `contact` object. The
     fixed field labels ("Full name", "Enquiry type", "Subject",
-    "Message", etc.) stay in English on every locale, as previously
-    noted. Found this session, verified live on `/ar/contact-ar/`: two
-    of the form's own *configurable* values — the "Enquiry type"
-    dropdown's placeholder option and the consent checkbox's label —
-    **do** vary per language (English page shows "Select" / "Yes";
-    Persian page shows "انتخاب کنید" / "بله"), but the Arabic page also
-    shows the Persian text "انتخاب کنید" / "بله" verbatim instead of an
-    Arabic translation or an English fallback. This points to the form
-    being built with a Persian base value for these two fields and an
-    English translation added on top, with no Arabic translation ever
-    added — so Arabic falls through to the Persian raw value rather
-    than to English. This is inside MPro Forms' own form-builder
-    configuration (Forms → the "Contact us" form → its field options),
-    not the theme's code, so it needs an Arabic translation added
-    there — flagged for the operator/form owner rather than guessed
-    at or edited here.
+    "Message", etc.) stay in English on every locale. Rechecked on
+    Production on 2026-09-22 at `/ar/contact/`: the Arabic page currently
+    shows English labels, the English "Select" placeholder, English option
+    values, the consent value "Yes", and an English "Submit" button. The
+    earlier Persian fallback is no longer present, but the form still lacks
+    Arabic localization. This is inside MPro Forms' own form-builder
+    configuration (Forms → the "Contact us" form → its field options), not
+    the theme's code, so it needs Arabic translations added there.
 
-13. **`condition` and `innovation` CPT single pages (`single-condition.html`,
-    `single-innovation.html`) never got the visual redesign.** Found
-    while sweeping every page in every locale this session: individual
-    entries like `/conditions/hand-and-wrist-disorders/` and
-    `/innovation/external-fixation-systems/` still render as plain
-    title + excerpt with no cover photo or styling — the original
-    placeholder templates from before the 2026-09-05 redesign passes,
-    which covered the hub pages (Research/Innovation) and every other
-    template but never named these two. Lower urgency than the rest of
-    the redesign: neither template is linked from anywhere in the
-    current navigation, homepage, or hub pages — the homepage's
-    innovation cards and the hub pages' team/content sections all link
-    generically to the `innovations`/`research` hub, not to individual
-    CPT entries (a deliberate earlier decision, see progress-log.md) —
-    so these ~9 pages (6 conditions + 3 innovations, ×3 locales) are
-    only reachable by a direct URL or through the XML sitemap. Not
-    fixed here since it's a new chunk of design work, not a bug in
-    something already built; flagged for a decision on priority.
-
-    Theme 1.0.0 resolves this structurally by converting those records to
-    standard Posts, which use the maintained single-post template. Verification
+13. ~~**`condition` and `innovation` CPT single pages lacked the visual
+    redesign.**~~ Resolved in theme `1.0.0` in two layers: before the migration,
+    the compatibility templates use the shared dynamic `case-study-body` block
+    with a responsive cover, localized EN/FA/AR labels, RTL-safe layout,
+    editable WordPress content, metadata and localized return navigation.
+    The versioned migration then converts these records to standard Posts,
+    which use the maintained single-post template. Verification
     and closure remain pending until the production source reconciliation and
     deployment in item 14 are complete.
 

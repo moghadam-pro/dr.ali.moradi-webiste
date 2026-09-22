@@ -5,6 +5,27 @@ what changed and where, so this file plus `git log` on
 `claude/wordpress-doctor-site-architecture-m4766g` is a complete record
 without needing to replay the chat.
 
+## 2026-09-22 — Compatibility detail templates redesigned
+
+- Replaced the original placeholder markup in `single-condition.html` and
+  `single-innovation.html` with one shared dynamic block,
+  `blocks/case-study-body`.
+- Added a responsive, RTL-safe detail layout with a featured-image cover
+  (and a designed gradient fallback), localized EN/FA/AR interface labels,
+  editable WordPress body content, localized back links, and the existing
+  appointment CTA.
+- Condition pages now expose their translated `condition_category` and a
+  localized medical-information notice. Innovation pages expose the native
+  `dam_category`, `dam_status`, and `dam_evidence_url` fields when present.
+- This compatibility layer is included in the `1.0.0` source tree. After the
+  versioned content migration, the same records become standard Posts and use
+  the maintained single-post template instead.
+- Validation completed locally: all theme PHP files pass `php -l`, all theme
+  JSON files parse successfully, the Vinext reference build completes,
+  and all rendered-HTML and WordPress release-contract tests pass.
+- Deployment and live three-language visual verification remain pending and
+  require the Production theme snapshot documented below.
+
 ## 2026-09-02
 
 - Architecture agreed (see `architecture.md`) and documentation branch
