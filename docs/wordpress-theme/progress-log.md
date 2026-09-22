@@ -1124,3 +1124,32 @@ It is 3,076,014 bytes with 190 entries, every entry is below the required
 `dr-ali-moradi/` root, `style.css` declares `1.1.0`, and no `.git`, `.env`, or
 `wp-config.php` entry is present. SHA-256:
 `DA94BFEEE7D2CB5EC10F3CFE7A3F362EE367166E65B9FA71DB6062C6B4E97F31`.
+
+## 2026-09-22 — theme 1.1.0 deployed and verified on production
+
+Uploaded `dr-ali-moradi-1.1.0-f7dd4f9.zip` through the authenticated WordPress
+theme updater and replaced the active `0.2.1` directory. WordPress reported a
+successful update and the active theme detail screen now reports `1.1.0`. The
+verified DirectAdmin rollback archive remains available at
+`/backups/backup-Sep-22-2026-1.tar.gz`.
+
+The first authenticated administrator request ran the versioned migration.
+`dam_content_schema_version` is `1.0.0`, which is only persisted when the
+migration report contains no errors. The Posts screen now contains 97 records,
+matching the audited 70 Posts plus 18 Conditions and 9 Innovations. The four
+retired content-type menus are absent and the localized destination categories
+and translated post relationships are visible in WordPress.
+
+Production verification passed:
+
+- the active Customizer contains one Homepage Content panel and exactly three
+  language sections;
+- opening the Persian and Arabic sections changed the live preview to their
+  actual localized homepage placeholders;
+- representative controls from every requested area exist, including Hero
+  media/orbits, four Journey images, three Pathway URLs, dynamic/manual post
+  controls, four Impact and Appointment slots, About media/actions, and the
+  detailed Footer controls;
+- English, Persian, and Arabic homepages rendered the complete page, localized
+  navigation/content, appointments, post cards, and full footer;
+- all three public homepage checks completed without browser console errors.
