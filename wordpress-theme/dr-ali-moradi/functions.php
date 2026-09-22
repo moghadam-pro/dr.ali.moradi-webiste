@@ -9,12 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'DAM_THEME_VERSION', '0.9.4' );
 define( 'DAM_THEME_DIR', get_template_directory() );
 define( 'DAM_THEME_URI', get_template_directory_uri() );
 
+/**
+ * The WordPress theme header is the single release-version source of truth.
+ * It drives both the Appearance screen and asset cache invalidation, so a
+ * release cannot accidentally advertise one version while serving another.
+ */
+$dam_theme = wp_get_theme( get_template() );
+define( 'DAM_THEME_VERSION', $dam_theme->get( 'Version' ) ? $dam_theme->get( 'Version' ) : '0.0.0' );
+
 require_once DAM_THEME_DIR . '/inc/post-types.php';
 require_once DAM_THEME_DIR . '/inc/taxonomies.php';
+require_once DAM_THEME_DIR . '/inc/content-migrations.php';
 require_once DAM_THEME_DIR . '/inc/meta-fields.php';
 require_once DAM_THEME_DIR . '/inc/theme-options.php';
 require_once DAM_THEME_DIR . '/inc/icons.php';

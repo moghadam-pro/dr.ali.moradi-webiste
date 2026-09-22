@@ -10,38 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 function dam_register_taxonomies() {
 
 	register_taxonomy(
-		'condition_category',
-		array( 'condition' ),
-		array(
-			'label'        => __( 'Condition Categories', 'dr-ali-moradi' ),
-			'labels'       => array(
-				'name'          => __( 'Condition Categories', 'dr-ali-moradi' ),
-				'singular_name' => __( 'Condition Category', 'dr-ali-moradi' ),
-			),
-			'public'       => true,
-			'show_in_rest' => true,
-			'hierarchical' => true,
-			'rewrite'      => array( 'slug' => 'condition-category' ),
-		)
-	);
-
-	register_taxonomy(
-		'publication_type',
-		array( 'publication' ),
-		array(
-			'label'        => __( 'Publication Types', 'dr-ali-moradi' ),
-			'labels'       => array(
-				'name'          => __( 'Publication Types', 'dr-ali-moradi' ),
-				'singular_name' => __( 'Publication Type', 'dr-ali-moradi' ),
-			),
-			'public'       => true,
-			'show_in_rest' => true,
-			'hierarchical' => true,
-			'rewrite'      => array( 'slug' => 'publication-type' ),
-		)
-	);
-
-	register_taxonomy(
 		'team_area',
 		array( 'team_member' ),
 		array(
@@ -71,11 +39,14 @@ add_action( 'init', 'dam_register_taxonomies' );
  */
 function dam_seed_post_categories() {
 	$categories = array(
-		'clinical-education' => __( 'Clinical Education', 'dr-ali-moradi' ),
-		'recovery'            => __( 'Recovery', 'dr-ali-moradi' ),
-		'innovation-news'     => __( 'Innovation', 'dr-ali-moradi' ),
-		'research-literacy'   => __( 'Research Literacy', 'dr-ali-moradi' ),
-		'awards-certificates' => __( 'Awards & Certificates', 'dr-ali-moradi' ),
+		'clinical-education'  => __( 'Clinical Education', 'dr-ali-moradi' ),
+		'clinical-conditions' => __( 'Clinical Conditions', 'dr-ali-moradi' ),
+		'recovery'             => __( 'Recovery', 'dr-ali-moradi' ),
+		'innovation-news'      => __( 'Innovation', 'dr-ali-moradi' ),
+		'publications'         => __( 'Publications', 'dr-ali-moradi' ),
+		'patient-resources'    => __( 'Patient Resources', 'dr-ali-moradi' ),
+		'research-literacy'    => __( 'Research Literacy', 'dr-ali-moradi' ),
+		'awards-certificates'  => __( 'Awards & Certificates', 'dr-ali-moradi' ),
 	);
 
 	foreach ( $categories as $slug => $name ) {
