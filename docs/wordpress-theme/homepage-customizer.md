@@ -1,4 +1,4 @@
-# Homepage Customizer — theme 1.1.0
+# Homepage Customizer — theme 1.2.0
 
 ## Operator workflow
 
@@ -11,6 +11,11 @@ WordPress Customizer does not support nested panels. The language entries are
 therefore native sections inside one panel, with visual headings separating
 Hero, Connected Practice, Pathways, Innovation, Impact, Appointments,
 Recognition, About, and Footer controls.
+
+Administrators can continue to use the Appearance path. Clinic operators with
+the **Content Manager — مدیر محتوا** role instead use the dedicated
+**Homepage Content** admin-menu item. They can edit this panel without access
+to theme installation, the full Site Editor, plugins, users, or site settings.
 
 ## Editable content
 

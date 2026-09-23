@@ -228,7 +228,7 @@ function dam_customizer_field( $wp_customize, $key, $section, $label, $type, $lo
 	if ( in_array( $type, array( 'url', 'image' ), true ) ) { $sanitize = 'esc_url_raw'; }
 	if ( 'checkbox' === $type ) { $sanitize = 'dam_sanitize_checkbox'; }
 	if ( 'select' === $type ) { $sanitize = 'dam_sanitize_select'; }
-	$wp_customize->add_setting( $id, array( 'type' => 'theme_mod', 'default' => $defaults[ $key ] ?? '', 'sanitize_callback' => $sanitize, 'transport' => 'refresh' ) );
+	$wp_customize->add_setting( $id, array( 'type' => 'theme_mod', 'capability' => DAM_HOMEPAGE_CAPABILITY, 'default' => $defaults[ $key ] ?? '', 'sanitize_callback' => $sanitize, 'transport' => 'refresh' ) );
 	$args = array( 'label' => $label, 'section' => $section, 'priority' => $priority, 'type' => $type );
 	if ( $choices ) { $args['choices'] = $choices; }
 	if ( 'image' === $type ) { $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, $id, $args ) ); }
@@ -267,6 +267,7 @@ function dam_customize_register( $wp_customize ) {
 	$wp_customize->add_panel( 'dam_homepage_content', array(
 		'title' => __( 'Homepage Content — تغییر محتوای صفحه نخست', 'dr-ali-moradi' ),
 		'description' => __( 'Choose a language. Its real homepage opens in the live preview.', 'dr-ali-moradi' ),
+		'capability' => DAM_HOMEPAGE_CAPABILITY,
 		'priority' => 50,
 	) );
 	$languages = array( 'en' => __( 'English homepage', 'dr-ali-moradi' ), 'fa' => 'صفحه نخست فارسی', 'ar' => 'الصفحة الرئيسية العربية' );
@@ -276,7 +277,7 @@ function dam_customize_register( $wp_customize ) {
 
 	foreach ( $languages as $locale => $title ) {
 		$section = 'dam_homepage_' . $locale; $p = 10;
-		$wp_customize->add_section( $section, array( 'title' => $title, 'panel' => 'dam_homepage_content' ) );
+		$wp_customize->add_section( $section, array( 'title' => $title, 'panel' => 'dam_homepage_content', 'capability' => DAM_HOMEPAGE_CAPABILITY ) );
 
 		dam_customizer_heading( $wp_customize, $section, "dam_heading_hero_{$locale}", __( 'Hero', 'dr-ali-moradi' ), $p++ );
 		dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array(

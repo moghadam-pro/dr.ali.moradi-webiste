@@ -23,6 +23,7 @@ define( 'DAM_THEME_VERSION', $dam_theme->get( 'Version' ) ? $dam_theme->get( 'Ve
 require_once DAM_THEME_DIR . '/inc/post-types.php';
 require_once DAM_THEME_DIR . '/inc/taxonomies.php';
 require_once DAM_THEME_DIR . '/inc/content-migrations.php';
+require_once DAM_THEME_DIR . '/inc/roles.php';
 require_once DAM_THEME_DIR . '/inc/meta-fields.php';
 require_once DAM_THEME_DIR . '/inc/theme-options.php';
 require_once DAM_THEME_DIR . '/inc/customizer.php';

@@ -6,12 +6,14 @@
 define( 'ABSPATH', __DIR__ );
 
 function add_action() {}
+function add_filter() {}
 
 function trailingslashit( $value ) {
 	return rtrim( $value, "/\\" ) . '/';
 }
 
 require dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/inc/content-migrations.php';
+require dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/inc/roles.php';
 
 function dam_test_assert( $condition, $message ) {
 	if ( ! $condition ) {
@@ -44,7 +46,7 @@ dam_test_assert(
 );
 
 $style = file_get_contents( dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/style.css' );
-dam_test_assert( 1 === preg_match( '/^Version:\s*1\.1\.0\r?$/m', $style ), 'Theme header is not version 1.1.0.' );
+dam_test_assert( 1 === preg_match( '/^Version:\s*1\.2\.0\r?$/m', $style ), 'Theme header is not version 1.2.0.' );
 
 $customizer = file_get_contents( dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/inc/customizer.php' );
 foreach ( array(
@@ -64,6 +66,35 @@ foreach ( array(
 dam_test_assert(
 	false !== strpos( $customizer, 'api.previewer.previewUrl.set' ),
 	'Language sections do not switch the live preview URL.'
+);
+dam_test_assert(
+	3 <= substr_count( $customizer, 'DAM_HOMEPAGE_CAPABILITY' ),
+	'Homepage panel, sections, and settings do not enforce the dedicated capability.'
+);
+
+$roles = file_get_contents( dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/inc/roles.php' );
+foreach ( array(
+	'DAM_CONTENT_MANAGER_ROLE', 'dam_content_manager',
+	'DAM_HOMEPAGE_CAPABILITY', 'dam_edit_homepage_content',
+	'edit_others_posts', 'edit_published_posts', 'publish_posts',
+	'delete_others_posts', 'upload_files', 'manage_categories',
+	'dam_map_content_manager_customize_capability',
+	'dam_content_manager_admin_menu',
+) as $required_role_contract ) {
+	dam_test_assert(
+		false !== strpos( $roles, $required_role_contract ),
+		'Required Content Manager contract is missing: ' . $required_role_contract
+	);
+}
+$expected_content_manager_caps = array(
+	'read', 'edit_posts', 'edit_others_posts', 'edit_published_posts',
+	'publish_posts', 'delete_posts', 'delete_others_posts',
+	'delete_published_posts', 'upload_files', 'manage_categories',
+	'dam_edit_homepage_content',
+);
+dam_test_assert(
+	$expected_content_manager_caps === array_keys( dam_content_manager_capabilities() ),
+	'Content Manager capability set is broader or narrower than the documented contract.'
 );
 
 $functions = file_get_contents( dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/functions.php' );

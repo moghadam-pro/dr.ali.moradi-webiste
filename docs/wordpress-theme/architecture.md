@@ -92,6 +92,15 @@ The Team Member CPT and Team Area taxonomy are registered in the theme itself
 `inc/content-migrations.php` converts the four retired CPT families in place,
 adds localized categories, and stores their old paths for 301 redirects.
 
+## Operator permissions
+
+Theme `1.2.0` adds the least-privilege `dam_content_manager` role in
+`inc/roles.php`. It supports Posts, categories, media, Team Members, and the
+dedicated multilingual Homepage Content Customizer settings. It deliberately
+does not grant `edit_theme_options`, user management, plugin management, theme
+installation/switching, site settings, or full Site Editor access. See
+`content-manager-role.md` for the capability contract and operator workflow.
+
 ## Custom fields without ACF
 
 - **Scalar fields** (read time, team member role and summary) use

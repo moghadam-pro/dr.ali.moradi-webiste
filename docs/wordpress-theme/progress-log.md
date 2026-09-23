@@ -1153,3 +1153,18 @@ Production verification passed:
 - English, Persian, and Arabic homepages rendered the complete page, localized
   navigation/content, appointments, post cards, and full footer;
 - all three public homepage checks completed without browser console errors.
+
+## 2026-09-23 — least-privilege Content Manager role prepared
+
+Prepared theme `1.2.0` with a versioned `Content Manager — مدیر محتوا` role for
+the clinic operator. The role can manage Posts, categories, media, and Team
+Members and has a dedicated admin entry point for the multilingual Homepage
+Content editor. It does not receive access to users, plugins, theme management,
+site settings, code editors, or the full Site Editor.
+
+The Homepage panel, all three language sections, and every Homepage theme mod
+now enforce `dam_edit_homepage_content`. WordPress's `customize` meta
+capability is mapped to this primitive capability only for eligible users, so
+the operator can enter the Customizer without the broad `edit_theme_options`
+capability. The access model and provisioning checklist are documented in
+`content-manager-role.md`.

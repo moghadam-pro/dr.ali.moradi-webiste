@@ -6,6 +6,25 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-09-23
+
+### Added
+
+- A least-privilege `Content Manager — مدیر محتوا` role for the clinic
+  operator, with access to Posts, categories, media, Team Members, and the
+  multilingual Homepage Content editor.
+- A dedicated Homepage Content admin-menu entry that opens the live Customizer
+  workflow without exposing the broader Appearance screens.
+- A versioned role schema that creates or repairs the role once and preserves
+  administrator access to the Homepage Content panel.
+
+### Security
+
+- Homepage Customizer settings now require the dedicated
+  `dam_edit_homepage_content` capability instead of `edit_theme_options`.
+- Content Managers can enter the Customizer but cannot manage users, plugins,
+  themes, site options, or the full Site Editor.
+
 ## [1.1.0] - 2026-09-22
 
 ### Added
