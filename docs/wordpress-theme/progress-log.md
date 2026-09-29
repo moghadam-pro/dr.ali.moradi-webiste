@@ -1260,3 +1260,32 @@ exposed to the browser), and editing a page from the block editor.
   cleanup migration was verified in both cases: the role is kept while a user
   holds it, and removed (with the administrator capability) once none does.
 - Version raised to `3.0.0`; release contract test updated.
+
+## 2026-09-29 — theme 3.0.0 deployed and verified on production
+
+Built `dr-ali-moradi-3.0.0-114fd5f.zip` from commit `114fd5f` with `git archive`
+(3,087,927 bytes, 196 entries, all under `dr-ali-moradi/`, `style.css` declares
+`3.0.0`, no `.git`, `.env`, `wp-config`, or `roles.php` entry, and
+`inc/role-cleanup.php` present). SHA-256:
+`42C01F415978C87C0B2D9B0192722EA5A9198CF6903795D0F1E6EBBC98AE76E1`.
+
+Before installing, the Users screen showed three accounts, all Administrators,
+so nobody held the Content Manager role. The archive replaced the active `2.0.0`
+through Appearance → Themes → Upload Theme and WordPress reported a successful
+update.
+
+Verification on `https://dralimoradi.com/`:
+
+- The Add User role list no longer contains Content Manager (Subscriber,
+  Contributor, Author, Editor, Administrator remain) and the admin menu no
+  longer has the Homepage Content entry.
+- Opening a real English team member (Dr. Alireza Akbarzadeh) shows the
+  Persian & Arabic translation box pre-filled from the existing translations
+  (title, slug, biography, role, summary, excerpt, related links) with direct
+  edit links to both. Nothing was saved during this check.
+- All 39 designed-page URLs plus the three homepages return 200 with the
+  expected cover, breadcrumb, and five footer columns; team counts are unchanged
+  (Clinical Care 4, Research 4, Innovation 3 in every language).
+
+Not exercised on production: saving a team member through the new box, which
+would write to the live site and was covered by the local Polylang test instead.
