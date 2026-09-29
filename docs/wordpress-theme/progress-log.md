@@ -1213,3 +1213,37 @@ It is 3,078,105 bytes with 191 entries, every entry is below the required
 `dr-ali-moradi/` root, `style.css` declares `1.2.0`, `inc/roles.php` is present,
 and no `.git`, `.env`, or `wp-config.php` entry is included. SHA-256:
 `699BF2D181804C34E3F1988EED2A255761B644C416DABEFD6736CE09F8585D70`.
+
+## 2026-09-29 — theme 2.0.0 deployed and verified on production
+
+Built `dr-ali-moradi-2.0.0-5d85e5f.zip` from commit `5d85e5f` with `git archive`
+(3,087,065 bytes, 196 entries, all under `dr-ali-moradi/`, `style.css` declares
+`2.0.0`, no `.git`, `.env`, or `wp-config` entry). SHA-256:
+`B03F4954B65F65F4E48FAF83655A86D9B670970D8BA717BB9E257CD415B05280`.
+
+Uploaded through Appearance → Themes → Upload Theme and used "Replace current
+with uploaded" over the active `1.2.0`. WordPress reported a successful update
+and the theme list now reports `2.0.0`.
+
+The first administrator request ran the page-content migration. Verification
+on `https://dralimoradi.com/`:
+
+- All 13 designed pages exist in English, Persian, and Arabic (39 URLs), use the
+  `page-designed` template, return HTTP 200, and each has exactly one `h1`, one
+  interior cover, one breadcrumb, and the appointment call-to-action.
+- No broken images on the Persian About page; the Persian headings use Abar VF.
+- Live blocks render: Clinical Care shows 4 team cards, 2 gallery strips, and
+  the 2 pathway cards; Innovation shows the team and latest posts; the clinic
+  gallery shows 16 thumbnails; Contact still renders its form with no shortcode
+  text leaking.
+- The Customizer lists three language panels with nine sections each in
+  homepage order; opening the Persian panel switched the preview to the Persian
+  homepage; the controls pane now loads WP-Parsidate's Vazir stylesheet and
+  computes `Vazir` as its font.
+- Footers in all three languages show the menu-driven Quick access column
+  (the pre-existing footer menu: Home, Clinic, Innovation, Research, About,
+  Contact, Blog), the four-link Patient resources column, contact, social, and
+  the fixed bottom bar.
+
+Not verified: the exact `dam_page_content_report` values (the option is not
+exposed to the browser), and editing a page from the block editor.
