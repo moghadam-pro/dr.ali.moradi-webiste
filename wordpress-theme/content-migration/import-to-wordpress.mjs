@@ -175,7 +175,7 @@ async function ensureMedia(entry) {
   let fileBuffer;
   try {
     fileBuffer = await fs.readFile(entry.sourceFile);
-  } catch (error) {
+  } catch {
     console.warn(`  ! media file missing on disk, skipping: ${entry.sourceFile}`);
     return null;
   }
@@ -676,7 +676,6 @@ async function importBlogIndexPage() {
   const homeId = placeholderIds[DEFAULT_LOCALE];
   console.log(`  front-page placeholder -> ${JSON.stringify(placeholderIds)}`);
 
-  const homepage = await readJson("homepage-content.json");
   const blogLabel = { en: "Blog", fa: "وبلاگ", ar: "المدونة" };
   const payloadByLocale = {};
   for (const locale of LOCALES) {
