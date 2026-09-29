@@ -217,7 +217,7 @@ function dam_customizer_field( $wp_customize, $key, $section, $label, $type, $lo
 	if ( in_array( $type, array( 'url', 'image' ), true ) ) { $sanitize = 'esc_url_raw'; }
 	if ( 'checkbox' === $type ) { $sanitize = 'dam_sanitize_checkbox'; }
 	if ( 'select' === $type ) { $sanitize = 'dam_sanitize_select'; }
-	$wp_customize->add_setting( $id, array( 'type' => 'theme_mod', 'capability' => DAM_HOMEPAGE_CAPABILITY, 'default' => $defaults[ $key ] ?? '', 'sanitize_callback' => $sanitize, 'transport' => 'refresh' ) );
+	$wp_customize->add_setting( $id, array( 'type' => 'theme_mod','default' => $defaults[ $key ] ?? '', 'sanitize_callback' => $sanitize, 'transport' => 'refresh' ) );
 	$args = array( 'label' => $label, 'section' => $section, 'priority' => $priority, 'type' => $type );
 	if ( $choices ) { $args['choices'] = $choices; }
 	if ( 'image' === $type ) { $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, $id, $args ) ); }
@@ -294,7 +294,6 @@ function dam_customize_register( $wp_customize ) {
 		$wp_customize->add_panel( $panel, array(
 			'title'       => $language_title,
 			'description' => __( 'Sections are listed in the same order as the homepage. Opening one shows that language\'s real homepage in the live preview.', 'dr-ali-moradi' ),
-			'capability'  => DAM_HOMEPAGE_CAPABILITY,
 			'priority'    => $panel_priority++,
 		) );
 
@@ -302,7 +301,7 @@ function dam_customize_register( $wp_customize ) {
 		$section_priority = 10;
 		foreach ( dam_customizer_section_order() as $name ) {
 			$sections[ $name ] = 'dam_homepage_' . $locale . '_' . $name;
-			$wp_customize->add_section( $sections[ $name ], array( 'title' => $titles[ $name ], 'panel' => $panel, 'capability' => DAM_HOMEPAGE_CAPABILITY, 'priority' => $section_priority++ ) );
+			$wp_customize->add_section( $sections[ $name ], array( 'title' => $titles[ $name ], 'panel' => $panel,'priority' => $section_priority++ ) );
 		}
 
 		// 1. Hero.

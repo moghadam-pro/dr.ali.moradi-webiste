@@ -1247,3 +1247,16 @@ on `https://dralimoradi.com/`:
 
 Not verified: the exact `dam_page_content_report` values (the option is not
 exposed to the browser), and editing a page from the block editor.
+
+## 2026-09-29 — theme 3.0.0: team translations and role removal
+
+- The Persian & Arabic translation box now also covers Team Members (title,
+  slug, biography, role, summary, excerpt, related links) and syncs the team
+  area, order, and photo into the translations. Verified locally against a real
+  Polylang install: translations were created and linked, the second save
+  updated them in place instead of duplicating, related links split correctly,
+  and the box pre-fills from existing translations.
+- Removed the Homepage Content menu entry and the Content Manager role. The
+  cleanup migration was verified in both cases: the role is kept while a user
+  holds it, and removed (with the administrator capability) once none does.
+- Version raised to `3.0.0`; release contract test updated.

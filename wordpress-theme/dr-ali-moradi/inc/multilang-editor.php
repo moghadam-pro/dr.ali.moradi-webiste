@@ -1,6 +1,7 @@
 <?php
 /**
- * Fill in Persian and Arabic (title, slug, content) alongside the English
+ * Fill in Persian and Arabic (title, slug, content -- plus role, summary,
+ * excerpt and related links for team members) alongside the English
  * post being edited, instead of creating and switching between three
  * separate posts by hand. Lives on the English post only -- that post
  * drives its own translations. Saving creates the fa/ar posts (linked via
@@ -20,7 +21,69 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function dam_multilang_editor_post_types() {
-	return array( 'post' );
+	return array( 'post', 'team_member' );
+}
+
+/**
+ * Which translatable fields the box offers for a post type. Every type has a
+ * title, slug, and body; team members also carry their card fields.
+ */
+function dam_multilang_fields( $post_type ) {
+	$fields = array(
+		'title'   => array( 'label' => __( 'Title', 'dr-ali-moradi' ), 'kind' => 'text' ),
+		'slug'    => array( 'label' => __( 'Slug', 'dr-ali-moradi' ), 'kind' => 'slug' ),
+		'content' => array( 'label' => 'team_member' === $post_type ? __( 'Biography', 'dr-ali-moradi' ) : __( 'Content', 'dr-ali-moradi' ), 'kind' => 'textarea' ),
+	);
+	if ( 'team_member' === $post_type ) {
+		$fields['role']    = array( 'label' => __( 'Role', 'dr-ali-moradi' ), 'kind' => 'text', 'meta' => 'dam_role' );
+		$fields['summary'] = array( 'label' => __( 'Short summary', 'dr-ali-moradi' ), 'kind' => 'text', 'meta' => 'dam_summary' );
+		$fields['excerpt'] = array( 'label' => __( 'Excerpt (profile intro line)', 'dr-ali-moradi' ), 'kind' => 'text' );
+		$fields['links']   = array( 'label' => __( 'Related links — one per line: Title|https://…', 'dr-ali-moradi' ), 'kind' => 'links', 'meta' => 'dam_related_links' );
+	}
+	return $fields;
+}
+
+/** Current value of one field on an existing translation, as the box shows it. */
+function dam_multilang_field_value( $post, $name, $field ) {
+	if ( ! $post ) {
+		return '';
+	}
+	if ( 'title' === $name ) {
+		return $post->post_title;
+	}
+	if ( 'slug' === $name ) {
+		return $post->post_name;
+	}
+	if ( 'content' === $name ) {
+		return $post->post_content;
+	}
+	if ( 'excerpt' === $name ) {
+		return $post->post_excerpt;
+	}
+	$value = get_post_meta( $post->ID, $field['meta'], true );
+	if ( 'links' === $field['kind'] ) {
+		$lines = array();
+		foreach ( (array) $value as $link ) {
+			if ( ! empty( $link['url'] ) ) {
+				$lines[] = ( isset( $link['title'] ) ? $link['title'] : '' ) . '|' . $link['url'];
+			}
+		}
+		return implode( "\n", $lines );
+	}
+	return (string) $value;
+}
+
+/** Parse "Title|URL" lines into the array shape the related-links meta stores. */
+function dam_multilang_parse_links( $text ) {
+	$links = array();
+	foreach ( preg_split( '/\r\n|\r|\n/', (string) $text ) as $line ) {
+		$parts = array_map( 'trim', explode( '|', $line, 2 ) );
+		$url   = count( $parts ) > 1 ? $parts[1] : $parts[0];
+		if ( '' !== $url ) {
+			$links[] = array( 'title' => count( $parts ) > 1 ? sanitize_text_field( $parts[0] ) : '', 'url' => esc_url_raw( $url ) );
+		}
+	}
+	return $links;
 }
 
 function dam_add_multilang_meta_box() {
@@ -65,18 +128,23 @@ function dam_render_multilang_meta_box( $post ) {
 				</p>
 			<?php endif; ?>
 		</div>
+		<?php foreach ( array( 'fa' => array( __( 'Persian', 'dr-ali-moradi' ), $fa_post ), 'ar' => array( __( 'Arabic', 'dr-ali-moradi' ), $ar_post ) ) as $code => $column ) : ?>
 		<div class="dam-multilang-column">
-			<h3><?php esc_html_e( 'Persian', 'dr-ali-moradi' ); ?></h3>
-			<p><label><?php esc_html_e( 'Title', 'dr-ali-moradi' ); ?><input type="text" name="dam_fa_title" class="widefat" dir="rtl" value="<?php echo esc_attr( $fa_post ? $fa_post->post_title : '' ); ?>" /></label></p>
-			<p><label><?php esc_html_e( 'Slug', 'dr-ali-moradi' ); ?><input type="text" name="dam_fa_slug" class="widefat" value="<?php echo esc_attr( $fa_post ? $fa_post->post_name : '' ); ?>" /></label></p>
-			<p><label><?php esc_html_e( 'Content', 'dr-ali-moradi' ); ?><textarea name="dam_fa_content" rows="14" class="widefat" dir="rtl"><?php echo esc_textarea( $fa_post ? $fa_post->post_content : '' ); ?></textarea></label></p>
+			<h3><?php echo esc_html( $column[0] ); ?></h3>
+			<?php foreach ( dam_multilang_fields( $post->post_type ) as $name => $field ) :
+				$value = dam_multilang_field_value( $column[1], $name, $field );
+				$input = 'dam_' . $code . '_' . $name;
+				?>
+				<p><label><?php echo esc_html( $field['label'] ); ?>
+				<?php if ( in_array( $field['kind'], array( 'textarea', 'links' ), true ) ) : ?>
+					<textarea name="<?php echo esc_attr( $input ); ?>" rows="<?php echo 'links' === $field['kind'] ? 4 : 14; ?>" class="widefat" <?php echo 'slug' === $name ? '' : 'dir="' . ( 'links' === $field['kind'] ? 'ltr' : 'rtl' ) . '"'; ?>><?php echo esc_textarea( $value ); ?></textarea>
+				<?php else : ?>
+					<input type="text" name="<?php echo esc_attr( $input ); ?>" class="widefat" <?php echo 'slug' === $name ? '' : 'dir="rtl"'; ?> value="<?php echo esc_attr( $value ); ?>" />
+				<?php endif; ?>
+				</label></p>
+			<?php endforeach; ?>
 		</div>
-		<div class="dam-multilang-column">
-			<h3><?php esc_html_e( 'Arabic', 'dr-ali-moradi' ); ?></h3>
-			<p><label><?php esc_html_e( 'Title', 'dr-ali-moradi' ); ?><input type="text" name="dam_ar_title" class="widefat" dir="rtl" value="<?php echo esc_attr( $ar_post ? $ar_post->post_title : '' ); ?>" /></label></p>
-			<p><label><?php esc_html_e( 'Slug', 'dr-ali-moradi' ); ?><input type="text" name="dam_ar_slug" class="widefat" value="<?php echo esc_attr( $ar_post ? $ar_post->post_name : '' ); ?>" /></label></p>
-			<p><label><?php esc_html_e( 'Content', 'dr-ali-moradi' ); ?><textarea name="dam_ar_content" rows="14" class="widefat" dir="rtl"><?php echo esc_textarea( $ar_post ? $ar_post->post_content : '' ); ?></textarea></label></p>
-		</div>
+		<?php endforeach; ?>
 	</div>
 	<?php
 }
@@ -124,12 +192,24 @@ function dam_save_multilang_editor( $post_id, $post ) {
 		}
 	}
 
-	foreach ( array( 'fa', 'ar' ) as $target_lang ) {
-		$title   = isset( $_POST[ 'dam_' . $target_lang . '_title' ] ) ? sanitize_text_field( wp_unslash( $_POST[ 'dam_' . $target_lang . '_title' ] ) ) : '';
-		$slug    = isset( $_POST[ 'dam_' . $target_lang . '_slug' ] ) ? sanitize_title( wp_unslash( $_POST[ 'dam_' . $target_lang . '_slug' ] ) ) : '';
-		$content = isset( $_POST[ 'dam_' . $target_lang . '_content' ] ) ? wp_unslash( $_POST[ 'dam_' . $target_lang . '_content' ] ) : '';
+	$fields = dam_multilang_fields( $post->post_type );
 
-		if ( '' === $title && '' === $content && '' === $slug ) {
+	foreach ( array( 'fa', 'ar' ) as $target_lang ) {
+		$input = array();
+		foreach ( $fields as $name => $field ) {
+			$key   = 'dam_' . $target_lang . '_' . $name;
+			$value = isset( $_POST[ $key ] ) ? wp_unslash( $_POST[ $key ] ) : '';
+			if ( 'text' === $field['kind'] ) {
+				$value = sanitize_text_field( $value );
+			} elseif ( 'slug' === $field['kind'] ) {
+				$value = sanitize_title( $value );
+			} elseif ( 'links' === $field['kind'] ) {
+				$value = trim( $value );
+			}
+			$input[ $name ] = $value;
+		}
+
+		if ( '' === implode( '', $input ) ) {
 			continue;
 		}
 
@@ -137,27 +217,68 @@ function dam_save_multilang_editor( $post_id, $post ) {
 			'post_type'   => $post->post_type,
 			'post_status' => $post->post_status,
 		);
-		if ( '' !== $title ) {
-			$post_args['post_title'] = $title;
+		if ( '' !== $input['title'] ) {
+			$post_args['post_title'] = $input['title'];
 		}
-		if ( '' !== $content ) {
-			$post_args['post_content'] = $content;
+		if ( '' !== $input['content'] ) {
+			$post_args['post_content'] = $input['content'];
 		}
-		if ( '' !== $slug ) {
-			$post_args['post_name'] = $slug;
+		if ( '' !== $input['slug'] ) {
+			$post_args['post_name'] = $input['slug'];
+		}
+		if ( isset( $input['excerpt'] ) && '' !== $input['excerpt'] ) {
+			$post_args['post_excerpt'] = $input['excerpt'];
 		}
 
 		if ( isset( $translations[ $target_lang ] ) ) {
 			$post_args['ID'] = $translations[ $target_lang ];
 			wp_update_post( $post_args );
+			$target_id = $translations[ $target_lang ];
 		} else {
-			if ( '' === $title ) {
+			if ( '' === $input['title'] ) {
 				$post_args['post_title'] = $post->post_title;
 			}
-			$new_id = wp_insert_post( $post_args );
-			if ( $new_id && ! is_wp_error( $new_id ) ) {
-				pll_set_post_language( $new_id, $target_lang );
-				$translations[ $target_lang ] = $new_id;
+			$target_id = wp_insert_post( $post_args );
+			if ( $target_id && ! is_wp_error( $target_id ) ) {
+				pll_set_post_language( $target_id, $target_lang );
+				$translations[ $target_lang ] = $target_id;
+			} else {
+				continue;
+			}
+		}
+
+		// Card fields stored as post meta (team members).
+		foreach ( $fields as $name => $field ) {
+			if ( empty( $field['meta'] ) || '' === $input[ $name ] ) {
+				continue;
+			}
+			update_post_meta( $target_id, $field['meta'], 'links' === $field['kind'] ? dam_multilang_parse_links( $input[ $name ] ) : $input[ $name ] );
+		}
+	}
+
+	// Structure that follows the English member into each translation: which
+	// team area it belongs to (each language has its own linked term), its
+	// order, and its photo when the translation has none of its own.
+	if ( 'team_member' === $post->post_type ) {
+		$area_ids = wp_get_object_terms( $post_id, 'team_area', array( 'fields' => 'ids' ) );
+		foreach ( array( 'fa', 'ar' ) as $target_lang ) {
+			if ( empty( $translations[ $target_lang ] ) ) {
+				continue;
+			}
+			$target_id = $translations[ $target_lang ];
+			$terms     = array();
+			foreach ( (array) $area_ids as $area_id ) {
+				$translated = function_exists( 'pll_get_term' ) ? pll_get_term( $area_id, $target_lang ) : 0;
+				if ( $translated ) {
+					$terms[] = (int) $translated;
+				}
+			}
+			if ( $terms ) {
+				wp_set_object_terms( $target_id, $terms, 'team_area' );
+			}
+			wp_update_post( array( 'ID' => $target_id, 'menu_order' => (int) $post->menu_order ) );
+			if ( ! has_post_thumbnail( $target_id ) && has_post_thumbnail( $post_id ) ) {
+				set_post_thumbnail( $target_id, get_post_thumbnail_id( $post_id ) );
 			}
 		}
 	}

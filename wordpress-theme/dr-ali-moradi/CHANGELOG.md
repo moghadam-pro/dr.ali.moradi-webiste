@@ -6,6 +6,37 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-09-29
+
+Major release under the versioning policy: it retires an operator-facing role
+and menu and runs a cleanup migration on upgrade.
+
+### Added
+
+- Team Members now have the same **Persian & Arabic translation** box as
+  Posts. Filling it in on the English member creates or updates the Persian
+  and Arabic members, links the three as Polylang translations, and carries
+  over the title, slug, biography, role, short summary, excerpt, and related
+  links (one `Title|URL` per line).
+- When a team member is saved in English, each translation also receives the
+  matching translated Team Area, the same order, and the same photo when the
+  translation has none of its own.
+
+### Removed
+
+- The **Homepage Content** admin-menu entry.
+- The **Content Manager — مدیر محتوا** role that appeared when adding a user,
+  its dedicated `dam_edit_homepage_content` capability, and the Customizer
+  capability mapping (`inc/roles.php`). Homepage Customizer panels use the
+  standard Customizer capability again.
+
+### Migration
+
+- `inc/role-cleanup.php` removes the role and takes the capability away from
+  Administrators on the first administrator request. If any user still holds the
+  role it is left in place and the removal is retried on later requests, so no
+  account is ever left without a role.
+
 ## [2.0.0] - 2026-09-29
 
 This is a major release: the source of truth for the designed pages moves from
