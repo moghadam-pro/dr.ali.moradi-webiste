@@ -1153,3 +1153,36 @@ Production verification passed:
 - English, Persian, and Arabic homepages rendered the complete page, localized
   navigation/content, appointments, post cards, and full footer;
 - all three public homepage checks completed without browser console errors.
+
+## 2026-09-29 — theme 2.0.0: page content in WordPress, Customizer tree, footer menus
+
+Implemented and verified locally in a real WordPress (WordPress Playground,
+PHP 8.3, English only, no Polylang or media library):
+
+- **Persian font in Customizer.** Root cause found in the WP-Parsidate source
+  (`inc/App/AppAssets.php`): the Vazir stylesheet is enqueued only on
+  `admin_enqueue_scripts`, which WordPress does not fire on the Customizer
+  screen. The theme now enqueues the plugin's own stylesheet on
+  `customize_controls_enqueue_scripts`, honouring the plugin's `enable_fonts`
+  setting.
+- **Customizer restructure.** Three language panels, each with nine sections in
+  homepage order (Recognition moved after Appointments). A release test now
+  compares the section order with `templates/front-page.html`. The footer bottom
+  bar and hard-coded link settings were removed from the Customizer.
+- **Footer menus.** New `footer_resources` location beside the existing
+  `footer` location, a flat footer walker, and default links when no menu is
+  assigned.
+- **Page content.** New `inc/page-content.php`, `page-designed` template, and
+  `page-section` block. The seeder wrote all 13 designed pages, the second run
+  changed nothing, the Contact shortcode was preserved, and two footer menus
+  were created and assigned. Not verified locally: Polylang translation
+  linking, the Media Library images, and the real production page state; those
+  need the production run recorded below.
+
+Local checks: PHP syntax on every theme file, theme JSON validity,
+`php tests/wordpress-theme-release.php` (extended for the new contract). The
+Vinext build/rendered-HTML tests belong to the React reference site, which this
+release does not touch.
+
+Production deployment is not part of this entry; record it after the archive is
+built and uploaded.

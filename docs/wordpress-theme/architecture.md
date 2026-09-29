@@ -55,7 +55,8 @@ Pages → Add New, with a template assigned from Page Attributes.
 | Template file | Purpose |
 |---|---|
 | `page.html` | Standard page: title + free-form block content |
-| `page-hub.html` | Section-hub pages (Clinical Care, Research, Innovation, Education overviews) — card grids, sub-sections |
+| `page-designed.html` | The designed pages (About, Clinical Care, Research, Innovation, clinic/hospital services, patient resources, Contact, galleries). Cover and sections are HTML stored in the page's own content — see `page-content.md` |
+| `page-hub.html` | Legacy section-hub template (static copy from the theme); superseded by `page-designed.html` for pages seeded in 2.0.0 |
 | `page-contact.html` | Contact page: locations, map placeholder, MPro Forms contact form |
 | `page-full-width.html` | Full-width page, no title/cover treatment |
 | `single.html` | Single Post for articles, conditions, innovations, publications, and patient resources |

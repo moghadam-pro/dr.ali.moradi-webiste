@@ -33,6 +33,18 @@ operator. Updated as items are resolved.
     active production theme was exported, reviewed, reconciled into `main`,
     and a full DirectAdmin rollback backup was verified before release 1.1.0.
 
+## Verify after the 2.0.0 deployment
+
+15. **Confirm the page-content migration on production.** After uploading theme
+    2.0.0 and opening any wp-admin screen as an administrator, read the
+    `dam_page_content_report` option (or open each page) and confirm every
+    `page:locale` entry is `seeded`, not `missing` or `error`. The report also
+    lists `footer_menus_created`. Polylang stores menu-to-location links in its
+    own option; if the footer still shows the default links in a language,
+    assign that language's menu once on Appearance → Menus → Manage Locations.
+    Each replaced page's previous content is in the `_dam_pre_designed_content`
+    post meta.
+
 ## Not blocking, but flagged
 
 3. **Attribution footer.** Every commit in this repository carries a

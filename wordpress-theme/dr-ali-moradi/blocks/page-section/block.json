@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/page-section",
+	"title": "Live Page Section",
+	"category": "dr-ali-moradi",
+	"icon": "groups",
+	"description": "A section that updates itself from site content: team grid, clinic/hospital gallery strip, full gallery, or the latest innovation posts. Choose which one in the block settings.",
+	"attributes": {
+		"section": {
+			"type": "string",
+			"default": "team-research",
+			"enum": ["team-clinic", "team-research", "team-innovation", "innovation-posts", "gallery-clinic", "gallery-hospital", "gallery-full-clinic", "gallery-full-hospital"]
+		}
+	},
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}

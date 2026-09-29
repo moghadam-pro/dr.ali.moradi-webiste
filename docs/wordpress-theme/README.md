@@ -19,6 +19,10 @@ the `claude/wordpress-doctor-site-architecture-m4766g` branch, under
   needed before work can continue past the current point.
 - [`progress-log.md`](progress-log.md) — running log of what has been built,
   updated as work proceeds.
+- [`page-content.md`](page-content.md) — how the designed pages are stored
+  in WordPress Pages (theme 2.0.0) and how the migration seeds them.
+- [`homepage-customizer.md`](homepage-customizer.md) — the per-language
+  Customizer panels and the footer menus.
 - [`versioning.md`](versioning.md) — Semantic Versioning policy, release
   checklist, and the single-source-of-truth rule.
 

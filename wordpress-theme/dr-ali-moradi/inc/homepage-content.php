@@ -15,6 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function dam_current_locale() {
+	// Set only while the page-content seeder renders a specific language's
+	// default markup (see inc/page-content.php).
+	if ( ! empty( $GLOBALS['dam_locale_override'] ) ) {
+		return $GLOBALS['dam_locale_override'];
+	}
 	if ( function_exists( 'pll_current_language' ) ) {
 		$lang = pll_current_language();
 		if ( $lang ) {

@@ -111,6 +111,11 @@
   ],
   "customTemplates": [
     {
+      "name": "page-designed",
+      "title": "Designed Page (content edited in the page)",
+      "postTypes": ["page"]
+    },
+    {
       "name": "page-hub",
       "title": "Section Hub (Clinic / Research / Innovation / Education)",
       "postTypes": ["page"]

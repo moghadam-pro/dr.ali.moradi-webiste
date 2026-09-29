@@ -78,6 +78,11 @@ $nobat_url = dam_appointment_url();
 	</div>
 </section>
 <?php
+// While the page-content seeder captures this block as editable page HTML,
+// the live (query-driven) sections below are inserted as their own blocks.
+if ( ! empty( $GLOBALS['dam_seed_mode'] ) ) {
+	return;
+}
 if ( 'innovations' === $page_key ) {
 	dam_render_team_section( 'innovation' );
 	dam_render_innovation_posts_section( $locale );

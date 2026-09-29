@@ -82,8 +82,6 @@ function dam_customizer_defaults( $locale ) {
 		'footer_office_address' => $t['contact']['office'], 'footer_clinic_address' => $t['contact']['clinic'],
 		'footer_map_label' => $t['footer']['map'],
 		'footer_map_url' => 'https://www.google.com/maps/search/?api=1&query=Mashhad+Poursina+Building+Arya+Hospital',
-		'footer_copyright' => $t['footer']['copyright'], 'footer_disclaimer' => $t['footer']['disclaimer'],
-		'footer_credit_label' => $t['footer']['credit'], 'footer_credit_url' => 'https://moghadam.pro',
 	);
 
 	foreach ( $t['journey'] as $index => $step ) {
@@ -131,15 +129,6 @@ function dam_customizer_defaults( $locale ) {
 	}
 	foreach ( array( 'innovation', 'recognition' ) as $prefix ) {
 		for ( $i = 1; $i <= 3; $i++ ) { $d[ "{$prefix}_post_{$i}" ] = 0; }
-	}
-	foreach ( array( 'clinical-care', 'innovations', 'research', 'about', 'blog' ) as $slug ) {
-		$key = str_replace( '-', '_', $slug );
-		$d[ "footer_explore_{$key}_label" ] = $t['footerExplore'][ $slug ] ?? $slug;
-		$d[ "footer_explore_{$key}_url" ] = dam_customizer_localized_url( $slug, $locale );
-	}
-	foreach ( array( 'before' => 'before-surgery', 'after' => 'after-surgery', 'faq' => 'faq', 'rehab' => 'rehabilitation' ) as $key => $slug ) {
-		$d[ "footer_resource_{$key}_label" ] = $t['footer'][ $key ];
-		$d[ "footer_resource_{$key}_url" ] = dam_customizer_localized_url( $slug, $locale );
 	}
 	foreach ( array(
 		'instagram' => array( 'Instagram', 'https://www.instagram.com/dr_ali_moradi_handsurgeon' ),
@@ -263,23 +252,61 @@ function dam_customizer_post_choices() {
 	return $choices;
 }
 
+
+/**
+ * Homepage sections in the exact order they appear on the front page
+ * (templates/front-page.html), so the Customizer tree mirrors the page.
+ */
+function dam_customizer_section_order() {
+	return array( 'hero', 'journey', 'pathways', 'innovation', 'impact', 'appointments', 'recognition', 'about', 'footer' );
+}
+
+function dam_customizer_section_titles() {
+	return array(
+		'hero'         => __( '1 · Hero — بخش اصلی', 'dr-ali-moradi' ),
+		'journey'      => __( '2 · Connected Practice — مسیر درمان و پژوهش', 'dr-ali-moradi' ),
+		'pathways'     => __( '3 · Pathways — مسیرها', 'dr-ali-moradi' ),
+		'innovation'   => __( '4 · Innovation — نوآوری', 'dr-ali-moradi' ),
+		'impact'       => __( '5 · Impact — آمار و دستاورد', 'dr-ali-moradi' ),
+		'appointments' => __( '6 · Appointments — نوبت‌دهی', 'dr-ali-moradi' ),
+		'recognition'  => __( '7 · Recognition — افتخارات', 'dr-ali-moradi' ),
+		'about'        => __( '8 · About preview — درباره من', 'dr-ali-moradi' ),
+		'footer'       => __( '9 · Footer — فوتر', 'dr-ali-moradi' ),
+	);
+}
+
+/**
+ * The Customizer cannot nest panels, but a panel can hold sections. Each
+ * language therefore gets its own panel, and every homepage block gets its own
+ * section inside it, in page order. Group headings only remain inside
+ * sections that repeat items (journey steps, pathway cards, ...).
+ */
 function dam_customize_register( $wp_customize ) {
-	$wp_customize->add_panel( 'dam_homepage_content', array(
-		'title' => __( 'Homepage Content — تغییر محتوای صفحه نخست', 'dr-ali-moradi' ),
-		'description' => __( 'Choose a language. Its real homepage opens in the live preview.', 'dr-ali-moradi' ),
-		'priority' => 50,
-	) );
-	$languages = array( 'en' => __( 'English homepage', 'dr-ali-moradi' ), 'fa' => 'صفحه نخست فارسی', 'ar' => 'الصفحة الرئيسية العربية' );
+	$languages  = array( 'en' => __( 'Homepage — English', 'dr-ali-moradi' ), 'fa' => 'صفحه نخست — فارسی', 'ar' => 'الصفحة الرئيسية — العربية' );
 	$categories = dam_customizer_category_choices(); $posts = dam_customizer_post_choices();
-	$numbers = array( 1 => '1', 2 => '2', 3 => '3' );
-	$sources = array( 'dynamic' => __( 'Latest posts from category', 'dr-ali-moradi' ), 'manual' => __( 'Manually selected posts', 'dr-ali-moradi' ) );
+	$numbers    = array( 1 => '1', 2 => '2', 3 => '3' );
+	$sources    = array( 'dynamic' => __( 'Latest posts from category', 'dr-ali-moradi' ), 'manual' => __( 'Manually selected posts', 'dr-ali-moradi' ) );
+	$titles     = dam_customizer_section_titles();
+	$panel_priority = 50;
 
-	foreach ( $languages as $locale => $title ) {
-		$section = 'dam_homepage_' . $locale; $p = 10;
-		$wp_customize->add_section( $section, array( 'title' => $title, 'panel' => 'dam_homepage_content' ) );
+	foreach ( $languages as $locale => $language_title ) {
+		$panel = 'dam_homepage_' . $locale;
+		$wp_customize->add_panel( $panel, array(
+			'title'       => $language_title,
+			'description' => __( 'Sections are listed in the same order as the homepage. Opening one shows that language\'s real homepage in the live preview.', 'dr-ali-moradi' ),
+			'priority'    => $panel_priority++,
+		) );
 
-		dam_customizer_heading( $wp_customize, $section, "dam_heading_hero_{$locale}", __( 'Hero', 'dr-ali-moradi' ), $p++ );
-		dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array(
+		$sections = array();
+		$section_priority = 10;
+		foreach ( dam_customizer_section_order() as $name ) {
+			$sections[ $name ] = 'dam_homepage_' . $locale . '_' . $name;
+			$wp_customize->add_section( $sections[ $name ], array( 'title' => $titles[ $name ], 'panel' => $panel, 'priority' => $section_priority++ ) );
+		}
+
+		// 1. Hero.
+		$p = 10;
+		dam_customizer_add_fields( $wp_customize, $sections['hero'], $locale, $p, array(
 			array( 'hero_background_image', __( 'Background image', 'dr-ali-moradi' ), 'image' ), array( 'hero_orbits_enabled', __( 'Show circular orbit lines', 'dr-ali-moradi' ), 'checkbox' ),
 			array( 'hero_name_first', __( 'Name — first part', 'dr-ali-moradi' ), 'text' ), array( 'hero_name_last', __( 'Name — highlighted part', 'dr-ali-moradi' ), 'text' ),
 			array( 'hero_credentials', __( 'Credentials — one per line: Bold|Text', 'dr-ali-moradi' ), 'textarea' ), array( 'hero_description', __( 'Description', 'dr-ali-moradi' ), 'textarea' ),
@@ -287,33 +314,36 @@ function dam_customize_register( $wp_customize ) {
 			array( 'hero_credential_list', __( 'Checkmark list — one item per line', 'dr-ali-moradi' ), 'textarea' ),
 		) );
 
-		dam_customizer_heading( $wp_customize, $section, "dam_heading_journey_{$locale}", __( 'Connected Practice', 'dr-ali-moradi' ), $p++ );
-		dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array(
+		// 2. Connected Practice.
+		$p = 10;
+		dam_customizer_add_fields( $wp_customize, $sections['journey'], $locale, $p, array(
 			array( 'journey_kicker', __( 'Section label', 'dr-ali-moradi' ), 'text' ), array( 'journey_intro', __( 'Intro text', 'dr-ali-moradi' ), 'textarea' ),
 			array( 'journey_link_label', __( 'Journey link label', 'dr-ali-moradi' ), 'text' ), array( 'journey_link_url', __( 'Journey link URL', 'dr-ali-moradi' ), 'url' ),
 		) );
 		for ( $i = 1; $i <= 4; $i++ ) {
-			dam_customizer_heading( $wp_customize, $section, "dam_heading_journey_{$locale}_{$i}", sprintf( __( 'Journey step %d', 'dr-ali-moradi' ), $i ), $p++ );
-			dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array(
+			dam_customizer_heading( $wp_customize, $sections['journey'], "dam_heading_journey_{$locale}_{$i}", sprintf( __( 'Journey step %d', 'dr-ali-moradi' ), $i ), $p++ );
+			dam_customizer_add_fields( $wp_customize, $sections['journey'], $locale, $p, array(
 				array( "journey_step_{$i}_number", __( 'Step number', 'dr-ali-moradi' ), 'text' ), array( "journey_step_{$i}_eyebrow", __( 'Small label', 'dr-ali-moradi' ), 'text' ),
 				array( "journey_step_{$i}_title", __( 'Title', 'dr-ali-moradi' ), 'text' ), array( "journey_step_{$i}_image", __( 'Image', 'dr-ali-moradi' ), 'image' ),
 			) );
 		}
 
-		dam_customizer_heading( $wp_customize, $section, "dam_heading_pathways_{$locale}", __( 'Pathways', 'dr-ali-moradi' ), $p++ );
-		dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array(
+		// 3. Pathways.
+		$p = 10;
+		dam_customizer_add_fields( $wp_customize, $sections['pathways'], $locale, $p, array(
 			array( 'pathways_kicker', __( 'Section label', 'dr-ali-moradi' ), 'text' ), array( 'pathways_title', __( 'Title', 'dr-ali-moradi' ), 'text' ), array( 'pathways_body', __( 'Subtitle', 'dr-ali-moradi' ), 'textarea' ),
 		) );
 		for ( $i = 1; $i <= 3; $i++ ) {
-			dam_customizer_heading( $wp_customize, $section, "dam_heading_pathway_{$locale}_{$i}", sprintf( __( 'Pathway card %d', 'dr-ali-moradi' ), $i ), $p++ );
-			dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array(
+			dam_customizer_heading( $wp_customize, $sections['pathways'], "dam_heading_pathway_{$locale}_{$i}", sprintf( __( 'Pathway card %d', 'dr-ali-moradi' ), $i ), $p++ );
+			dam_customizer_add_fields( $wp_customize, $sections['pathways'], $locale, $p, array(
 				array( "pathway_{$i}_title", __( 'Title', 'dr-ali-moradi' ), 'text' ), array( "pathway_{$i}_body", __( 'Content', 'dr-ali-moradi' ), 'textarea' ),
 				array( "pathway_{$i}_button_label", __( 'Button label', 'dr-ali-moradi' ), 'text' ), array( "pathway_{$i}_button_url", __( 'Button URL', 'dr-ali-moradi' ), 'url' ),
 			) );
 		}
 
-		foreach ( array( 'innovation' => __( 'Innovation', 'dr-ali-moradi' ), 'recognition' => __( 'Recognition', 'dr-ali-moradi' ) ) as $prefix => $heading ) {
-			dam_customizer_heading( $wp_customize, $section, "dam_heading_{$prefix}_{$locale}", $heading, $p++ );
+		// 4 and 7. Innovation and Recognition share one card-source layout.
+		foreach ( array( 'innovation', 'recognition' ) as $prefix ) {
+			$p = 10;
 			$section_fields = array(
 				array( "{$prefix}_kicker", __( 'Section label', 'dr-ali-moradi' ), 'text' ), array( "{$prefix}_title", __( 'Title', 'dr-ali-moradi' ), 'text' ),
 				array( "{$prefix}_subtitle", __( 'Subtitle', 'dr-ali-moradi' ), 'textarea' ), array( "{$prefix}_source", __( 'Card source', 'dr-ali-moradi' ), 'select', $sources ),
@@ -322,65 +352,69 @@ function dam_customize_register( $wp_customize ) {
 			);
 			if ( 'recognition' === $prefix ) { array_splice( $section_fields, 3, 0, array( array( 'recognition_link_label', __( 'Archive link label', 'dr-ali-moradi' ), 'text' ) ) ); }
 			for ( $i = 1; $i <= 3; $i++ ) { $section_fields[] = array( "{$prefix}_post_{$i}", sprintf( __( 'Manual post %d', 'dr-ali-moradi' ), $i ), 'select', $posts ); }
-			dam_customizer_add_fields( $wp_customize, $section, $locale, $p, $section_fields );
+			dam_customizer_add_fields( $wp_customize, $sections[ $prefix ], $locale, $p, $section_fields );
 		}
 
-		dam_customizer_heading( $wp_customize, $section, "dam_heading_impact_{$locale}", __( 'Impact', 'dr-ali-moradi' ), $p++ );
-		dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array(
+		// 5. Impact.
+		$p = 10;
+		dam_customizer_add_fields( $wp_customize, $sections['impact'], $locale, $p, array(
 			array( 'impact_kicker', __( 'Section label', 'dr-ali-moradi' ), 'text' ), array( 'impact_title', __( 'Main title', 'dr-ali-moradi' ), 'text' ), array( 'impact_subtitle', __( 'Main subtitle', 'dr-ali-moradi' ), 'textarea' ),
 		) );
 		for ( $i = 1; $i <= 4; $i++ ) {
-			dam_customizer_heading( $wp_customize, $section, "dam_heading_impact_{$locale}_{$i}", sprintf( __( 'Impact item %d', 'dr-ali-moradi' ), $i ), $p++ );
-			dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array( array( "impact_{$i}_title", __( 'Title/value', 'dr-ali-moradi' ), 'text' ), array( "impact_{$i}_subtitle", __( 'Subtitle', 'dr-ali-moradi' ), 'text' ) ) );
+			dam_customizer_heading( $wp_customize, $sections['impact'], "dam_heading_impact_{$locale}_{$i}", sprintf( __( 'Impact item %d', 'dr-ali-moradi' ), $i ), $p++ );
+			dam_customizer_add_fields( $wp_customize, $sections['impact'], $locale, $p, array( array( "impact_{$i}_title", __( 'Title/value', 'dr-ali-moradi' ), 'text' ), array( "impact_{$i}_subtitle", __( 'Subtitle', 'dr-ali-moradi' ), 'text' ) ) );
 		}
 
-		dam_customizer_heading( $wp_customize, $section, "dam_heading_appointments_{$locale}", __( 'Appointments', 'dr-ali-moradi' ), $p++ );
-		dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array(
+		// 6. Appointments.
+		$p = 10;
+		dam_customizer_add_fields( $wp_customize, $sections['appointments'], $locale, $p, array(
 			array( 'appointments_kicker', __( 'Section label', 'dr-ali-moradi' ), 'text' ), array( 'appointment_title', __( 'Title', 'dr-ali-moradi' ), 'text' ),
 			array( 'appointment_body', __( 'Subtitle', 'dr-ali-moradi' ), 'textarea' ), array( 'appointment_image', __( 'Section image', 'dr-ali-moradi' ), 'image' ),
 			array( 'appointment_cta_label', __( 'Booking button label', 'dr-ali-moradi' ), 'text' ), array( 'appointment_urgent_days', __( 'Urgent days', 'dr-ali-moradi' ), 'text' ),
 			array( 'appointment_urgent_hours', __( 'Urgent hours', 'dr-ali-moradi' ), 'text' ),
 		) );
 		for ( $i = 1; $i <= 4; $i++ ) {
-			dam_customizer_heading( $wp_customize, $section, "dam_heading_appointment_{$locale}_{$i}", sprintf( __( 'Appointment option %d', 'dr-ali-moradi' ), $i ), $p++ );
-			dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array(
+			dam_customizer_heading( $wp_customize, $sections['appointments'], "dam_heading_appointment_{$locale}_{$i}", sprintf( __( 'Appointment option %d', 'dr-ali-moradi' ), $i ), $p++ );
+			dam_customizer_add_fields( $wp_customize, $sections['appointments'], $locale, $p, array(
 				array( "appointment_{$i}_enabled", __( 'Enabled', 'dr-ali-moradi' ), 'checkbox' ), array( "appointment_{$i}_eyebrow", __( 'Small label', 'dr-ali-moradi' ), 'text' ),
 				array( "appointment_{$i}_title", __( 'Title', 'dr-ali-moradi' ), 'text' ), array( "appointment_{$i}_body", __( 'Description', 'dr-ali-moradi' ), 'textarea' ),
 			) );
 		}
 
-		dam_customizer_heading( $wp_customize, $section, "dam_heading_about_{$locale}", __( 'About preview', 'dr-ali-moradi' ), $p++ );
-		dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array(
+		// 8. About preview.
+		$p = 10;
+		dam_customizer_add_fields( $wp_customize, $sections['about'], $locale, $p, array(
 			array( 'about_kicker', __( 'Section label', 'dr-ali-moradi' ), 'text' ), array( 'about_body', __( 'Content', 'dr-ali-moradi' ), 'textarea' ),
 			array( 'about_cta_label', __( 'Primary button label', 'dr-ali-moradi' ), 'text' ), array( 'about_cta_url', __( 'Primary button URL', 'dr-ali-moradi' ), 'url' ),
 			array( 'about_research_label', __( 'Research link label', 'dr-ali-moradi' ), 'text' ), array( 'about_research_url', __( 'Research link URL', 'dr-ali-moradi' ), 'url' ),
 			array( 'about_image', __( 'Image', 'dr-ali-moradi' ), 'image' ),
 		) );
 
-		dam_customizer_heading( $wp_customize, $section, "dam_heading_footer_{$locale}", __( 'Footer', 'dr-ali-moradi' ), $p++ );
-		$footer_fields = array(
+		// 9. Footer. The Explore and Resources link lists are WordPress menus
+		// (Appearance > Menus) and the bottom bar is fixed, so neither appears here.
+		$p   = 10;
+		$sec = $sections['footer'];
+		dam_customizer_heading( $wp_customize, $sec, "dam_heading_footer_brand_{$locale}", __( 'Brand and booking', 'dr-ali-moradi' ), $p++ );
+		dam_customizer_add_fields( $wp_customize, $sec, $locale, $p, array(
 			array( 'footer_logo', __( 'Footer logo', 'dr-ali-moradi' ), 'image' ), array( 'footer_bio', __( 'Biography', 'dr-ali-moradi' ), 'textarea' ),
 			array( 'footer_booking_label', __( 'Booking label', 'dr-ali-moradi' ), 'text' ), array( 'footer_booking_url', __( 'Booking URL', 'dr-ali-moradi' ), 'url' ),
-			array( 'footer_explore_title', __( 'Explore column title', 'dr-ali-moradi' ), 'text' ), array( 'footer_resources_title', __( 'Resources column title', 'dr-ali-moradi' ), 'text' ),
-			array( 'footer_contact_title', __( 'Contact column title', 'dr-ali-moradi' ), 'text' ), array( 'footer_social_title', __( 'Social column title', 'dr-ali-moradi' ), 'text' ),
+		) );
+		dam_customizer_heading( $wp_customize, $sec, "dam_heading_footer_menus_{$locale}", __( 'Menu columns (links come from Appearance → Menus)', 'dr-ali-moradi' ), $p++ );
+		dam_customizer_add_fields( $wp_customize, $sec, $locale, $p, array(
+			array( 'footer_explore_title', __( 'Quick access column title', 'dr-ali-moradi' ), 'text' ), array( 'footer_resources_title', __( 'Patient resources column title', 'dr-ali-moradi' ), 'text' ),
+		) );
+		dam_customizer_heading( $wp_customize, $sec, "dam_heading_footer_contact_{$locale}", __( 'Contact', 'dr-ali-moradi' ), $p++ );
+		dam_customizer_add_fields( $wp_customize, $sec, $locale, $p, array(
+			array( 'footer_contact_title', __( 'Contact column title', 'dr-ali-moradi' ), 'text' ),
 			array( 'footer_email', __( 'Email', 'dr-ali-moradi' ), 'text' ), array( 'footer_phone', __( 'Phone', 'dr-ali-moradi' ), 'text' ),
 			array( 'footer_office_address', __( 'Office address', 'dr-ali-moradi' ), 'textarea' ), array( 'footer_clinic_address', __( 'Clinic address', 'dr-ali-moradi' ), 'textarea' ),
 			array( 'footer_map_label', __( 'Map label', 'dr-ali-moradi' ), 'text' ), array( 'footer_map_url', __( 'Map URL', 'dr-ali-moradi' ), 'url' ),
-			array( 'footer_copyright', __( 'Copyright', 'dr-ali-moradi' ), 'text' ), array( 'footer_disclaimer', __( 'Medical disclaimer', 'dr-ali-moradi' ), 'textarea' ),
-			array( 'footer_credit_label', __( 'Credit label', 'dr-ali-moradi' ), 'text' ), array( 'footer_credit_url', __( 'Credit URL', 'dr-ali-moradi' ), 'url' ),
-		);
-		dam_customizer_add_fields( $wp_customize, $section, $locale, $p, $footer_fields );
-		foreach ( array( 'clinical_care' => 'Clinical care', 'innovations' => 'Innovation', 'research' => 'Research', 'about' => 'About', 'blog' => 'Blog' ) as $key => $label ) {
-			dam_customizer_heading( $wp_customize, $section, "dam_heading_footer_explore_{$locale}_{$key}", sprintf( __( 'Footer link: %s', 'dr-ali-moradi' ), $label ), $p++ );
-			dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array( array( "footer_explore_{$key}_label", __( 'Label', 'dr-ali-moradi' ), 'text' ), array( "footer_explore_{$key}_url", __( 'URL', 'dr-ali-moradi' ), 'url' ) ) );
-		}
-		foreach ( array( 'before' => 'Before surgery', 'after' => 'After surgery', 'faq' => 'FAQ', 'rehab' => 'Rehabilitation' ) as $key => $label ) {
-			dam_customizer_heading( $wp_customize, $section, "dam_heading_footer_resource_{$locale}_{$key}", sprintf( __( 'Footer resource: %s', 'dr-ali-moradi' ), $label ), $p++ );
-			dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array( array( "footer_resource_{$key}_label", __( 'Label', 'dr-ali-moradi' ), 'text' ), array( "footer_resource_{$key}_url", __( 'URL', 'dr-ali-moradi' ), 'url' ) ) );
-		}
+		) );
+		dam_customizer_heading( $wp_customize, $sec, "dam_heading_footer_social_{$locale}", __( 'Social networks', 'dr-ali-moradi' ), $p++ );
+		dam_customizer_add_fields( $wp_customize, $sec, $locale, $p, array( array( 'footer_social_title', __( 'Social column title', 'dr-ali-moradi' ), 'text' ) ) );
 		foreach ( array( 'instagram' => 'Instagram', 'telegram' => 'Telegram', 'aparat' => 'Aparat' ) as $key => $label ) {
-			dam_customizer_heading( $wp_customize, $section, "dam_heading_footer_social_{$locale}_{$key}", sprintf( __( 'Social link: %s', 'dr-ali-moradi' ), $label ), $p++ );
-			dam_customizer_add_fields( $wp_customize, $section, $locale, $p, array( array( "footer_social_{$key}_label", __( 'Label', 'dr-ali-moradi' ), 'text' ), array( "footer_social_{$key}_url", __( 'URL', 'dr-ali-moradi' ), 'url' ) ) );
+			dam_customizer_heading( $wp_customize, $sec, "dam_heading_footer_social_{$locale}_{$key}", sprintf( __( 'Social link: %s', 'dr-ali-moradi' ), $label ), $p++ );
+			dam_customizer_add_fields( $wp_customize, $sec, $locale, $p, array( array( "footer_social_{$key}_label", __( 'Label', 'dr-ali-moradi' ), 'text' ), array( "footer_social_{$key}_url", __( 'URL', 'dr-ali-moradi' ), 'url' ) ) );
 		}
 	}
 }
@@ -391,7 +425,35 @@ function dam_customizer_controls_scripts() {
 	foreach ( array( 'en', 'fa', 'ar' ) as $locale ) {
 		$urls[ $locale ] = function_exists( 'pll_home_url' ) ? pll_home_url( $locale ) : home_url( 'en' === $locale ? '/' : '/' . $locale . '/' );
 	}
-	$script = '(function(api,urls){api.bind("ready",function(){Object.keys(urls).forEach(function(locale){var section=api.section("dam_homepage_"+locale);if(section){section.expanded.bind(function(expanded){if(expanded){api.previewer.previewUrl.set(urls[locale]);}});}});});})(wp.customize,' . wp_json_encode( $urls ) . ');';
+	$script = '(function(api,urls){api.bind("ready",function(){Object.keys(urls).forEach(function(locale){var panel=api.panel("dam_homepage_"+locale);if(panel){panel.expanded.bind(function(expanded){if(expanded){api.previewer.previewUrl.set(urls[locale]);}});}});});})(wp.customize,' . wp_json_encode( $urls ) . ');';
 	wp_add_inline_script( 'customize-controls', $script );
 }
 add_action( 'customize_controls_enqueue_scripts', 'dam_customizer_controls_scripts' );
+
+/**
+ * Give the Customizer the same Persian admin font as the rest of wp-admin.
+ *
+ * WP-Parsidate loads its Vazir stylesheet on `admin_enqueue_scripts`, which
+ * WordPress never fires on the Customizer screen (that screen only fires
+ * `customize_controls_enqueue_scripts`), so the controls pane fell back to
+ * the system font. The stylesheet is enqueued here instead, honouring the
+ * plugin's own "enable fonts" setting, and only in the controls pane -- never
+ * in the site preview.
+ */
+function dam_customizer_parsidate_font() {
+	if ( ! defined( 'WP_PARSI_URL' ) || ! defined( 'WP_PARSI_DIR' ) ) {
+		return;
+	}
+	$settings = get_option( defined( 'WP_PARSI_KEY' ) ? WP_PARSI_KEY : 'wpp_settings', array() );
+	$enabled  = is_array( $settings ) && isset( $settings['enable_fonts'] ) ? $settings['enable_fonts'] : false;
+	if ( ! $enabled || in_array( $enabled, array( '0', 'disable', 'off', 'no' ), true ) ) {
+		return;
+	}
+	foreach ( array( 'assets/css-admin/vazir-font.min.css', 'assets/css-admin/vazir-font.css' ) as $relative ) {
+		if ( file_exists( trailingslashit( WP_PARSI_DIR ) . $relative ) ) {
+			wp_enqueue_style( 'dam-parsidate-vazir-font', trailingslashit( WP_PARSI_URL ) . $relative, array( 'customize-controls' ), defined( 'WP_PARSI_VER' ) ? WP_PARSI_VER : null );
+			return;
+		}
+	}
+}
+add_action( 'customize_controls_enqueue_scripts', 'dam_customizer_parsidate_font', 20 );

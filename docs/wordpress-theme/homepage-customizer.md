@@ -1,16 +1,29 @@
-# Homepage Customizer — theme 1.1.0
+# Homepage Customizer — theme 2.0.0
 
 ## Operator workflow
 
-Open **Appearance → Customize → Homepage Content — تغییر محتوای صفحه نخست**.
-The panel contains one section for English, Persian, and Arabic. Opening a
-language section changes the Customizer preview URL to that language's real
-homepage, so saved and unsaved edits are reviewed in the correct locale.
+Open **Appearance → Customize**. There are three top-level panels, one per
+language: **Homepage — English**, **صفحه نخست — فارسی**, and
+**الصفحة الرئيسية — العربية**. Opening a panel switches the live preview to that
+language's real homepage.
 
-WordPress Customizer does not support nested panels. The language entries are
-therefore native sections inside one panel, with visual headings separating
-Hero, Connected Practice, Pathways, Innovation, Impact, Appointments,
-Recognition, About, and Footer controls.
+WordPress Customizer does not support nested panels, so the hierarchy is
+panel (language) → section (homepage block) → controls. Sections are listed in
+the same order the blocks appear on the homepage, and a release test fails if
+the two orders ever diverge:
+
+1. Hero
+2. Connected Practice
+3. Pathways
+4. Innovation
+5. Impact
+6. Appointments
+7. Recognition
+8. About preview
+9. Footer
+
+Sections that repeat items (journey steps, pathway cards, impact items,
+appointment options) group them under a heading inside the section.
 
 ## Editable content
 
@@ -26,10 +39,28 @@ Recognition, About, and Footer controls.
 - **Impact:** section title/subtitle and four independent value/label pairs.
 - **Appointments:** section image/copy and separate enable, eyebrow, title,
   and description controls for all four appointment modes.
-- **About:** copy, image, both button labels, and both button URLs.
-- **Footer:** logo, biography, booking action, all Explore and Resource links,
-  headings, email, phone, two addresses, map action, three social links,
-  copyright, medical disclaimer, and site credit.
+- **About preview:** copy, image, both button labels, and both button URLs.
+- **Footer:** logo, biography, booking action, column titles, email, phone, two
+  addresses, map action, and the three social links (Instagram, Telegram,
+  Aparat).
+
+### Footer menus and the fixed bottom bar
+
+The two footer link columns are ordinary WordPress menus, edited under
+**Appearance → Menus**. Assign a menu to **Footer — Quick access** or
+**Footer — Patient resources** for each language (Polylang lists the locations
+once per language). If a language has no menu assigned yet, the footer shows the
+built-in default links so the column is never empty.
+
+The footer bottom bar (copyright, medical disclaimer, credit) is deliberately
+not editable; it prints fixed localized text.
+
+### Persian font in the controls pane
+
+The Customizer controls pane uses WP-Parsidate's Vazir font whenever the
+plugin's font option is enabled. WP-Parsidate only enqueues that stylesheet on
+`admin_enqueue_scripts`, which WordPress does not fire on the Customizer screen,
+so the theme enqueues it on `customize_controls_enqueue_scripts`.
 
 ## Compatibility and data storage
 
@@ -46,7 +77,7 @@ published Posts; Polylang translations are resolved when available.
 
 1. Run PHP syntax checks for every theme PHP file.
 2. Run `php tests/wordpress-theme-release.php`.
-3. Open each language section and confirm the preview switches to EN/FA/AR.
+3. Open each language panel and confirm the preview switches to EN/FA/AR.
 4. Change one field in every area and confirm the preview updates after its
    refresh without publishing.
 5. Verify dynamic and manual card modes, card counts, and 1/2/3-column grids.

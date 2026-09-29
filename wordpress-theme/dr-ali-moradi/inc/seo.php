@@ -287,6 +287,9 @@ function dam_get_breadcrumb_items() {
  * header part, so it reads as part of the page instead of a header bar.
  */
 function dam_render_breadcrumbs() {
+	if ( ! empty( $GLOBALS['dam_seed_mode'] ) ) {
+		return;
+	}
 	$items = dam_get_breadcrumb_items();
 	if ( count( $items ) < 2 ) {
 		return;

@@ -6,6 +6,60 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-09-29
+
+This is a major release: the source of truth for the designed pages moves from
+theme files into WordPress Pages, and the Customizer/footer operator workflow
+changes. A versioned migration (below) performs the move on the first
+administrator request after the upgrade.
+
+### Added
+
+- Page content now lives in WordPress. About, Clinical Care, Innovation,
+  Research, Clinic services, Hospital services, Before surgery, After surgery,
+  FAQ, Rehabilitation, Contact, and both galleries are stored in each page's
+  own content, separately for English, Persian, and Arabic. Designed sections
+  are Custom HTML blocks that reuse the existing markup and classes, so the
+  look is unchanged, and the operator edits them under Pages.
+- The `dr-ali-moradi/page-section` block keeps query-driven parts live inside
+  page content: team grids, clinic/hospital gallery strips, full galleries,
+  and the latest innovation posts.
+- The `Designed Page` template (`page-designed`) used by those pages.
+- A versioned, repeat-safe page-content migration (`dam_page_content_version`,
+  report in `dam_page_content_report`). It never re-seeds a page it has already
+  seeded and stores each page's previous content in the
+  `_dam_pre_designed_content` post meta.
+- Footer link columns use WordPress menus: `Footer — Quick access` (the
+  existing `footer` location) and the new `Footer — Patient resources`
+  (`footer_resources`), assigned per language through Polylang. The migration
+  creates and assigns a menu for every language that has none, from the links
+  the footer used to hard-code.
+
+### Changed
+
+- The homepage Customizer is now one panel per language (English, Persian,
+  Arabic), each containing one section per homepage block, listed in the same
+  order as the homepage: Hero, Connected Practice, Pathways, Innovation, Impact,
+  Appointments, Recognition, About preview, Footer. Opening a panel switches the
+  live preview to that language. Saved values are unchanged (the setting IDs did
+  not change).
+- Recognition is now listed after Appointments in the Customizer, matching the
+  order it appears on the homepage.
+
+### Removed
+
+- The footer bottom bar (copyright, medical disclaimer, credit) is no longer
+  editable in the Customizer; it renders the fixed localized text.
+- The hard-coded Explore and Resources link settings in the Customizer, replaced
+  by the footer menus above.
+
+### Fixed
+
+- The Customizer controls pane now uses the same Persian admin font as the rest
+  of wp-admin when WP-Parsidate's font option is enabled. The plugin only
+  enqueues its Vazir stylesheet on `admin_enqueue_scripts`, which WordPress does
+  not fire on the Customizer screen, so the pane fell back to the system font.
+
 ## [1.1.0] - 2026-09-22
 
 ### Added

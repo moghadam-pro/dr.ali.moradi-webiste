@@ -34,6 +34,7 @@ require_once DAM_THEME_DIR . '/inc/about-content.php';
 require_once DAM_THEME_DIR . '/inc/clinic-content.php';
 require_once DAM_THEME_DIR . '/inc/blog-content.php';
 require_once DAM_THEME_DIR . '/inc/gallery.php';
+require_once DAM_THEME_DIR . '/inc/page-content.php';
 require_once DAM_THEME_DIR . '/inc/nav-walker.php';
 require_once DAM_THEME_DIR . '/inc/blocks.php';
 require_once DAM_THEME_DIR . '/inc/polylang.php';
@@ -62,8 +63,10 @@ function dam_setup() {
 
 	register_nav_menus(
 		array(
-			'primary' => __( 'Primary Navigation', 'dr-ali-moradi' ),
-			'footer'  => __( 'Footer Navigation', 'dr-ali-moradi' ),
+			'primary'          => __( 'Primary Navigation', 'dr-ali-moradi' ),
+			// `footer` keeps its original key so menus already assigned to it stay assigned.
+			'footer'           => __( 'Footer — Quick access', 'dr-ali-moradi' ),
+			'footer_resources' => __( 'Footer — Patient resources', 'dr-ali-moradi' ),
 		)
 	);
 }

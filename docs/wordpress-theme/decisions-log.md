@@ -100,3 +100,23 @@ current model is:
 
 This current decision supersedes the corresponding CPT rows in the original
 architecture decision, while retaining the earlier record for history.
+
+## 2026-09-29 — Designed pages are WordPress content; footer links are menus
+
+Decision: the About, Clinical Care, Innovation, Research, clinic/hospital
+services, patient-resource, Contact, and gallery pages are stored as HTML in
+each language's own WordPress Page instead of being printed from static theme
+copy, so the operator edits every page in Pages. Designed sections are Custom
+HTML blocks reusing the existing markup; query-driven sections (team grids,
+gallery strips, latest posts, breadcrumbs) remain dynamic blocks.
+
+Related decisions in the same release:
+
+- The homepage Customizer becomes one panel per language with one section per
+  homepage block in page order, because WordPress cannot nest panels.
+- The footer Explore and Resources columns use WordPress menus per language;
+  the footer bottom bar is fixed text and no longer editable.
+- The Customizer controls pane loads WP-Parsidate's Vazir stylesheet itself,
+  because the plugin only enqueues it on `admin_enqueue_scripts`.
+- This is a MAJOR release (`2.0.0`) under the versioning policy: the content
+  model and operator workflow change and a migration runs on upgrade.
