@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// @ts-nocheck
 /**
  * Extracts content from the current Next.js/Vite site's typed content
  * modules (app/*.ts) and writes normalized JSON for WordPress import.

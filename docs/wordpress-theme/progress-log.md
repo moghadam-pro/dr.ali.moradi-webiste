@@ -1186,3 +1186,30 @@ release does not touch.
 
 Production deployment is not part of this entry; record it after the archive is
 built and uploaded.
+
+## 2026-09-23 — least-privilege Content Manager role prepared
+
+Prepared theme `1.2.0` with a versioned `Content Manager — مدیر محتوا` role for
+the clinic operator. The role can manage Posts, categories, media, and Team
+Members and has a dedicated admin entry point for the multilingual Homepage
+Content editor. It does not receive access to users, plugins, theme management,
+site settings, code editors, or the full Site Editor.
+
+The Homepage panel, all three language sections, and every Homepage theme mod
+now enforce `dam_edit_homepage_content`. WordPress's `customize` meta
+capability is mapped to this primitive capability only for eligible users, so
+the operator can enter the Customizer without the broad `edit_theme_options`
+capability. The access model and provisioning checklist are documented in
+`content-manager-role.md`.
+
+Implementation commit `0803e49` was rebased over the concurrent documentation
+commit already present on remote `main`, pushed without overwriting it, and
+tagged `theme-v1.2.0`. PHP syntax, the WordPress release contract, all five
+rendered-HTML tests, JSON parsing, the Vinext production build, and
+`git diff --check` passed.
+
+Built `dr-ali-moradi-1.2.0-0803e49.zip` directly from the tagged theme tree.
+It is 3,078,105 bytes with 191 entries, every entry is below the required
+`dr-ali-moradi/` root, `style.css` declares `1.2.0`, `inc/roles.php` is present,
+and no `.git`, `.env`, or `wp-config.php` entry is included. SHA-256:
+`699BF2D181804C34E3F1988EED2A255761B644C416DABEFD6736CE09F8585D70`.

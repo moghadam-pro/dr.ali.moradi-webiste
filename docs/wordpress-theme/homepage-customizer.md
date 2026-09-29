@@ -25,6 +25,11 @@ the two orders ever diverge:
 Sections that repeat items (journey steps, pathway cards, impact items,
 appointment options) group them under a heading inside the section.
 
+Administrators can continue to use the Appearance path. Clinic operators with
+the **Content Manager — مدیر محتوا** role instead use the dedicated
+**Homepage Content** admin-menu item. They can edit this panel without access
+to theme installation, the full Site Editor, plugins, users, or site settings.
+
 ## Editable content
 
 - **Hero:** copy, credentials, facets, background image, and circular-orbit
