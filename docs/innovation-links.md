@@ -68,7 +68,7 @@ latest-innovation blocks remain in their existing positions after the main body.
 
 All fifteen primary URLs were fetched successfully (200) for fourteen records.
 The previous doctor-domain routes were read from their matching legacy archive
-projects. Each project now has source-based EN/FA/AR content prepared for an
+projects. Each project now has source-based EN/FA/AR content published as an
 ordinary WordPress Page under its translated Innovation hub. Public detail
 Pages omit old doctor-domain source hyperlinks. The eight external sources
 remain cited in the corresponding project Pages, including the Avisa reference
@@ -80,3 +80,29 @@ facts; promotional superlatives, global menus, repeated responsive paragraphs
 and unrelated footer/contact content are excluded. Product and research claims
 retain their development/manufacturer context. Source HTML captures remain
 outside Git; the curated multilingual Page manifest is checked in.
+
+
+### Published destinations
+
+| Project | English | فارسی | العربية |
+| --- | --- | --- | --- |
+| Dynamometer | [Page](https://dralimoradi.com/innovations/dynamometer/) | [Page](https://dralimoradi.com/fa/innovations/dynamometer/) | [Page](https://dralimoradi.com/ar/innovations/dynamometer/) |
+| Magnetic joint distraction | [Page](https://dralimoradi.com/innovations/magnetic-joint-distraction/) | [Page](https://dralimoradi.com/fa/innovations/magnetic-joint-distraction/) | [Page](https://dralimoradi.com/ar/innovations/magnetic-joint-distraction/) |
+| Dynamic distal-radius external fixator | [Page](https://dralimoradi.com/innovations/dynamic-distal-radius-external-fixator/) | [Page](https://dralimoradi.com/fa/innovations/dynamic-distal-radius-external-fixator/) | [Page](https://dralimoradi.com/ar/innovations/dynamic-distal-radius-external-fixator/) |
+| Dynamic hip external fixator | [Page](https://dralimoradi.com/innovations/dynamic-hip-external-fixator/) | [Page](https://dralimoradi.com/fa/innovations/dynamic-hip-external-fixator/) | [Page](https://dralimoradi.com/ar/innovations/dynamic-hip-external-fixator/) |
+| Intra-osseous DRUJ prosthesis | [Page](https://dralimoradi.com/innovations/intra-osseous-druj-prosthesis/) | [Page](https://dralimoradi.com/fa/innovations/intra-osseous-druj-prosthesis/) | [Page](https://dralimoradi.com/ar/innovations/intra-osseous-druj-prosthesis/) |
+| Lag plate | [Page](https://dralimoradi.com/innovations/lag-plate/) | [Page](https://dralimoradi.com/fa/innovations/lag-plate/) | [Page](https://dralimoradi.com/ar/innovations/lag-plate/) |
+| Artificial finger pulley | [Page](https://dralimoradi.com/innovations/artificial-finger-pulley/) | [Page](https://dralimoradi.com/fa/innovations/artificial-finger-pulley/) | [Page](https://dralimoradi.com/ar/innovations/artificial-finger-pulley/) |
+| Bionic Hand H3 | [Page](https://dralimoradi.com/innovations/bionic-hand-h3/) | [Page](https://dralimoradi.com/fa/innovations/bionic-hand-h3/) | [Page](https://dralimoradi.com/ar/innovations/bionic-hand-h3/) |
+| Bionic-hand training software | [Page](https://dralimoradi.com/innovations/bionic-hand-training-software/) | [Page](https://dralimoradi.com/fa/innovations/bionic-hand-training-software/) | [Page](https://dralimoradi.com/ar/innovations/bionic-hand-training-software/) |
+| Bionic Hand H5 | [Page](https://dralimoradi.com/innovations/bionic-hand-h5/) | [Page](https://dralimoradi.com/fa/innovations/bionic-hand-h5/) | [Page](https://dralimoradi.com/ar/innovations/bionic-hand-h5/) |
+| Magnetic control for an artificial limb | [Page](https://dralimoradi.com/innovations/magnetic-control-artificial-limb/) | [Page](https://dralimoradi.com/fa/innovations/magnetic-control-artificial-limb/) | [Page](https://dralimoradi.com/ar/innovations/magnetic-control-artificial-limb/) |
+| Integrated stem | [Page](https://dralimoradi.com/innovations/integrated-stem/) | [Page](https://dralimoradi.com/fa/innovations/integrated-stem/) | [Page](https://dralimoradi.com/ar/innovations/integrated-stem/) |
+| Hip Exoskeleton HEXA | [Page](https://dralimoradi.com/innovations/hip-exoskeleton-hexa/) | [Page](https://dralimoradi.com/fa/innovations/hip-exoskeleton-hexa/) | [Page](https://dralimoradi.com/ar/innovations/hip-exoskeleton-hexa/) |
+| Coated Schanz pins | [Page](https://dralimoradi.com/innovations/coated-schanz-pins/) | [Page](https://dralimoradi.com/fa/innovations/coated-schanz-pins/) | [Page](https://dralimoradi.com/ar/innovations/coated-schanz-pins/) |
+
+Production verification: all 42 Pages render the correct language and project
+content, include title/description/canonical and three language alternates, and
+have no legacy-domain hyperlinks. All project illustrations use local Media
+URLs. All 42 URLs appear in the 86-entry Page sitemap. Each hub has fourteen
+internal buttons and fourteen sidebar anchors in the correct language.

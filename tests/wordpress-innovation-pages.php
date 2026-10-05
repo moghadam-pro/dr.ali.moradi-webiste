@@ -32,4 +32,10 @@ foreach ( array(164,165,166) as $id ) {
  verify( dam_innovation_hub_links( $changed, $urls, 'Read project' ) === $changed, 'Hub update must be idempotent.' );
 }
 verify( is_wp_error( dam_innovation_hub_links( '<p>Operator changed layout</p>', $urls, 'Read project' ) ), 'Unexpected structure must fail safely.' );
+// Existing Page exits before parent lookup or any write, preserving operator edits.
+function get_posts( $query ) { return array( 4321 ); }
+function get_permalink( $id ) { return 'https://example.test/operator-edited/'; }
+function wp_insert_post() { throw new Exception( 'Existing Page must never be overwritten.' ); }
+$result = dam_innovation_pages_run( array( 'kind' => 'page', 'index' => 0, 'lang' => 'fa' ) );
+verify( $result['id'] === 4321 && $result['existing'] === true, 'Resume must preserve existing Page.' );
 echo "Innovation Page migration contracts passed.\n";

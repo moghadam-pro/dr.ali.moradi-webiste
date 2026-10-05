@@ -6,8 +6,8 @@ coherent digital presence.
 
 ## Innovation detail Pages — theme 3.2.0
 
-The approved fourteen-project catalogue has a reviewed EN/FA/AR Page-content
-manifest. Tools → Innovation Pages explicitly imports 42 editable WordPress
+The approved fourteen-project catalogue now has 42 published EN/FA/AR WordPress
+Pages and a reviewed Page-content manifest. Tools → Innovation Pages explicitly imports 42 editable WordPress
 Pages, reuses matching media, connects Polylang translations and replaces hub
 buttons with the corresponding internal Page links. Existing imported Page
 content is preserved on resume. External references appear on project Pages;

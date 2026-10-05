@@ -4,6 +4,47 @@ Running record of implemented changes and observed production results. Use this
 file together with Git history; the current delivery branch is
 `codex/patients-gallery` on upstream.
 
+## 2026-10-06 — Publish 42 editable Innovation project Pages
+
+- Theme release `3.2.0`, commit `516bbc2`, tag `theme-v3.2.0`, pushed to
+  upstream `codex/patients-gallery`. The installed archive was built directly
+  from that commit; SHA256:
+  `419e11991070b0924b0c32df510d81738e5dcd79a1025b7e2a3e35bbef68b848`.
+  Target: `https://dralimoradi.com`. The previously installed 3.1.1 theme was
+  already reconciled exactly with Git; the installer confirmed 3.1.1 → 3.2.0
+  and successful replacement. No new theme edits existed in production.
+- Read all fifteen primary reference URLs successfully for fourteen records.
+  Reorganized project facts in EN/FA/AR and excluded site navigation, duplicate
+  responsive blocks, unrelated footers and promotional superlatives. External
+  source links remain in the corresponding detail Pages; doctor-domain archive
+  references do not appear as Page hyperlinks. H3 remains one project.
+- Ran Tools → Innovation Pages: 114 operations, zero errors; 42 published Pages
+  (14 per language), 71 image-source mappings, 68 distinct Media IDs. Two
+  previously existing attachments were reused; 66 new attachments were
+  registered. Different URLs with identical originals share the same Media ID.
+- Finalization connected fourteen Polylang translation groups and replaced only
+  the catalogue buttons in Pages 164/165/166. Confirmed each language hub has
+  fourteen internal buttons, fourteen sidebar anchors and no archive links.
+- Browser audit of every new Page: authored project title/body, correct language,
+  populated description/canonical, canonical equals the actual URL, three
+  alternate-language links, no legacy-domain hyperlinks, all image URLs local.
+  Verified the five H3 images actually load, including the reused image.
+- Rank Math Page sitemap renders 86 unique URLs and includes all 42 new Pages.
+  Verified the header switcher links between translations of the same project.
+  The normal Page editor confirms published status, the Innovation parent and
+  Designed Page template. Content remains editable in Pages, independent of
+  future theme updates.
+- Saved live hub HTML snapshots. Detail snapshots were reconstructed from the
+  imported manifest and observed local Media URLs; the English Dynamometer
+  snapshot was compared byte-for-byte with its live Page editor content.
+  `innovation-pages-2026-10-06/index.json` records all IDs and actual URLs.
+- Validation: full `npm test` passes (build, five rendered-HTML tests, existing
+  WordPress release/patient/SEO checks); new migration checks pass, including
+  external-reference policy, three languages, H3 link deduplication, sidebar
+  preservation, rerun idempotence, safe structure failure and preserved edits.
+  All 62 theme PHP files pass syntax checks. Final screenshot saved privately:
+  `/tmp/dam-innovation-pages-live-fa.png`.
+
 ## 2026-10-06 — Correct Innovation reference placement
 
 - Corrected the earlier appended placement in production Pages 164/165/166.
