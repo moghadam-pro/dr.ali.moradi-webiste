@@ -1,0 +1,14 @@
+{
+  "posts": 97,
+  "empty_post_bodies": 0,
+  "posts_without_featured_image": 0,
+  "innovation_bodies_match": 42,
+  "post_bodies_match": 27,
+  "patients": 71,
+  "clinic": 4,
+  "hospital": 67,
+  "exactly_selected_patients_changed": true,
+  "patient_gallery_and_translations_unchanged": true,
+  "other_disease_terms_retained": true,
+  "issues": []
+}

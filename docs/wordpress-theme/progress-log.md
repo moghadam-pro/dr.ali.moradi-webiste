@@ -4,6 +4,49 @@ Running record of implemented changes and observed production results. Use this
 file together with Git history; the current delivery branch is
 `codex/patients-gallery` on upstream.
 
+## 2026-10-06 — Project redesign, patient admin fix and Posts / theme 3.3.0
+
+- Release commit `f2d138f`, tag `theme-v3.3.0`, target `dralimoradi.com`.
+  Archive built from that exact commit; SHA-256:
+  `862bc478d70f9aeeb07d4d584a94d03f91160df0b710cd23c2519de3717b5e37`.
+  Previous production 3.2.1 was the exact Git release from this session; no
+  intervening theme edits existed. WordPress confirmed 3.2.1 → 3.3.0 and a
+  successful update through the ordinary theme upload screen.
+- Reorganized 14 projects into 42 normal editable EN/FA/AR Page bodies with a
+  shared responsive, scoped layout. Separated introduction, project explanation,
+  galleries and certificates; contained images preserve their complete diagrams.
+  Deduplicated repeated Media URLs and omitted static video placeholder images
+  without deleting attachments. Kept external-only source references and added
+  the archived magnetic-distraction YouTube link. No frontend content migration.
+- Tools → Content updates applied 42 Page operations and 27 Post operations with
+  zero errors. SHA-256 guards prevent overwriting a changed live body; exact
+  backups, WordPress revisions and idempotent resume preserve operator work.
+- Fresh audit found 97 Posts, no empty bodies and 27 missing featured images.
+  Expanded those nine translation groups with educational EN/FA/AR sections,
+  preserving introductions and adding relevant AAOS/ASSH/project reading links.
+  Generated nine matching covers with imagegen, corrected an extra digit before
+  publishing the nerve illustration, and uploaded each selected cover once.
+  Media 1074–1082 has descriptive alt text and conceptual-image metadata.
+  A final export confirms all 97 Posts have content and featured images, and all
+  69 changed Page/Post bodies match the reviewed snapshots exactly.
+- Fixed `dam_patient_is_catalogue()` leaking frontend language attributes into
+  wp-admin. All Patients now retains Persian RTL document/table direction and
+  displays category/tag columns. Moved four randomly selected records using the
+  normal editor; final count Clinic 4 / Hospital 67. Only those location terms
+  changed; disease categories, patient galleries and translations remain intact.
+  Patient identifiers, exports and selection records stay outside Git.
+- Public audit: all 42 project URLs HTTP 200, one H1, three explanation cards,
+  scoped stylesheet, correct language/canonical/three translation links, no
+  duplicate gallery URLs or old doctor-subdomain links. Browser verification:
+  Persian desktop and all 14 projects at 390px, plus Persian/Arabic mobile;
+  no horizontal overflow. Chrome's viewport override did not resize its page;
+  mobile checks used the in-app browser and restored its default viewport.
+- Validation: full `npm test` passed (build, five rendered-HTML checks and all
+  WordPress suites); PHP syntax checks passed. Added regression checks for the
+  patient admin/frontend language boundary and guarded-update stale/invalid
+  targets, backups and repeat execution. README, both changelogs and operator
+  workflow docs updated. See [content completion](content-completion.md).
+
 ## 2026-10-06 — Preserve Arabic text / final release 3.2.1
 
 - Exact-title verification revealed WP-Parsidate's frontend `FixArabic` filter

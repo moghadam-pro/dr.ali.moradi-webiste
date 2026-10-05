@@ -57,3 +57,26 @@ language attributes out of WordPress list/editor screens. Category and tag colum
 are visible in All Patients. Four randomly chosen records were moved from Hospital
 to Clinic using the editor, with the disease terms and media retained. Selection
 identifiers and patient exports are private temporary files outside the repository.
+
+## Verified production result
+
+Theme 3.3.0 was installed successfully over the exact Git 3.2.1 release.
+All 42 Page updates and all 27 Post updates completed without errors. A fresh
+WordPress export matches all 69 reviewed bodies exactly; all 97 Posts now have a
+nonempty body and a featured image. Nine new Media attachments (1074–1082) are
+shared by the translation groups. The `index.json` records those attachment IDs.
+
+All 42 public project URLs return HTTP 200 with one H1, three project sections,
+project CSS, the correct language and three translation links. Galleries have no
+duplicate URLs, static player placeholders or old doctor-subdomain links. Live
+browser checks cover the Persian desktop gallery and all 14 project layouts at
+390 pixels, plus Persian and Arabic mobile pages; no horizontal overflow occurs.
+
+All Patients now uses `fa-IR`, RTL document/table direction and category/tag
+columns. A final export confirms 71 Patients: Clinic 4, Hospital 67. Exactly the
+four selected records changed location terms; disease terms, gallery values and
+translation fields are retained. Import bookkeeping and the selected location
+meta are excluded from the gallery-content comparison.
+
+All local build/rendered-HTML tests, WordPress behavior/security checks and PHP
+syntax checks passed. Deployment details are recorded in `progress-log.md`.
