@@ -253,11 +253,7 @@ function dam_render_clinical_care_body( $locale ) {
  * hospital-01..16).
  */
 function dam_gallery_images( $area ) {
-	$count  = 16;
-	$images = array();
-	for ( $i = 1; $i <= $count; $i++ ) {
-		$slug     = $area . '-' . str_pad( (string) $i, 2, '0', STR_PAD_LEFT );
-		$images[] = dam_media_url( $slug );
-	}
-	return $images;
+ $locations = dam_patient_location_ids();
+ if ( ! isset( $locations[ $area ] ) ) { return array(); }
+ return array_column( dam_patient_gallery_items( $locations[ $area ] ), 'url' );
 }

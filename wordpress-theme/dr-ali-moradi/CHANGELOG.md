@@ -6,6 +6,38 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [3.1.0] - 2026-10-05
+
+### Added
+
+- Patients post type with Persian/Arabic admin labels, hierarchical categories,
+  tags, excerpt, treatment content, and ordered image/video/video-link galleries.
+- Exactly one protected Clinic/Hospital care category per patient; Hospital is
+  the owner-approved import default. REST rejects missing/conflicting choices;
+  classic/quick/bulk edits retain a valid previous setting.
+- Patient pages, category/tag/catalogue archives, descendant case galleries,
+  category cards using the first descendant image and a 60% color overlay,
+  expandable category-to-patient sidebar, and pagination.
+- Administrator-only resumable manifest importer, with nonce/capability checks,
+  source-ID deduplication and restricted authenticated media download hosts.
+
+### Changed
+
+- Clinical Care preview strips and existing clinic/hospital gallery page URLs
+  read published Patients rather than fixed Media Library slugs.
+- Lightbox preserves media aspect ratio, includes title, description and patient
+  link, supports videos, restores keyboard focus and traps focus while open.
+- Synchronized production 3.0.0 before implementing this feature.
+
+### Operator notes
+
+- Case records/categories are shared across languages; gallery UI follows the
+  viewing page language. Operators can edit imported names and category nesting.
+- Patient title is the name/title; excerpt is the short description; editor
+  holds the case/treatment details. Gallery entries have individual captions.
+- Source clinical text is imported only where supplied; missing details remain
+  empty. Source manifests and signed download URLs must remain outside Git.
+
 ## [3.0.0] - 2026-09-29
 
 Major release under the versioning policy: it retires an operator-facing role

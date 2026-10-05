@@ -1,0 +1,1 @@
+{"apiVersion": 3, "name": "dr-ali-moradi/patient-profile", "title": "Patient Profile", "category": "dr-ali-moradi", "supports": {"html": false}, "render": "file:./render.php"}

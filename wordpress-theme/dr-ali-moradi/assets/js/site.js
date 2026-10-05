@@ -84,124 +84,77 @@
 			} );
 		}
 
-		// Gallery rows (rotating 4-thumbnail preview + full grids) and
-		// their shared lightbox modal.
-		var modal = document.querySelector( '[data-gallery-modal]' );
-		var modalImage = modal && modal.querySelector( '[data-gallery-modal-image]' );
-		var modalCount = modal && modal.querySelector( '[data-gallery-modal-count]' );
-		var activeImages = [];
-		var activeIndex = 0;
-
-		function openModal( images, index ) {
-			if ( ! modal ) {
-				return;
-			}
-			activeImages = images;
-			activeIndex = index;
-			showModalImage();
-			modal.removeAttribute( 'hidden' );
-			document.body.style.overflow = 'hidden';
-		}
-
-		function showModalImage() {
-			if ( ! modalImage || ! activeImages.length ) {
-				return;
-			}
-			modalImage.src = activeImages[ activeIndex ];
-			if ( modalCount ) {
-				modalCount.textContent = ( activeIndex + 1 ) + ' / ' + activeImages.length;
-			}
-		}
-
-		function closeModal() {
-			if ( ! modal ) {
-				return;
-			}
-			modal.setAttribute( 'hidden', '' );
-			document.body.style.overflow = '';
-		}
-
-		function stepModal( direction ) {
-			if ( ! activeImages.length ) {
-				return;
-			}
-			activeIndex = ( activeIndex + direction + activeImages.length ) % activeImages.length;
-			showModalImage();
-		}
-
-		if ( modal ) {
-			var modalClose = modal.querySelector( '[data-gallery-close]' );
-			var modalPrev = modal.querySelector( '[data-gallery-modal-prev]' );
-			var modalNext = modal.querySelector( '[data-gallery-modal-next]' );
-			if ( modalClose ) {
-				modalClose.addEventListener( 'click', closeModal );
-			}
-			if ( modalPrev ) {
-				modalPrev.addEventListener( 'click', function () { stepModal( -1 ); } );
-			}
-			if ( modalNext ) {
-				modalNext.addEventListener( 'click', function () { stepModal( 1 ); } );
-			}
-			modal.addEventListener( 'click', function ( event ) {
-				if ( event.target === modal ) {
-					closeModal();
-				}
-			} );
-			document.addEventListener( 'keydown', function ( event ) {
-				if ( modal.hasAttribute( 'hidden' ) ) {
-					return;
-				}
-				if ( event.key === 'Escape' ) {
-					closeModal();
-				} else if ( event.key === 'ArrowLeft' ) {
-					stepModal( -1 );
-				} else if ( event.key === 'ArrowRight' ) {
-					stepModal( 1 );
-				}
-			} );
-		}
-
-		document.querySelectorAll( '[data-gallery-strip]' ).forEach( function ( strip ) {
-			var images = JSON.parse( strip.getAttribute( 'data-images' ) || '[]' );
-			var thumbs = strip.querySelectorAll( '[data-gallery-thumb]' );
-			var offset = 0;
-
-			function renderThumbs() {
-				thumbs.forEach( function ( thumb, slot ) {
-					var index = ( offset + slot ) % images.length;
-					var img = thumb.querySelector( 'img' );
-					var badge = thumb.querySelector( 'span' );
-					if ( img ) {
-						img.src = images[ index ];
-					}
-					if ( badge ) {
-						badge.textContent = String( index + 1 ).padStart( 2, '0' );
-					}
-					thumb.setAttribute( 'data-index', String( index ) );
-				} );
-			}
-
-			var prevButton = strip.querySelector( '[data-gallery-prev]' );
-			var nextButton = strip.querySelector( '[data-gallery-next]' );
-			if ( prevButton ) {
-				prevButton.addEventListener( 'click', function () {
-					offset = ( offset - 1 + images.length ) % images.length;
-					renderThumbs();
-				} );
-			}
-			if ( nextButton ) {
-				nextButton.addEventListener( 'click', function () {
-					offset = ( offset + 1 ) % images.length;
-					renderThumbs();
-				} );
-			}
-
-			thumbs.forEach( function ( thumb ) {
-				thumb.addEventListener( 'click', function () {
-					openModal( images, parseInt( thumb.getAttribute( 'data-index' ), 10 ) || 0 );
-				} );
-			} );
-		} );
+		// Shared patient lightbox; strings are supported for legacy gallery markup.
+        var modal = document.querySelector('[data-gallery-modal]');
+        var activeImages = [], activeIndex = 0, returnFocus, previousOverflow;
+        function mediaItem(item) { return typeof item === 'string' ? {url: item, preview: item, type: 'image', title: '', description: ''} : item; }
+        function safeUrl(url) { try { var parsed = new URL(url, location.href); return /^https?:$/.test(parsed.protocol) ? parsed.href : ''; } catch (e) { return ''; } }
+        function showModalImage() {
+            if (!modal || !activeImages.length) return;
+            var item = mediaItem(activeImages[activeIndex]);
+            var image = modal.querySelector('[data-gallery-modal-image]');
+            var video = modal.querySelector('[data-gallery-modal-video]');
+            var link = modal.querySelector('[data-gallery-modal-video-link]');
+            video.pause(); video.removeAttribute('src'); video.load();
+            image.hidden = item.type !== 'image'; video.hidden = item.type !== 'video'; link.hidden = item.type !== 'link';
+            image.removeAttribute('src');
+            if (item.type === 'image') { image.src = safeUrl(item.url); image.alt = item.title || ''; }
+            if (item.type === 'video') { video.src = safeUrl(item.url); }
+            if (item.type === 'link') { link.href = safeUrl(item.url); }
+            modal.querySelector('[data-gallery-modal-title]').textContent = item.title || '';
+            modal.querySelector('[data-gallery-modal-description]').textContent = item.description || '';
+            var patientLink = modal.querySelector('[data-gallery-modal-patient]');
+            patientLink.hidden = !safeUrl(item.patientUrl); patientLink.href = safeUrl(item.patientUrl);
+            modal.querySelector('[data-gallery-modal-count]').textContent = (activeIndex + 1) + ' / ' + activeImages.length;
+        }
+        function openModal(images, index, trigger) {
+            if (!modal || !images.length) return;
+            activeImages = images; activeIndex = index; returnFocus = trigger; previousOverflow = document.body.style.overflow;
+            showModalImage(); modal.hidden = false; document.body.style.overflow = 'hidden'; modal.querySelector('[data-gallery-close]').focus();
+        }
+        function closeModal() {
+            if (!modal) return;
+            var video = modal.querySelector('video'); video.pause(); video.removeAttribute('src'); video.load();
+            modal.hidden = true; document.body.style.overflow = previousOverflow || ''; if (returnFocus) returnFocus.focus();
+        }
+        function stepModal(direction) { if (!activeImages.length) return; activeIndex = (activeIndex + direction + activeImages.length) % activeImages.length; showModalImage(); }
+        if (modal) {
+            modal.querySelector('[data-gallery-close]').addEventListener('click', closeModal);
+            modal.querySelector('[data-gallery-modal-prev]').addEventListener('click', function () { stepModal(-1); });
+            modal.querySelector('[data-gallery-modal-next]').addEventListener('click', function () { stepModal(1); });
+            modal.addEventListener('click', function (event) { if (event.target === modal) closeModal(); });
+            document.addEventListener('keydown', function (event) {
+                if (modal.hidden) return;
+                if (event.key === 'Escape') closeModal();
+                else if (event.key === 'ArrowLeft') stepModal(-1);
+                else if (event.key === 'ArrowRight') stepModal(1);
+                else if (event.key === 'Tab') {
+                    var focusable = Array.from(modal.querySelectorAll('button,a[href],video[controls]')).filter(function (el) { return el.getClientRects().length && !el.disabled; });
+                    var first = focusable[0], last = focusable[focusable.length-1];
+                    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+                    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+                }
+            });
+        }
+        document.querySelectorAll('[data-gallery-strip]').forEach(function (strip) {
+            var images; try { images = JSON.parse(strip.getAttribute('data-images') || '[]'); } catch (e) { return; }
+            if (!images.length) return;
+            var thumbs = strip.querySelectorAll('[data-gallery-thumb]'), offset = 0;
+            function renderThumbs() {
+                thumbs.forEach(function (thumb, slot) {
+                    var index = (offset + slot) % images.length, item = mediaItem(images[index]);
+                    var img = thumb.querySelector('img');
+                    if (!img && item.preview) { img = document.createElement('img'); img.className = 'fill-img'; thumb.prepend(img); }
+                    if (img) { img.hidden = !item.preview; if(item.preview) img.src = safeUrl(item.preview); img.alt = item.title || ''; }
+                    var badge = thumb.querySelector('span'); if (badge) badge.textContent = (item.type === 'image' ? '' : '▶ ') + (item.title || String(index+1));
+                    thumb.setAttribute('aria-label', item.title || String(index+1)); thumb.setAttribute('data-index', String(index));
+                });
+            }
+            var prev = strip.querySelector('[data-gallery-prev]'), next = strip.querySelector('[data-gallery-next]');
+            if (prev) prev.addEventListener('click', function () { offset = (offset-1+images.length)%images.length; renderThumbs(); });
+            if (next) next.addEventListener('click', function () { offset = (offset+1)%images.length; renderThumbs(); });
+            thumbs.forEach(function (thumb) { thumb.addEventListener('click', function () { openModal(images, parseInt(thumb.getAttribute('data-index'),10)||0, thumb); }); });
+        });
 
 		// Interior cover scroll-shrink.
 		var cover = document.querySelector( '.interior-cover' );
