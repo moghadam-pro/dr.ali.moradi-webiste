@@ -9,6 +9,7 @@ function dam_patient_import_screen() {
 	?>
 	<div class="wrap"><h1>درون‌ریزی بیماران / Import Patients</h1>
 	<p>Manifest JSON: categories, cases, then media. Re-importing the same source IDs resumes without duplicates. Existing operator edits are preserved. Keep this page open until completed.</p>
+	<p><label for="dam-import-json">Manifest JSON (paste or choose a file)</label></p><textarea id="dam-import-json" rows="8" class="large-text code"></textarea><br>
 	<input type="file" id="dam-import-manifest" accept="application/json,.json"><button class="button button-primary" id="dam-import-start">Start / شروع</button>
 	<p id="dam-import-progress" role="status"></p><pre id="dam-import-errors" style="white-space:pre-wrap"></pre></div>
 	<script>
@@ -16,9 +17,9 @@ function dam_patient_import_screen() {
 	var nonce = <?php echo wp_json_encode( wp_create_nonce( 'dam_patient_import' ) ); ?>;
 	var button = document.getElementById('dam-import-start');
 	button.onclick = async function(){
-	 var file = document.getElementById('dam-import-manifest').files[0]; if(!file) return;
+	 var file = document.getElementById('dam-import-manifest').files[0]; var pasted = document.getElementById('dam-import-json').value; if(!file && !pasted.trim()) return;
 	 var progress = document.getElementById('dam-import-progress'), errors = document.getElementById('dam-import-errors');
-	 var manifest; try { manifest = JSON.parse(await file.text()); } catch(e) { errors.textContent = 'Invalid JSON'; return; }
+	 var manifest; try { manifest = JSON.parse(pasted.trim() ? pasted : await file.text()); } catch(e) { errors.textContent = 'Invalid JSON'; return; }
 	 if(!Array.isArray(manifest.operations)) { errors.textContent = 'Missing operations'; return; }
 	 button.disabled = true; errors.textContent = ''; var failed = 0, completed = 0;
 	 for(var i=0;i<manifest.operations.length;i++) {

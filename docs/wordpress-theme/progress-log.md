@@ -5,6 +5,37 @@ what changed and where, so this file plus `git log` on
 `claude/wordpress-doctor-site-architecture-m4766g` is a complete record
 without needing to replay the chat.
 
+## 2026-10-05 — Patients catalogue and partial production import
+
+- Exported the active production 3.0.0 theme before implementation, reconciled
+  it with Git and upstream main, and preserved current production features.
+  Backup export SHA256:
+  `855e1588410b159f6e10614768f0b42da9d267b082177f7e5ccb6b886cb6403c`.
+- Added theme 3.1.0 Patients, protected mutually exclusive Clinic/Hospital
+  categories, mixed-media editing, dynamic Clinical Care/full galleries,
+  case/category/tag templates, descendant covers with 60% overlay, tree sidebar,
+  pagination and captioned aspect-preserving lightbox. Full operator details
+  and import format: [Patients](patients.md).
+- Uploaded the theme ZIP and observed WordPress replacement success. Imported
+  71 cases and 62 disease/procedure categories without errors; the two mandatory
+  care terms make 64 categories. Hospital is the owner-approved default.
+- Inventoried 315 media (306 images, 9 videos). The first 60-item media batch
+  completed 9 and failed 51 as temporary download references expired. Remaining
+  306 media require refreshed small batches and source-ID deduplication.
+- Local final fixes clarify empty media, avoid duplicate gallery H1 and permit
+  pasted JSON manifests. Theme File Editor reported importer save success;
+  active importer refresh and the other final fixes remain unverified live.
+- Browser control repeatedly failed with `Unable to load browser request-header
+  policy`, including after session reset. Native Chrome navigation did not
+  load a fresh page either. Media transfer and final populated-gallery visual
+  QA are pending recovery; no complete-ingestion claim or release tag is made.
+- Final `npm test` passed: build, five rendered-page tests, WordPress release
+  checks and patient behavioral checks. PHP/JavaScript syntax also validated.
+- Updated root README/changelog, WordPress README, architecture and this log.
+  Code is pushed to upstream `codex/patients-gallery`; main is not overwritten.
+  Patient source manifests, medical text, photos and temporary URLs stay outside
+  Git in `/tmp/dam-drive-inventory.json` and `/tmp/dam-patient-*.json`.
+
 ## 2026-09-22 — Compatibility detail templates redesigned
 
 - Replaced the original placeholder markup in `single-condition.html` and

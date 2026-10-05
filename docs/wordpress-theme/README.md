@@ -1,12 +1,14 @@
 # WordPress Theme — Documentation Index
 
 This folder documents the WordPress conversion of the Dr. Ali Moradi website.
-It lives on the `docs` branch only. The theme's source code is developed on
-the `claude/wordpress-doctor-site-architecture-m4766g` branch, under
-`wordpress-theme/dr-ali-moradi/`.
+Documentation and source are maintained together in the main repository.
+The theme source lives under `wordpress-theme/dr-ali-moradi/`.
+
+Current Patients implementation: theme 3.1.0, branch `codex/patients-gallery`.
 
 ## Contents
 
+- [`patients.md`](patients.md) — Patients content model, galleries, operator workflow and resumable Drive import.
 - [`architecture.md`](architecture.md) — the agreed technical architecture:
   theme type, templates, custom post types, plugin boundaries, multilingual
   and SEO approach.
@@ -29,6 +31,6 @@ the `claude/wordpress-doctor-site-architecture-m4766g` branch, under
 ## Source site
 
 - Current live demo: https://dralimoradi.moghadam.pro/
-- Final production domain (not touched during this build): https://dralimoradi.com/
+- Production WordPress domain: https://dralimoradi.com/
 - Temporary WordPress site for the build: https://tmp.saveon.me/
 - Source repository: `moghadam-pro/dr.ali.moradi-webiste`

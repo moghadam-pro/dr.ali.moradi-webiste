@@ -77,7 +77,8 @@ list, so the visual system cannot be broken by accident.
 ## Content model
 
 As of theme 1.0.0, all visitor-facing editorial and educational content uses
-native **Posts** plus categories. Only team profiles remain a structured CPT.
+native **Posts** plus categories. Team profiles remain a structured CPT;
+theme 3.1.0 additionally introduces Patients for clinical case galleries.
 
 | Content | Type | Notes |
 |---|---|---|
@@ -87,6 +88,10 @@ native **Posts** plus categories. Only team profiles remain a structured CPT.
 | Publications | Standard Post | Localized Publications category |
 | Patient resources | Standard Post | Localized Patient Resources category |
 | Team members | CPT `team_member` | role, summary, bio, photo, areas (clinic/research/innovation) |
+| Clinical case galleries | CPT `patient` | history, excerpt, ordered mixed media, hierarchical `patient_category`, `patient_tag`, exactly one Clinic/Hospital category |
+
+See [Patients](patients.md) for archives, shared-language case records, protected
+care categories and the resumable Drive import workflow.
 
 The Team Member CPT and Team Area taxonomy are registered in the theme itself
 (`inc/post-types.php`, `inc/taxonomies.php`). The versioned migration in

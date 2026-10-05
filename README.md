@@ -22,6 +22,23 @@ Online demo: [dralimoradi.moghadam.pro](https://dralimoradi.moghadam.pro/)
 
 Design source: [Dr. AliMoradi — website v1.0.0 on Figma](https://www.figma.com/design/UCIClfqLygF9UTERhXzawE/Dr.-AliMoradi---website-v1.0.0?node-id=2071-27750&t=BnaFPMxOBdiCwy18-1)
 
+## WordPress production
+
+The active production site is [dralimoradi.com](https://dralimoradi.com/).
+The theme source is in `wordpress-theme/dr-ali-moradi/`; production 3.0.0 was
+exported and reconciled before the Patients feature in 3.1.0. Designed pages
+remain editable WordPress Pages; team profiles and Patients are separate catalogues.
+
+Patients provide disease categories/tags, one mandatory Clinic/Hospital category,
+case history, and ordered image/video/link galleries. Clinical Care and the
+existing gallery destinations read those published case records. Category
+archives include descendant cases and an expandable category-to-patient sidebar.
+See [Patients workflow and import](docs/wordpress-theme/patients.md),
+including the partial production import status (71 cases, 64 categories,
+9/315 media confirmed; remaining media and final live QA pending),
+[theme changelog](wordpress-theme/dr-ali-moradi/CHANGELOG.md), and
+[deployment progress](docs/wordpress-theme/progress-log.md).
+
 ## Product principles
 
 - Desktop-first presentation with full responsiveness across mobile screen sizes

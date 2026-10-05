@@ -34,9 +34,16 @@ https://github.com/moghadam-pro/dr.ali.moradi-webiste/blob/docs/wordpress-theme/
 
 - Posts hold articles, conditions, innovations, publications, and patient
   resources; categories distinguish those families.
-- `team_member` is the only public custom post type retained by the theme.
+- `team_member` and `patient` are the public catalogues retained by the theme.
 - Version 1.0.0 migrates the four retired custom post types without changing
   record IDs and preserves their old URLs with permanent redirects.
 
 See `docs/wordpress-theme/progress-log.md` for deployment state and
 `docs/wordpress-theme/versioning.md` for the release policy.
+
+## Patients (3.1.0)
+
+See [operator workflow and import](../docs/wordpress-theme/patients.md). Patients
+include hierarchical categories, tags and ordered multimedia. Clinical Care and
+its existing full-gallery pages query the mandatory Clinic/Hospital category.
+The production snapshot was synchronized before this release.

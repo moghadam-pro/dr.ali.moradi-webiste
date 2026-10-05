@@ -191,7 +191,7 @@ function dam_render_patient_tree( $parent = 0, $depth = 0 ) {
 }
 
 function dam_render_patient_gallery( $items, $preview = false ) {
-	if ( ! $items ) { echo '<p class="patient-empty">' . esc_html( dam_patient_label( 'No published cases yet.', 'هنوز پرونده‌ای منتشر نشده است.', 'لا توجد حالات منشورة بعد.' ) ) . '</p>'; return; }
+	if ( ! $items ) { echo '<p class="patient-empty">' . esc_html( dam_patient_label( 'No case media available yet.', 'هنوز رسانه‌ای برای نمایش وجود ندارد.', 'لا توجد وسائط للحالات بعد.' ) ) . '</p>'; return; }
 	$hub = dam_clinic_hub_copy( dam_current_locale() );
 	?>
 	<div class="<?php echo $preview ? 'gallery-strip' : 'gallery-full-grid'; ?>" data-gallery-strip data-images="<?php echo esc_attr( wp_json_encode( $items ) ); ?>">
@@ -209,7 +209,7 @@ function dam_render_patient_gallery( $items, $preview = false ) {
 	<?php
 }
 
-function dam_render_patient_archive( $term_id = 0, $title = '' ) {
+function dam_render_patient_archive( $term_id = 0, $title = '', $heading_level = 1 ) {
 	if ( ! $title ) { $title = dam_patient_label( 'Patients', 'بیماران', 'المرضى' ); }
 	$parent = $term_id;
 	$children = get_terms( array( 'taxonomy' => 'patient_category', 'parent' => $parent, 'hide_empty' => false ) );
@@ -220,7 +220,7 @@ function dam_render_patient_archive( $term_id = 0, $title = '' ) {
 		$children = array();
 	}
 	?>
-	<section class="section-shell section-space patient-archive"><h1><?php echo esc_html( $title ); ?></h1>
+	<section class="section-shell section-space patient-archive"><h<?php echo 2 === $heading_level ? '2' : '1'; ?>><?php echo esc_html( $title ); ?></h<?php echo 2 === $heading_level ? '2' : '1'; ?>>
 	<div class="patient-archive-layout">
 		<aside class="patient-sidebar" aria-label="<?php echo esc_attr( dam_patient_label( 'Patient categories', 'دسته‌بندی بیماران', 'تصنيفات المرضى' ) ); ?>"><h2><?php echo esc_html( dam_patient_label( 'Categories', 'دسته‌بندی‌ها', 'التصنيفات' ) ); ?></h2><?php dam_render_patient_tree(); ?></aside>
 		<div>

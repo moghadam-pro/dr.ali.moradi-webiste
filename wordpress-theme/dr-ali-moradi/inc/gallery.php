@@ -16,7 +16,7 @@ function dam_render_gallery_row( $area, $title, $intro, $view_all_url, $dark = f
 }
 function dam_render_gallery_full( $area, $title ) {
 	$locations = dam_patient_location_ids();
-	dam_render_patient_archive( $locations[ $area ] ?? 0, $title );
+	dam_render_patient_archive( $locations[ $area ] ?? 0, $title, 2 );
 }
 function dam_render_gallery_modal() {
 	$hub = dam_clinic_hub_copy( dam_current_locale() );
