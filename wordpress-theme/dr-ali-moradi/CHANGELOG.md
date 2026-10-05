@@ -6,6 +6,21 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [3.4.0] - 2026-10-06
+
+### Added
+
+- Physician/Person JSON-LD on the homepage and About page (verified facts only;
+  `sameAs` limited to the confirmed Google Scholar profile, extendable through
+  the `dam_physician_same_as` filter).
+- `hreflang="x-default"` on language homepages.
+
+### Changed
+
+- Homepage hero credential no longer reads "Harvard University"; it now shows
+  the practice location, matching the officially documented affiliations
+  (MGH clinical research fellowship is described on the About page).
+
 ## [3.3.0] - 2026-10-06
 
 ### Added

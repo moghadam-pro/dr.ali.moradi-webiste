@@ -41,7 +41,7 @@ function dam_site_copy( $locale = null ) {
 				'menuToggle' => 'Toggle menu',
 				'heroName' => array( 'Dr.', 'Ali Moradi' ),
 				'heroCredentials' => array(
-					array( 'Hand Surgeon', '(Harvard University)' ),
+					array( 'Hand Surgeon', '(Mashhad, Iran)' ),
 					array( 'Ph.D of', 'Artificial Limbs' ),
 					array( 'Recipient of the 2026 Alborz Award', '(Iran’s Nobel Prize)' ),
 				),
@@ -128,7 +128,7 @@ function dam_site_copy( $locale = null ) {
 				'menuToggle' => 'باز و بسته کردن منو',
 				'heroName' => array( 'دکتر', 'علی مرادی' ),
 				'heroCredentials' => array(
-					array( 'جراح دست', '(دانشگاه هاروارد)' ),
+					array( 'جراح دست', '(مشهد، ایران)' ),
 					array( 'دکتری تخصصی', 'اندام‌های مصنوعی' ),
 					array( 'برگزیده جایزه البرز ۱۴۰۵', '(نوبل ایران)' ),
 				),
@@ -214,7 +214,7 @@ function dam_site_copy( $locale = null ) {
 				'menuToggle' => 'فتح أو إغلاق القائمة',
 				'heroName' => array( 'الدكتور', 'علي مرادي' ),
 				'heroCredentials' => array(
-					array( 'جراح اليد', '(جامعة هارفارد)' ),
+					array( 'جراح اليد', '(مشهد، إيران)' ),
 					array( 'دكتوراه في', 'الأطراف الصناعية' ),
 					array( 'الحاصل على جائزة البرز لعام ٢٠٢٦', '(نوبل إيران)' ),
 				),
