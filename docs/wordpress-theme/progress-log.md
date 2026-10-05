@@ -5,6 +5,27 @@ what changed and where, so this file plus `git log` on
 `claude/wordpress-doctor-site-architecture-m4766g` is a complete record
 without needing to replay the chat.
 
+## 2026-09-22 — Compatibility detail templates redesigned
+
+- Replaced the original placeholder markup in `single-condition.html` and
+  `single-innovation.html` with one shared dynamic block,
+  `blocks/case-study-body`.
+- Added a responsive, RTL-safe detail layout with a featured-image cover
+  (and a designed gradient fallback), localized EN/FA/AR interface labels,
+  editable WordPress body content, localized back links, and the existing
+  appointment CTA.
+- Condition pages now expose their translated `condition_category` and a
+  localized medical-information notice. Innovation pages expose the native
+  `dam_category`, `dam_status`, and `dam_evidence_url` fields when present.
+- This compatibility layer is included in the `1.0.0` source tree. After the
+  versioned content migration, the same records become standard Posts and use
+  the maintained single-post template instead.
+- Validation completed locally: all theme PHP files pass `php -l`, all theme
+  JSON files parse successfully, the Vinext reference build completes,
+  and all rendered-HTML and WordPress release-contract tests pass.
+- Deployment and live three-language visual verification remain pending and
+  require the Production theme snapshot documented below.
+
 ## 2026-09-02
 
 - Architecture agreed (see `architecture.md`) and documentation branch
@@ -1023,6 +1044,251 @@ repository copy instead had a `0.1.0` header and a separate `0.9.4` cache
 constant. Replacing the active theme from that older tree would cause a
 regression, so no production files or database records were changed in this
 stage.
+
+## 2026-09-22 — production theme snapshot reconciled
+
+Exported the active production theme directory from DirectAdmin as
+`dr-ali-moradi-production-snapshot-20260922.zip` (2,986,197 bytes). Its SHA-256
+is `EF9612A7D6FA0970BF5708E64F1F323AB3D71AE5F35554CA9CD9498017DB601A`.
+The 182-entry archive contained no `.env`, `wp-config.php`, private-key file,
+or credential-like string found by the pre-merge scan.
+
+Reconciled the production-only work into release `1.0.0` in commit `425f6f8`:
+
+- retained the versioned CPT-to-Post migration, localized destination
+  categories, legacy redirects, and `team_member` as the only public theme CPT;
+- imported production SEO, breadcrumbs, archive pagination, real single-post
+  content, post metadata/sidebar, team related links, locale-aware team hub
+  routing, Customizer controls, translations, the Abar variable font, and the
+  production screenshot;
+- combined production's `filemtime()` asset cache busting with the theme header
+  remaining the only release-version source;
+- separated real source differences from line-ending-only changes before the
+  commit.
+
+Validation passed: PHP syntax for every theme PHP file, JSON parsing for every
+theme JSON file, Vinext production build, all five rendered-HTML tests, the
+WordPress release contract, and `git diff --check`. The normal `npm` launcher
+on this workstation is broken because its global `npm-cli.js` is missing, so
+the same build and test commands were invoked directly from the checked-in
+`node_modules` binaries. No production theme or database content was changed;
+deployment remains blocked until the database/theme rollback backup and the
+pre-migration content audit in Stage C are complete.
+
+## 2026-09-22 — pre-migration backup and audit complete
+
+Created and verified the DirectAdmin rollback archive
+`/backups/backup-Sep-22-2026-1.tar.gz` (66.75 MB). It contains the domain
+directory plus database settings and database data; e-mail, FTP, and Trash
+data were intentionally excluded. The earlier standalone active-theme ZIP is
+also still available on the server.
+
+Repeated the public REST inventory immediately before deployment: 70 Posts,
+18 Conditions, 9 Innovations, 0 Publications, and 0 Patient Resources. A
+local, non-Git audit of all 27 migration candidates records IDs, languages,
+translation relationships, titles, statuses, dates, slugs, and current
+permalinks.
+
+Built the installable release artifact directly from commit `c0c9b1d` as
+`dr-ali-moradi-1.0.0-c0c9b1d.zip`. Validation found 190 entries, every entry
+under the required `dr-ali-moradi/` root, a root `style.css` declaring version
+`1.0.0`, and no `.git`, `.env`, or `wp-config.php` entry. Artifact SHA-256:
+`4F821A238EA506CC0E3DA2F931BA595B1F95DF67016A91FE780CCFBA04A8BE76`.
+
+Stages A-C are complete. Production deployment and the first authenticated
+administrator request remain pending explicit owner confirmation.
+
+## 2026-09-22 — multilingual homepage Customizer 1.1.0 prepared
+
+Reworked the homepage editing workflow into one Homepage Content panel with
+English, Persian, and Arabic sections. Opening a language section now switches
+the live preview to that locale's actual homepage. Added granular controls for
+Hero media/orbits, all Connected Practice stages, Pathways cards, Innovation
+and Recognition sources/layouts, Impact values, Appointments, About actions,
+and the complete footer.
+
+The previous delimiter-based Journey, Pathways, and Appointment values remain
+usable as upgrade defaults; all new edits use independently sanitized fields.
+The release is versioned as `1.1.0` and documented in
+`homepage-customizer.md` and the theme changelog. Local validation and the
+production deployment record are appended after the final release artifact is
+built and verified.
+
+Implementation commit `f7dd4f9` was pushed to `main` and tagged
+`theme-v1.1.0`. Validation passed for every theme PHP file, all theme JSON,
+the WordPress release contract, the five rendered-HTML tests, the Vinext
+production build, and `git diff --check`.
+
+Built `dr-ali-moradi-1.1.0-f7dd4f9.zip` directly from the tagged theme tree.
+It is 3,076,014 bytes with 190 entries, every entry is below the required
+`dr-ali-moradi/` root, `style.css` declares `1.1.0`, and no `.git`, `.env`, or
+`wp-config.php` entry is present. SHA-256:
+`DA94BFEEE7D2CB5EC10F3CFE7A3F362EE367166E65B9FA71DB6062C6B4E97F31`.
+
+## 2026-09-22 — theme 1.1.0 deployed and verified on production
+
+Uploaded `dr-ali-moradi-1.1.0-f7dd4f9.zip` through the authenticated WordPress
+theme updater and replaced the active `0.2.1` directory. WordPress reported a
+successful update and the active theme detail screen now reports `1.1.0`. The
+verified DirectAdmin rollback archive remains available at
+`/backups/backup-Sep-22-2026-1.tar.gz`.
+
+The first authenticated administrator request ran the versioned migration.
+`dam_content_schema_version` is `1.0.0`, which is only persisted when the
+migration report contains no errors. The Posts screen now contains 97 records,
+matching the audited 70 Posts plus 18 Conditions and 9 Innovations. The four
+retired content-type menus are absent and the localized destination categories
+and translated post relationships are visible in WordPress.
+
+Production verification passed:
+
+- the active Customizer contains one Homepage Content panel and exactly three
+  language sections;
+- opening the Persian and Arabic sections changed the live preview to their
+  actual localized homepage placeholders;
+- representative controls from every requested area exist, including Hero
+  media/orbits, four Journey images, three Pathway URLs, dynamic/manual post
+  controls, four Impact and Appointment slots, About media/actions, and the
+  detailed Footer controls;
+- English, Persian, and Arabic homepages rendered the complete page, localized
+  navigation/content, appointments, post cards, and full footer;
+- all three public homepage checks completed without browser console errors.
+
+## 2026-09-29 — theme 2.0.0: page content in WordPress, Customizer tree, footer menus
+
+Implemented and verified locally in a real WordPress (WordPress Playground,
+PHP 8.3, English only, no Polylang or media library):
+
+- **Persian font in Customizer.** Root cause found in the WP-Parsidate source
+  (`inc/App/AppAssets.php`): the Vazir stylesheet is enqueued only on
+  `admin_enqueue_scripts`, which WordPress does not fire on the Customizer
+  screen. The theme now enqueues the plugin's own stylesheet on
+  `customize_controls_enqueue_scripts`, honouring the plugin's `enable_fonts`
+  setting.
+- **Customizer restructure.** Three language panels, each with nine sections in
+  homepage order (Recognition moved after Appointments). A release test now
+  compares the section order with `templates/front-page.html`. The footer bottom
+  bar and hard-coded link settings were removed from the Customizer.
+- **Footer menus.** New `footer_resources` location beside the existing
+  `footer` location, a flat footer walker, and default links when no menu is
+  assigned.
+- **Page content.** New `inc/page-content.php`, `page-designed` template, and
+  `page-section` block. The seeder wrote all 13 designed pages, the second run
+  changed nothing, the Contact shortcode was preserved, and two footer menus
+  were created and assigned. Not verified locally: Polylang translation
+  linking, the Media Library images, and the real production page state; those
+  need the production run recorded below.
+
+Local checks: PHP syntax on every theme file, theme JSON validity,
+`php tests/wordpress-theme-release.php` (extended for the new contract). The
+Vinext build/rendered-HTML tests belong to the React reference site, which this
+release does not touch.
+
+Production deployment is not part of this entry; record it after the archive is
+built and uploaded.
+
+## 2026-09-23 — least-privilege Content Manager role prepared
+
+Prepared theme `1.2.0` with a versioned `Content Manager — مدیر محتوا` role for
+the clinic operator. The role can manage Posts, categories, media, and Team
+Members and has a dedicated admin entry point for the multilingual Homepage
+Content editor. It does not receive access to users, plugins, theme management,
+site settings, code editors, or the full Site Editor.
+
+The Homepage panel, all three language sections, and every Homepage theme mod
+now enforce `dam_edit_homepage_content`. WordPress's `customize` meta
+capability is mapped to this primitive capability only for eligible users, so
+the operator can enter the Customizer without the broad `edit_theme_options`
+capability. The access model and provisioning checklist are documented in
+`content-manager-role.md`.
+
+Implementation commit `0803e49` was rebased over the concurrent documentation
+commit already present on remote `main`, pushed without overwriting it, and
+tagged `theme-v1.2.0`. PHP syntax, the WordPress release contract, all five
+rendered-HTML tests, JSON parsing, the Vinext production build, and
+`git diff --check` passed.
+
+Built `dr-ali-moradi-1.2.0-0803e49.zip` directly from the tagged theme tree.
+It is 3,078,105 bytes with 191 entries, every entry is below the required
+`dr-ali-moradi/` root, `style.css` declares `1.2.0`, `inc/roles.php` is present,
+and no `.git`, `.env`, or `wp-config.php` entry is included. SHA-256:
+`699BF2D181804C34E3F1988EED2A255761B644C416DABEFD6736CE09F8585D70`.
+
+## 2026-09-29 — theme 2.0.0 deployed and verified on production
+
+Built `dr-ali-moradi-2.0.0-5d85e5f.zip` from commit `5d85e5f` with `git archive`
+(3,087,065 bytes, 196 entries, all under `dr-ali-moradi/`, `style.css` declares
+`2.0.0`, no `.git`, `.env`, or `wp-config` entry). SHA-256:
+`B03F4954B65F65F4E48FAF83655A86D9B670970D8BA717BB9E257CD415B05280`.
+
+Uploaded through Appearance → Themes → Upload Theme and used "Replace current
+with uploaded" over the active `1.2.0`. WordPress reported a successful update
+and the theme list now reports `2.0.0`.
+
+The first administrator request ran the page-content migration. Verification
+on `https://dralimoradi.com/`:
+
+- All 13 designed pages exist in English, Persian, and Arabic (39 URLs), use the
+  `page-designed` template, return HTTP 200, and each has exactly one `h1`, one
+  interior cover, one breadcrumb, and the appointment call-to-action.
+- No broken images on the Persian About page; the Persian headings use Abar VF.
+- Live blocks render: Clinical Care shows 4 team cards, 2 gallery strips, and
+  the 2 pathway cards; Innovation shows the team and latest posts; the clinic
+  gallery shows 16 thumbnails; Contact still renders its form with no shortcode
+  text leaking.
+- The Customizer lists three language panels with nine sections each in
+  homepage order; opening the Persian panel switched the preview to the Persian
+  homepage; the controls pane now loads WP-Parsidate's Vazir stylesheet and
+  computes `Vazir` as its font.
+- Footers in all three languages show the menu-driven Quick access column
+  (the pre-existing footer menu: Home, Clinic, Innovation, Research, About,
+  Contact, Blog), the four-link Patient resources column, contact, social, and
+  the fixed bottom bar.
+
+Not verified: the exact `dam_page_content_report` values (the option is not
+exposed to the browser), and editing a page from the block editor.
+
+## 2026-09-29 — theme 3.0.0: team translations and role removal
+
+- The Persian & Arabic translation box now also covers Team Members (title,
+  slug, biography, role, summary, excerpt, related links) and syncs the team
+  area, order, and photo into the translations. Verified locally against a real
+  Polylang install: translations were created and linked, the second save
+  updated them in place instead of duplicating, related links split correctly,
+  and the box pre-fills from existing translations.
+- Removed the Homepage Content menu entry and the Content Manager role. The
+  cleanup migration was verified in both cases: the role is kept while a user
+  holds it, and removed (with the administrator capability) once none does.
+- Version raised to `3.0.0`; release contract test updated.
+
+## 2026-09-29 — theme 3.0.0 deployed and verified on production
+
+Built `dr-ali-moradi-3.0.0-114fd5f.zip` from commit `114fd5f` with `git archive`
+(3,087,927 bytes, 196 entries, all under `dr-ali-moradi/`, `style.css` declares
+`3.0.0`, no `.git`, `.env`, `wp-config`, or `roles.php` entry, and
+`inc/role-cleanup.php` present). SHA-256:
+`42C01F415978C87C0B2D9B0192722EA5A9198CF6903795D0F1E6EBBC98AE76E1`.
+
+Before installing, the Users screen showed three accounts, all Administrators,
+so nobody held the Content Manager role. The archive replaced the active `2.0.0`
+through Appearance → Themes → Upload Theme and WordPress reported a successful
+update.
+
+Verification on `https://dralimoradi.com/`:
+
+- The Add User role list no longer contains Content Manager (Subscriber,
+  Contributor, Author, Editor, Administrator remain) and the admin menu no
+  longer has the Homepage Content entry.
+- Opening a real English team member (Dr. Alireza Akbarzadeh) shows the
+  Persian & Arabic translation box pre-filled from the existing translations
+  (title, slug, biography, role, summary, excerpt, related links) with direct
+  edit links to both. Nothing was saved during this check.
+- All 39 designed-page URLs plus the three homepages return 200 with the
+  expected cover, breadcrumb, and five footer columns; team counts are unchanged
+  (Clinical Care 4, Research 4, Innovation 3 in every language).
+
+Not exercised on production: saving a team member through the new box, which
+would write to the live site and was covered by the local Polylang test instead.
 
 ## 2026-10-05 — production 3.0.0 synchronized
 

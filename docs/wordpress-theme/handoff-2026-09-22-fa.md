@@ -1,30 +1,59 @@
 # تحویل ادامه کار قالب WordPress دکتر علی مرادی
 
 تاریخ: ۲۰۲۶-۰۹-۲۲  
-وضعیت: آماده ادامه روی سیستم دسکتاپ؛ هنوز روی Production منتشر نشده است.
+وضعیت: مراحل A تا C کامل شده‌اند؛ بسته ۱.۰.۰ هنوز روی Production منتشر نشده است.
 
 ## نقطه شروع Git
 
 - ریپوی اصلی: `https://github.com/moghadam-pro/dr.ali.moradi-webiste`
-- ریپوی موقت خصوصی این مرحله:
-  `https://github.com/moghadam-pro/dr-ali-moradi-theme-work-20260922`
-- Branch ادامه کار: `codex/content-types-to-posts`
-- آخرین Commit هنگام نوشتن این فایل: Commit مربوط به همین Handoff
+- remote فعال: `origin` روی همان ریپوی اصلی
+- Branch ادامه کار: `main`
+- Commit ادغام Snapshot قالب Production: `425f6f8`
 - Commit کد مهاجرت: `7c484fa`
 - Commit مستندات نسخه و مهاجرت: `be69afb`
 - نقطه شروع Branch از ریپوی اصلی: `28b4c1a`
 
-برای ادامه، ریپوی موقت را Clone یا Fetch کنید و دقیقاً Branch زیر را Checkout
-کنید:
+ریپوی موقت اشتباهی پس از انتقال Branch پشتیبان به ریپوی اصلی حذف شده است. برای
+ادامه فقط ریپوی اصلی را به‌روز کنید:
 
 ```bash
 git fetch origin
-git switch codex/content-types-to-posts
-git pull --ff-only origin codex/content-types-to-posts
+git switch main
+git pull --ff-only origin main
 ```
 
-اگر Clone از ریپوی اصلی انجام شده است، remote ریپوی موقت را جداگانه اضافه کنید؛
-هیچ تغییر این Branch هنوز به `upstream/main` پوش نشده است.
+Branch پشتیبان `codex/content-types-to-posts` نیز در ریپوی اصلی موجود است.
+
+## به‌روزرسانی ادامه کار روی سیستم دسکتاپ
+
+- از پوشه فعال
+  `/domains/dralimoradi.com/public_html/wp-content/themes/dr-ali-moradi`
+  یک Snapshot با نام `dr-ali-moradi-production-snapshot-20260922.zip` ساخته و
+  دانلود شد.
+- SHA-256 فایل Snapshot:
+  `EF9612A7D6FA0970BF5708E64F1F323AB3D71AE5F35554CA9CD9498017DB601A`
+- آرشیو ۱۸۲ entry دارد و هیچ `.env`، `wp-config.php`، کلید خصوصی یا الگوی
+  credential در آن پیدا نشد.
+- تغییرات واقعی Production با مهاجرت ۱.۰.۰ ادغام شد؛ منطق migration، دسته‌های
+  مقصد، redirectهای legacy و مدل فقط-`team_member` حفظ شدند.
+- قابلیت‌های زنده شامل SEO، Breadcrumb، archive pagination، محتوای واقعی single
+  post، Team related links، و فونت Abar به Git منتقل شدند.
+- PHP lint، JSON parse، Vinext build، پنج تست rendered HTML و قرارداد انتشار
+  WordPress همگی پاس شدند.
+- ادغام Snapshot و بازبینی فنی مراحل A و B تکمیل شده‌اند.
+- Backup قابل بازیابی فایل‌های دامنه و دیتابیس با نام
+  `/backups/backup-Sep-22-2026-1.tar.gz` و حجم ۶۶٫۷۵ مگابایت در DirectAdmin
+  تأیید شد.
+- audit محلی ۲۷ رکورد مهاجرتی خارج از Git ذخیره شد و شمارش مجدد همچنان
+  Posts=70، Conditions=18، Innovations=9، Publications=0 و
+  Patient Resources=0 است.
+- بسته نصب از Commit نهایی با نام
+  `dr-ali-moradi-1.0.0-c0c9b1d.zip` ساخته شد؛ ۱۹۰ entry دارد، ریشه آن
+  `dr-ali-moradi/` است و SHA-256 آن
+  `4F821A238EA506CC0E3DA2F931BA595B1F95DF67016A91FE780CCFBA04A8BE76`
+  است.
+- مرحله بعد «مرحله D — انتشار و اجرای مهاجرت» است و پیش از تغییر Production
+  نیاز به تأیید صریح مالک دارد.
 
 ## درخواست اصلی مالک پروژه
 
@@ -46,12 +75,9 @@ git pull --ff-only origin codex/content-types-to-posts
 
 - پوشه کاری ابتدا یک Git خالی و بدون remote بود.
 - ریپوی اصلی شناسایی و Fetch شد.
-- ریپوی موقت خصوصی
-  `moghadam-pro/dr-ali-moradi-theme-work-20260922` ساخته شد.
-- `main` و سپس Branch `codex/content-types-to-posts` در ریپوی موقت Push شدند.
-- remoteها در وضعیت فعلی:
-  - `origin`: ریپوی موقت خصوصی
-  - `upstream`: ریپوی اصلی
+- یک ریپوی موقت به‌اشتباه ساخته شد؛ محتوای لازم و Branch پشتیبان آن به ریپوی
+  اصلی منتقل و سپس ریپوی موقت حذف شد.
+- remote فعلی فقط `origin` و متصل به ریپوی اصلی است.
 
 ### ۲. مطالعه ساختار و مستندات
 
@@ -190,7 +216,7 @@ commit‌نشده را overwrite کند. به همین دلیل هیچ فایل 
 - Chrome کاربر به wp-admin سایت اصلی Login است.
 - آدرس DirectAdmin از مستندات:
   `https://server141i.irwebspace.com:2223/`
-- در آخرین بررسی DirectAdmin Login نبود؛ مالک باید ابتدا در Chrome وارد شود.
+- مالک وارد DirectAdmin شد و Snapshot قالب از File Manager دریافت شد.
 - Theme File Editor وردپرس هشدار ویرایش مستقیم نمایش داد. هشدار تأیید شد، اما
   Accessibility لایه Chrome بعد از آن پایدار نبود؛ هیچ فایل PHP از داخل UI
   تغییر داده نشد.
@@ -200,10 +226,9 @@ commit‌نشده را overwrite کند. به همین دلیل هیچ فایل 
 
 ## ترتیب دقیق ادامه کار
 
-### مرحله A — دریافت Snapshot قالب زنده
+### مرحله A — دریافت Snapshot قالب زنده (تکمیل شد)
 
-1. مطمئن شوید Branch `codex/content-types-to-posts` و آخرین Commit این فایل
-   Checkout شده است.
+1. Branch `main` ریپوی اصلی Checkout و با `origin/main` همگام شد.
 2. مالک در Chrome وارد DirectAdmin شود.
 3. از مسیر Production فقط پوشه فعال زیر را به‌صورت zip دانلود کنید:
    `/domains/dralimoradi.com/public_html/wp-content/themes/dr-ali-moradi`
@@ -214,7 +239,7 @@ commit‌نشده را overwrite کند. به همین دلیل هیچ فایل 
    به Git منتقل کنید؛ تغییرات مهاجرت `7c484fa` نباید از بین بروند.
 7. تفاوت‌های line ending یا cache-generated را از تغییرات واقعی جدا کنید.
 
-### مرحله B — بازبینی ادغام
+### مرحله B — بازبینی ادغام (تکمیل شد)
 
 1. به‌خصوص این فایل‌های PHP زنده را با Git تطبیق دهید:
    - `functions.php`
@@ -231,7 +256,7 @@ commit‌نشده را overwrite کند. به همین دلیل هیچ فایل 
 5. یک Commit مستقل برای «sync production theme snapshot» بسازید و Push کنید.
 6. مستندات و Changelog را با نتیجه ادغام به‌روزرسانی، Commit و Push کنید.
 
-### مرحله C — آماده‌سازی و Backup قبل از مهاجرت
+### مرحله C — آماده‌سازی و Backup قبل از مهاجرت (تکمیل شد)
 
 1. از دیتابیس Production و پوشه فعال قالب Backup قابل بازیابی بگیرید.
 2. قبل از تغییر، دوباره تعدادها را ثبت کنید:
@@ -287,13 +312,13 @@ commit‌نشده را overwrite کند. به همین دلیل هیچ فایل 
 1. فقط پس از ادغام Snapshot زنده، انتشار موفق و verification، tag زیر ساخته و
    Push شود:
    `theme-v1.0.0`
-2. Branch موقت مستقیماً و بدون بازبینی روی `upstream/main` Push نشود.
-3. پس از تأیید مالک، تغییرات به ریپوی اصلی از طریق merge/PR منتقل شود.
-4. ریپوی موقت تا پایان تأیید و امکان rollback حذف نشود.
+2. Tag فقط از Commit نهایی و تست‌شده‌ی `main` ریپوی اصلی ساخته شود.
+3. Snapshot و Backup مرحله C تا پایان تأیید و امکان rollback نگهداری شوند.
 
 ## نکات ایمنی مهم برای Agent بعدی
 
-- بدون Snapshot کامل قالب زنده، theme zip فعلی را روی Production نصب نکن.
+- با وجود تکمیل Snapshot، تا قبل از Backup دیتابیس/قالب و audit مرحله C، theme
+  zip را روی Production نصب نکن.
 - هیچ رکورد محتوایی را Delete نکن؛ migration باید in-place باشد.
 - هیچ دسته Innovation تکراری نساز؛ ابتدا گروه ترجمه موجود را resolve کن.
 - تغییر type را با ویرایش دستی ۲۷ رکورد در UI انجام نده؛ migration نسخه‌دار برای
@@ -303,7 +328,7 @@ commit‌نشده را overwrite کند. به همین دلیل هیچ فایل 
   را نمایش یا Commit نکن.
 - قبل از عملیات برگشت‌ناپذیر Production، Backup و شمارش قبل از مهاجرت را تأیید
   کن.
-- هر مرحله منطقی را جدا Commit و فوراً روی همین Branch Push کن.
+- هر مرحله منطقی را جدا Commit و فوراً روی `main` ریپوی اصلی Push کن.
 
 ## فرمان‌های کنترل سریع
 
@@ -328,4 +353,4 @@ git diff --check
 - `docs/production-cutover-runbook-fa.md`
 
 این فایل منبع شروع Session بعدی است. ابتدا وضعیت Git و مانع Production را با
-آن تطبیق دهید و سپس از مرحله A ادامه دهید.
+آن تطبیق دهید و سپس از مرحله C ادامه دهید.
