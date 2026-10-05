@@ -6,6 +6,21 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [3.3.0] - 2026-10-06
+
+### Added
+
+- Scoped responsive project layouts for 14 innovation projects in EN/FA/AR,
+  with contained figures, separate documents, readable sections and local navigation.
+- Explicit administrator content-update tool with previous-body SHA-256 guards,
+  backups, revisions, existing Media lookup and idempotent resume.
+- Educational Post section styling for expanded, ordinary WordPress Posts.
+
+### Fixed
+
+- Keep patient catalogue language attributes out of wp-admin, preventing mixed
+  RTL/LTR patient-list tables; expose patient category/tag columns in the list.
+
 ## [3.2.1] - 2026-10-06
 
 ### Fixed

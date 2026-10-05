@@ -17,6 +17,10 @@ function sanitize_text_field( $value ) { return strip_tags( $value ); }
 function sanitize_textarea_field( $value ) { return strip_tags( $value ); }
 function wp_get_attachment_url( $id ) { return 'https://example.test/media/' . $id; }
 function get_post_mime_type( $id ) { return 3 === $id ? 'application/pdf' : ( 2 === $id ? 'video/mp4' : 'image/jpeg' ); }
+function is_singular( $type ) { return false; }
+function is_post_type_archive( $type ) { return true; }
+function is_tax( $taxonomies ) { return false; }
+function esc_attr( $s ) { return $s; }
 function is_admin() { return $GLOBALS['test_admin'] ?? true; }
 function dam_current_locale() { return $GLOBALS['test_locale'] ?? 'en'; }
 function paginate_links( $args ) { return '<a href="/gallery/page/2/?id=123">۲</a><span>۳</span><a href="/gallery/page/4/">' . $args['next_text'] . '</a>'; }
@@ -60,4 +64,10 @@ foreach ( array( 'en' => array( '>2<', 'Next »' ), 'fa' => array( '>۲<', 'بع
 $meta[1]['dam_patient_translations'] = array( 'ar' => array( 'title' => 'حالة', 'excerpt' => 'وصف' ) );
 verify( dam_patient_translated_field( 'Original', 1, 'title' ) === 'حالة', 'Translated case field must follow locale.' );
 verify( dam_patient_translated_field( 'Original body', 1, 'content' ) === 'Original body', 'Missing translation must preserve source content.' );
+$GLOBALS['test_admin'] = true;
+verify( ! dam_patient_is_catalogue(), 'Admin patient query must never be treated as frontend catalogue.' );
+$attributes = $hooks['language_attributes'][0];
+verify( $attributes( 'lang="fa-IR" dir="rtl"' ) === 'lang="fa-IR" dir="rtl"', 'Admin language and direction must be preserved.' );
+$GLOBALS['test_admin'] = false; $GLOBALS['test_locale'] = 'en';
+verify( $attributes( 'lang="fa-IR" dir="rtl"' ) === 'lang="en" dir="ltr"', 'Frontend patient language override must still work.' );
 echo "Patient behavior checks passed.\n";

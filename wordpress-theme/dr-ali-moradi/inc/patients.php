@@ -8,7 +8,7 @@ function dam_patient_label( $en, $fa, $ar = '' ) {
 }
 
 function dam_patient_is_catalogue() {
-	return is_singular( 'patient' ) || is_post_type_archive( 'patient' ) || is_tax( array( 'patient_category', 'patient_tag' ) );
+	return ! is_admin() && ( is_singular( 'patient' ) || is_post_type_archive( 'patient' ) || is_tax( array( 'patient_category', 'patient_tag' ) ) );
 }
 function dam_patient_language_url( $url, $locale = '' ) {
 	$locale = $locale ?: dam_current_locale();
@@ -79,7 +79,7 @@ function dam_register_patients() {
 		$name = $hierarchical ? dam_patient_label( 'Categories', 'دسته بندی', 'التصنيفات' ) : dam_patient_label( 'Tags', 'برچسب ها', 'الوسوم' );
 		register_taxonomy( $taxonomy, 'patient', array(
 			'labels' => array( 'name' => $name, 'singular_name' => $name, 'menu_name' => $name ),
-			'public' => true, 'show_in_rest' => true, 'hierarchical' => $hierarchical,
+			'public' => true, 'show_in_rest' => true, 'show_admin_column' => true, 'hierarchical' => $hierarchical,
 			'rewrite' => array( 'slug' => $hierarchical ? 'patient-category' : 'patient-tag', 'hierarchical' => $hierarchical ),
 		) );
 	}

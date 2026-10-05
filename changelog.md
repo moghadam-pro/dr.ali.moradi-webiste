@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-10-06 — Project design and content completion / theme 3.3.0
+
+- Redesigned all fourteen innovation projects across 42 EN/FA/AR editable Pages.
+  Added bounded figure galleries, document sections, local anchors and related links.
+- Removed duplicate figures and static video placeholders from authored layouts;
+  kept real project media and external source citations.
+- Fixed patient-list admin language/RTL leakage and added category/tag columns.
+- Moved four randomly selected Patients from Hospital to Clinic, retaining disease
+  categories and media. No private patient inventory is stored in Git.
+- Expanded the 27 Posts missing featured images, preserving introductions and
+  using nine generated topic-specific covers shared across translations.
+- Added explicit content updates with hash checks, backups and idempotent resume.
+
 ## 2026-10-06 — Preserve Arabic characters / theme 3.2.1
 
 - Scoped WP-Parsidate character normalization to avoid altering authored Arabic

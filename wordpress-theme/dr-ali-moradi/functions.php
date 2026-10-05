@@ -40,6 +40,7 @@ require_once DAM_THEME_DIR . '/inc/patient-import.php';
 require_once DAM_THEME_DIR . '/inc/gallery.php';
 require_once DAM_THEME_DIR . '/inc/page-content.php';
 require_once DAM_THEME_DIR . '/inc/innovation-pages.php';
+require_once DAM_THEME_DIR . '/inc/content-updates.php';
 require_once DAM_THEME_DIR . '/inc/nav-walker.php';
 require_once DAM_THEME_DIR . '/inc/blocks.php';
 require_once DAM_THEME_DIR . '/inc/polylang.php';
@@ -82,6 +83,7 @@ add_action( 'after_setup_theme', 'dam_setup' );
  */
 function dam_enqueue_editor_assets() {
 	add_editor_style( 'assets/css/editor.css' );
+	add_editor_style( 'assets/css/project-pages.css' );
 }
 add_action( 'after_setup_theme', 'dam_enqueue_editor_assets' );
 
@@ -102,6 +104,9 @@ function dam_asset_version( $relative_path ) {
  */
 function dam_enqueue_assets() {
 	wp_enqueue_style( 'dr-ali-moradi-style', DAM_THEME_URI . '/assets/css/style.css', array(), dam_asset_version( '/assets/css/style.css' ) );
+	if ( is_page() && get_post_meta( get_queried_object_id(), '_dam_innovation_page_key', true ) ) {
+		wp_enqueue_style( 'dr-ali-moradi-projects', DAM_THEME_URI . '/assets/css/project-pages.css', array( 'dr-ali-moradi-style' ), dam_asset_version( '/assets/css/project-pages.css' ) );
+	}
 	wp_enqueue_script( 'dr-ali-moradi-site', DAM_THEME_URI . '/assets/js/site.js', array(), dam_asset_version( '/assets/js/site.js' ), true );
 }
 add_action( 'wp_enqueue_scripts', 'dam_enqueue_assets' );

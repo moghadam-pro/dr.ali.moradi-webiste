@@ -112,3 +112,9 @@ revisions remain the operator workflow after import.
 Theme 3.2.1 also preserves native Arabic characters on Arabic frontend Pages by
 removing only WP-Parsidate’s Arabic-to-Persian normalization callbacks for that
 language. Stored content, Persian pages and administrator settings are retained.
+
+## Project redesign and Post completion (3.3.0)
+
+See [the authored-content workflow](content-completion.md) for the latest 42
+project Page bodies, 27 Post expansions, cover images and guarded update tool.
+The original import remains creation/resume only and never replaces these bodies.
