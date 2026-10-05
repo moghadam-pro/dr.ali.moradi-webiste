@@ -6,6 +6,13 @@ file together with Git history; the current delivery branch is
 
 ## 2026-10-06 — Complete media import, multilingual SEO and Page restoration
 
+- Release commit: `d376fa4`, pushed to upstream `codex/patients-gallery` with
+  annotated tag `theme-v3.1.1`. The installable archive was built directly from
+  that commit's theme tree; archive SHA256:
+  `864b581ff4847b9311a12f38c72715faf2d200221f9471f33a7dbc65f58b53e2`.
+  Its theme file contents match the installed ZIP (archive container metadata
+  produces a different ZIP checksum). Target: `https://dralimoradi.com`.
+
 - Installed theme 3.1.1 through WordPress ZIP replacement. The deployed archive
   matches every current theme source file. Deployed ZIP SHA256:
   `f2826574371fed53d422cb6ee51bd466c27436ed87881ffd7983f75d61ebca8f`.
