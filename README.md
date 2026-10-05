@@ -37,7 +37,8 @@ Theme 3.1.1 adds checksum-based hosting imports, reuse of existing media, editab
 English/Persian/Arabic patient copy and category names, localized pagination, and
 Rank Math sitemap/metadata integration. Before/after surgery and Clinical Care
 content are maintained in the English, Persian and Arabic WordPress Pages;
-the Innovation hub restores the 14-record reference list. Bulk transfers register attachments using
+the Innovation hub uses the 14-record reference list as its main body with
+matching sidebar links and no Continue exploring card. Bulk transfers register attachments using
 WordPress media APIs. See [Patients workflow and import](docs/wordpress-theme/patients.md),
 including the completed production import (71 cases, 64 categories and
 314 media: 305 images and 9 videos),

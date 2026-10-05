@@ -4,6 +4,23 @@ Running record of implemented changes and observed production results. Use this
 file together with Git history; the current delivery branch is
 `codex/patients-gallery` on upstream.
 
+## 2026-10-06 — Correct Innovation reference placement
+
+- Corrected the earlier appended placement in production Pages 164/165/166.
+  The fourteen references now replace the original four generic editorial
+  sections in the main sidebar/body layout of all three language Pages.
+- Added fourteen sidebar links to matching `section-0` through `section-13`
+  heading IDs. Removed the original Continue exploring/ادامه مسیر card and
+  the appended catalogue wrapper. The reference list occurs once, before team
+  and latest-innovation blocks; the existing cover and references are preserved.
+- Saved through the WordPress Page code editor and observed update success.
+  Public EN/FA/AR checks each confirm fourteen sections, fourteen sidebar links,
+  fourteen heading IDs and no old Continue exploring text. Verified a sidebar
+  link reaches its section and saved a Persian layout screenshot locally.
+- Updated the three tracked Page snapshots, README, root changelog, reference
+  inventory and Page-content documentation. Content-only correction; theme
+  source/version remains 3.1.1. Validation uses live Page checks and diff checks.
+
 ## 2026-10-06 — Complete media import, multilingual SEO and Page restoration
 
 - Release commit: `d376fa4`, pushed to upstream `codex/patients-gallery` with

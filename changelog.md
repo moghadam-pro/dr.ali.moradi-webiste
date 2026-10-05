@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-06 — Innovation catalogue placement correction
+
+- Replaced the four generic Innovation sections with the fourteen references in
+  all three language Pages, keeping the existing cover and live blocks.
+- Added fourteen matching heading anchors to each Page sidebar.
+- Removed the Continue exploring/next-step card and the duplicate appended list.
+- Updated the tracked Page snapshots and content/deployment documentation.
+
 ## 2026-10-06 — Patient media, languages and SEO / theme 3.1.1
 
 - Added checksum-verified hosting imports and reusable private ZIP packaging.

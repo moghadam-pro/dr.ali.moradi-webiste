@@ -54,3 +54,11 @@ uses those archived destinations and labels them as archive references.
 The external Avisa/Orthop references retain the source URLs. Four responded 200
 during the audit; four timed out, so availability of those external destinations
 is not claimed. The HTTP Schanz Pins source is preserved as supplied.
+
+### Layout correction
+
+The reference catalogue replaces the original four editorial sections in the
+main sidebar/body layout of each language Page. All fourteen titles appear in
+the sidebar with matching section anchors. The former Continue exploring card
+and the appended duplicate catalogue section are removed. Covers, team and
+latest-innovation blocks remain in their existing positions after the main body.

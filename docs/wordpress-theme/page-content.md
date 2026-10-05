@@ -69,8 +69,10 @@ All three Clinical Care Pages include a short preparation/recovery section
 before the Clinic/Hospital pathway cards, linking to the matching language's two
 instruction Pages. Existing team and patient gallery blocks are preserved.
 
-The three Innovation Pages retain their existing cover, editorial sections and
-live blocks, with the 14-record reference catalogue restored below them. Seven
+The three Innovation Pages retain their existing cover and live blocks. The
+14-record reference catalogue replaces the original four generic sections in
+the main numbered body, with fourteen matching anchor links in its sidebar.
+The next-step/Continue exploring card is removed. Seven
 archived Dr. Moradi project pages are served by `legacy.dralimoradi.com`; external
 product/research references retain their supplied destinations. H3 has two links
 and remains one record. See [reference inventory](../innovation-links.md).
