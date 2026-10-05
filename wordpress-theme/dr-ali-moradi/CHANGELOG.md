@@ -6,6 +6,14 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [3.2.1] - 2026-10-06
+
+### Fixed
+
+- Prevent WP-Parsidate from changing Arabic ي/ك/ة into Persian letters on
+  Arabic frontend pages. Persian pages, admin settings and unrelated filters
+  keep their existing behavior; stored multilingual content stays intact.
+
 ## [3.2.0] - 2026-10-06
 
 ### Added

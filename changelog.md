@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-06 — Preserve Arabic characters / theme 3.2.1
+
+- Scoped WP-Parsidate character normalization to avoid altering authored Arabic
+  text on Arabic frontend pages; retained Persian and administrator behavior.
+- Added focused checks for Arabic, Persian, English and administrator contexts.
+- Published 42 Innovation Pages; verified catalogue links, translations and
+  sitemap. Imported 66 new illustrations and reused existing/identical files.
+
 ## 2026-10-06 — Innovation detail Pages / theme 3.2.0
 
 - Added source-based descriptions and illustrations for fourteen projects in

@@ -65,3 +65,21 @@ function dam_i18n_gettext_with_context( $translation, $text, $context, $domain )
 	return $mo ? $mo->translate( $text, $context ) : $translation;
 }
 add_filter( 'gettext_with_context', 'dam_i18n_gettext_with_context', 10, 4 );
+
+/** Keep Arabic-authored characters intact; Persian normalization is for Persian pages. */
+function dam_preserve_arabic_characters() {
+ if ( is_admin() || 'ar' !== dam_current_locale() ) { return; }
+ global $wp_filter;
+ foreach ( array( 'the_content', 'the_title', 'comment_text', 'wp_list_categories', 'the_excerpt', 'wp_title' ) as $tag ) {
+  if ( empty( $wp_filter[$tag] ) ) { continue; }
+  foreach ( $wp_filter[$tag]->callbacks as $priority => $callbacks ) {
+   foreach ( $callbacks as $callback ) {
+    $fn = $callback['function'];
+    if ( is_array( $fn ) && is_object( $fn[0] ) && 'WPParsidate\\App\\Convert\\FixArabic' === get_class( $fn[0] ) && 'fixArabic' === $fn[1] ) {
+     remove_filter( $tag, $fn, $priority );
+    }
+   }
+  }
+ }
+}
+add_action( 'wp', 'dam_preserve_arabic_characters', 99 );
