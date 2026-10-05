@@ -108,3 +108,7 @@ on the H3 Page. Old doctor-domain source links are omitted. Original hub link
 content is backed up in `_dam_pre_innovation_catalogue_links`, and the report is
 stored in `dam_innovation_pages_report`. Normal Page edits and WordPress
 revisions remain the operator workflow after import.
+
+Theme 3.2.1 also preserves native Arabic characters on Arabic frontend Pages by
+removing only WP-Parsidate’s Arabic-to-Persian normalization callbacks for that
+language. Stored content, Persian pages and administrator settings are retained.

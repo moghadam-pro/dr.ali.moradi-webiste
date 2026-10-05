@@ -4,6 +4,28 @@ Running record of implemented changes and observed production results. Use this
 file together with Git history; the current delivery branch is
 `codex/patients-gallery` on upstream.
 
+## 2026-10-06 — Preserve Arabic text / final release 3.2.1
+
+- Exact-title verification revealed WP-Parsidate's frontend `FixArabic` filter
+  replaced Arabic ي/ك/ة with Persian equivalents. The stored Arabic Page HTML
+  remained correct, confirmed through the Page editor. Reviewed the plugin's
+  official source to identify the precise callbacks.
+- Removed only that character converter on Arabic frontend requests, after
+  language resolution. Persian, English, administrator settings and unrelated
+  filters keep their behavior. No plugin settings or stored content were changed.
+- Release commit `72a0bd5`, tag `theme-v3.2.1`, target `dralimoradi.com`.
+  ZIP built from that exact commit; SHA256:
+  `4b198051e70a35ef482614d6fa1158dc64c6b8370af65dc7ca0fc14707fb7863`.
+  Previous 3.2.0 was the exact Git release deployed in this session. WordPress
+  confirmed 3.2.0 → 3.2.1 and successful replacement.
+- Rechecked all fourteen Arabic Pages after deployment. All 42 project titles
+  and HTML language codes now match the reviewed manifest exactly, and each
+  Page's three alternate links point to the same project in EN/FA/AR.
+- PHP syntax check and all WordPress release/patient/SEO/innovation/Arabic checks
+  pass. The new focused test covers Arabic frontend, Persian, English and admin
+  requests, and confirms unrelated callbacks remain intact. The previous full
+  build/rendered-HTML tests passed before this PHP-only adjustment.
+
 ## 2026-10-06 — Publish 42 editable Innovation project Pages
 
 - Theme release `3.2.0`, commit `516bbc2`, tag `theme-v3.2.0`, pushed to
