@@ -6,6 +6,17 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [3.2.0] - 2026-10-06
+
+### Added
+
+- Explicit administrator import for 14 innovation projects as 42 ordinary, editable
+  EN/FA/AR Pages, with Polylang relationships and internal catalogue links.
+- Source-based project descriptions and illustrations, hash-based Media reuse,
+  resumable Page creation, and external-only reference links.
+- Catalogue-link updates preserve sidebar anchors, covers and authored prose;
+  existing imported Page content is preserved when the import resumes.
+
 ## [3.1.1] - 2026-10-06
 
 ### Fixed

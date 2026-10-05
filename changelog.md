@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-10-06 — Innovation detail Pages / theme 3.2.0
+
+- Added source-based descriptions and illustrations for fourteen projects in
+  English, Persian and Arabic, stored in normal editable WordPress Pages.
+- Added explicit resumable administrator import, Media hash reuse, translation
+  linking and internal catalogue destinations with one Page for H3.
+- Preserved sidebar anchors and hub content; source links appear only for
+  external references, with no links back to the legacy doctor subdomain.
+- Added migration-contract checks for languages, references, H3 deduplication,
+  safe structure validation and repeatable catalogue updates.
+
 ## 2026-10-06 — Innovation catalogue placement correction
 
 - Replaced the four generic Innovation sections with the fourteen references in

@@ -31,7 +31,7 @@ innovation.
     migrated to `/innovation/hip-exoskeleton-hexa`.
 14. [Coated Schanz Pins](http://avisa-med.com/index.php/products/schanz-pins).
 
-## Current migration rules
+## Historical migration rules (superseded by 3.2.0)
 
 - Records hosted on Dr. Moradi's previous domain have an internal page in the
   new interior-page template and retain the archived source link.
@@ -62,3 +62,21 @@ main sidebar/body layout of each language Page. All fourteen titles appear in
 the sidebar with matching section anchors. The former Continue exploring card
 and the appended duplicate catalogue section are removed. Covers, team and
 latest-innovation blocks remain in their existing positions after the main body.
+
+
+## Independent WordPress project Pages, 2026-10-06
+
+All fifteen primary URLs were fetched successfully (200) for fourteen records.
+The previous doctor-domain routes were read from their matching legacy archive
+projects. Each project now has source-based EN/FA/AR content prepared for an
+ordinary WordPress Page under its translated Innovation hub. Public detail
+Pages omit old doctor-domain source hyperlinks. The eight external sources
+remain cited in the corresponding project Pages, including the Avisa reference
+for H3. Catalogue buttons resolve to the created Page in the current language.
+Source illustrations are imported into Media with original-file hash reuse.
+
+The source content is reorganized and translated around the actual project
+facts; promotional superlatives, global menus, repeated responsive paragraphs
+and unrelated footer/contact content are excluded. Product and research claims
+retain their development/manufacturer context. Source HTML captures remain
+outside Git; the curated multilingual Page manifest is checked in.

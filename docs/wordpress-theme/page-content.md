@@ -81,3 +81,30 @@ The exact twelve published Page bodies are tracked in
 `wordpress-theme/content-migration/page-updates-2026-10-06/` by production Page ID.
 They were saved through the WordPress Page code editor, not rendered from theme
 PHP or an automatic overwrite migration. Future edits belong in WordPress Pages.
+
+
+## Innovation detail import (3.2.0)
+
+Use Tools → برگه‌های نوآوری / Innovation Pages and click Create Pages. This is
+an explicit administrator action, never a frontend seed. The checked-in
+`content/innovation-pages.json` holds 14 project records with EN/FA/AR content
+adapted from the supplied primary references (menus, footer copy and duplicate
+responsive content excluded). Each resulting Page is parented to its language's
+Innovation hub and uses `page-designed`, ordinary Custom HTML and breadcrumbs.
+
+The importer registers project illustrations in Media, reusing SHA-256 matches
+of existing originals. Source URL mappings persist for resumption. Existing
+Pages identified by `_dam_innovation_page_key` are not overwritten, so operator
+edits survive reruns. Failed image downloads retain their original image URL
+in the Page rather than blocking creation; review the import report before
+claiming media transfer complete. A nonce, administrator capabilities and an
+atomic import lock protect writes. No credentials are stored.
+
+The final step requires all 42 Pages to be published, links 14 Polylang groups,
+validates all three hub layouts, then changes only project buttons. Fourteen
+sidebar anchors, prose, cover and dynamic team/post blocks are retained. H3's
+two references become one internal button; its external Avisa source appears
+on the H3 Page. Old doctor-domain source links are omitted. Original hub link
+content is backed up in `_dam_pre_innovation_catalogue_links`, and the report is
+stored in `dam_innovation_pages_report`. Normal Page edits and WordPress
+revisions remain the operator workflow after import.

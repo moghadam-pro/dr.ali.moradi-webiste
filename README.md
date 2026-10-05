@@ -4,6 +4,16 @@ A multilingual personal-brand website for Dr. Ali Moradi, bringing his clinical,
 scientific, innovation, rehabilitation-robotics, and entrepreneurial work into one
 coherent digital presence.
 
+## Innovation detail Pages — theme 3.2.0
+
+The approved fourteen-project catalogue has a reviewed EN/FA/AR Page-content
+manifest. Tools → Innovation Pages explicitly imports 42 editable WordPress
+Pages, reuses matching media, connects Polylang translations and replaces hub
+buttons with the corresponding internal Page links. Existing imported Page
+content is preserved on resume. External references appear on project Pages;
+old doctor-domain references are omitted. See [the workflow](docs/wordpress-theme/page-content.md)
+and [source inventory](docs/innovation-links.md).
+
 ## Project status
 
 The approved React demo is the active foundation and is maintained on `main`.

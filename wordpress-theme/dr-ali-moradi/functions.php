@@ -39,6 +39,7 @@ require_once DAM_THEME_DIR . '/inc/patient-admin.php';
 require_once DAM_THEME_DIR . '/inc/patient-import.php';
 require_once DAM_THEME_DIR . '/inc/gallery.php';
 require_once DAM_THEME_DIR . '/inc/page-content.php';
+require_once DAM_THEME_DIR . '/inc/innovation-pages.php';
 require_once DAM_THEME_DIR . '/inc/nav-walker.php';
 require_once DAM_THEME_DIR . '/inc/blocks.php';
 require_once DAM_THEME_DIR . '/inc/polylang.php';
