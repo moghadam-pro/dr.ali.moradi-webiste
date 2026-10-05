@@ -4,6 +4,30 @@ Running record of implemented changes and observed production results. Use this
 file together with Git history; the current delivery branch is
 `codex/patients-gallery` on upstream.
 
+## 2026-10-06 — Documentation reconciliation and branch integration
+
+- Updated the root README, documentation index, WordPress source README and
+  Patients operator guide to describe the deployed 3.3.0 state, 42 editable
+  project Pages, 27 completed Posts, 71 Patients, 314 registered case media,
+  generated educational covers and the verified Clinic 4 / Hospital 67 split.
+  The detailed inventory, source links, guarded content workflow and production
+  checks remain in `content-completion.md`, `page-content.md`, `patients.md`,
+  `innovation-links.md` and this log. The new documentation commit was
+  `9b3a432`.
+- Fetched the canonical upstream repository and confirmed its `main` was an
+  ancestor of the local delivery branch. Local `main` advanced from `28b4c1a`
+  to `9b3a432` with `git merge --ff-only codex/content-types-to-posts`: no
+  conflicts, rebases or force pushes. Pushed both `main` and the existing
+  `codex/patients-gallery` delivery branch to the canonical GitHub repository.
+  Both remote branches then pointed to `9b3a432`; release tag `theme-v3.3.0`
+  had already been pushed.
+- The historical `origin` URL (`dr-ali-moradi-theme-work-20260922`) returned
+  `Repository not found` during fetch. Its branch refs were therefore not
+  changed. Local `main` now tracks `upstream/main`; the local delivery branch
+  tracks `upstream/codex/patients-gallery`. The canonical upstream repository
+  contains every local commit. Future work should use the canonical upstream
+  rather than the unavailable `origin` URL.
+
 ## 2026-10-06 — Project redesign, patient admin fix and Posts / theme 3.3.0
 
 - Release commit `f2d138f`, tag `theme-v3.3.0`, target `dralimoradi.com`.
