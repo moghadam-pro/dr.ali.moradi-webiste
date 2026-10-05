@@ -44,9 +44,10 @@ Design source: [Dr. AliMoradi — website v1.0.0 on Figma](https://www.figma.com
 
 ## WordPress production
 
-The active production site is [dralimoradi.com](https://dralimoradi.com/).
-The theme source is in `wordpress-theme/dr-ali-moradi/`; production 3.0.0 was
-exported and reconciled before the Patients feature in 3.1.0. Designed pages
+The active production site is [dralimoradi.com](https://dralimoradi.com/),
+running theme **3.3.0**. The theme source is in
+`wordpress-theme/dr-ali-moradi/`; production 3.0.0 was exported and reconciled
+before the Patients feature in 3.1.0. Designed pages
 remain editable WordPress Pages; team profiles and Patients are separate catalogues.
 
 Patients provide disease categories/tags, one mandatory Clinic/Hospital category,

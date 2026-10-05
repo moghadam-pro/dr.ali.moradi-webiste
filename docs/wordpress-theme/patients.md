@@ -1,4 +1,4 @@
-# Patients catalogue — theme 3.1.1
+# Patients catalogue — implemented in 3.1.1, updated in 3.3.0
 
 ## Operator workflow
 
@@ -134,9 +134,24 @@ The initial apparent 315th image was AppleDouble metadata, not a photograph.
 The WXR audit before the final video confirmed 313 expected source IDs, all
 linked to their correct case, zero empty cases and exactly one mandatory care
 category per case. The final video operation completed successfully. Hospital
-remains the owner-approved default; operators can reclassify Clinic cases.
+remains the owner-approved import default; operators can reclassify Clinic cases.
 Originals are registered in normal WordPress uploads with thumbnails and patient
 links. Private ZIPs remain outside the public web root for recovery.
+
+### Current production check, theme 3.3.0
+
+The owner requested four randomly selected cases to move from Hospital to
+Clinic. The normal editor updated those four location terms and their Rank Math
+primary term. A final WordPress export reports 71 Patients: **Clinic 4** and
+**Hospital 67**. The selected records retain their disease categories, gallery
+and multilingual fields. Patient identifiers and private export files are kept
+outside Git.
+
+The All Patients admin screen previously inherited the frontend catalogue's
+language attributes. That made the Persian admin table render left-to-right.
+The frontend detection now excludes `is_admin()`; production verification shows
+`fa-IR`, RTL document/table direction, normal category/tag columns, and no
+visible error notice. The frontend English catalogue still uses English/LTR.
 
 Live checks confirm localized English/Persian/Arabic pagination, translated
 navigation, captioned image modals and an MP4 with loaded metadata (1080×1920,

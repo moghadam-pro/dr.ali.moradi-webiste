@@ -1,10 +1,10 @@
 # WordPress Theme — Source
 
-This folder holds the actual code: the theme and the content-migration
-scripts. Full documentation (architecture, decision log, migration plan,
-open items, progress log) lives on the `docs` branch, under
-`wordpress-theme/`, not here — see
-https://github.com/moghadam-pro/dr.ali.moradi-webiste/blob/docs/wordpress-theme/README.md
+This folder holds the production theme and content-migration scripts. The
+documentation is maintained in the same repository under `docs/wordpress-theme/`:
+[documentation index](../docs/wordpress-theme/README.md),
+[current content and verification](../docs/wordpress-theme/content-completion.md),
+and [deployment log](../docs/wordpress-theme/progress-log.md).
 
 ## Layout
 
@@ -26,9 +26,8 @@ https://github.com/moghadam-pro/dr.ali.moradi-webiste/blob/docs/wordpress-theme/
     self-hosted Inter/Vazirmatn/Scheherazade New font files (vendored from
     this repo's own `@fontsource*` packages, matching the fonts the
     current React site already uses).
-- `content-migration/` — the extraction script (works now) and the import
-  script (scaffolded, blocked on WordPress site credentials). See its own
-  `README.md`.
+- `content-migration/` — extraction/import scripts and reviewed HTML snapshots
+  for the 42 multilingual Innovation Pages and 27 expanded Posts.
 
 ## Content model
 
@@ -41,9 +40,19 @@ https://github.com/moghadam-pro/dr.ali.moradi-webiste/blob/docs/wordpress-theme/
 See `docs/wordpress-theme/progress-log.md` for deployment state and
 `docs/wordpress-theme/versioning.md` for the release policy.
 
-## Patients (3.1.0)
+## Production state (3.3.0)
 
 See [operator workflow and import](../docs/wordpress-theme/patients.md). Patients
 include hierarchical categories, tags and ordered multimedia. Clinical Care and
 its existing full-gallery pages query the mandatory Clinic/Hospital category.
-The production snapshot was synchronized before this release.
+The production snapshot was synchronized before the releases. All 71 Patients
+and 314 case media are registered; the current mandatory category split is
+Clinic 4 / Hospital 67. The patient list keeps the Persian RTL admin layout.
+
+The fourteen Innovation projects have 42 ordinary, editable EN/FA/AR Pages.
+Their scoped layout, verified public URLs and reviewed Page bodies are described
+in [content completion](../docs/wordpress-theme/content-completion.md).
+Nine generated educational covers and authored sections complete the 27 Posts
+that lacked featured images. The final WordPress export found zero empty bodies
+and zero Posts without featured images among 97 Posts. The operator can edit
+all of these through the normal WordPress Page/Post editors.

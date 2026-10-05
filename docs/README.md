@@ -45,6 +45,9 @@ history, then use the focused documents for implementation details.
 ## WordPress implementation and handoff
 
 - [WordPress implementation documentation](wordpress-theme/README.md)
+- [Verified Innovation Pages, Posts and Patients update](wordpress-theme/content-completion.md)
+- [Editable Page content and migration workflow](wordpress-theme/page-content.md)
+- [Patients catalogue and media workflow](wordpress-theme/patients.md)
 - [WordPress architecture](wordpress-theme/architecture.md)
 - [Content migration plan](wordpress-theme/content-migration-plan.md)
 - [Decision log](wordpress-theme/decisions-log.md)

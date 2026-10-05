@@ -4,11 +4,18 @@ This folder documents the WordPress conversion of the Dr. Ali Moradi website.
 Documentation and source are maintained together in the main repository.
 The theme source lives under `wordpress-theme/dr-ali-moradi/`.
 
-Current Patients implementation: theme 3.1.0, branch `codex/patients-gallery`.
+Current production theme: **3.3.0**. The canonical repository is
+`moghadam-pro/dr.ali.moradi-webiste`; release commits are integrated into
+`main`, with `codex/patients-gallery` retained as the delivery branch.
 
 ## Contents
 
 - [`patients.md`](patients.md) — Patients content model, galleries, operator workflow and resumable Drive import.
+- [`content-completion.md`](content-completion.md) — the 42 designed Innovation
+  Pages, 27 completed Posts, nine generated covers, the patient admin correction,
+  and final production/export checks.
+- [`../innovation-links.md`](../innovation-links.md) — the fourteen source
+  projects and their published WordPress destinations.
 - [`architecture.md`](architecture.md) — the agreed technical architecture:
   theme type, templates, custom post types, plugin boundaries, multilingual
   and SEO approach.
@@ -17,8 +24,8 @@ Current Patients implementation: theme 3.1.0, branch `codex/patients-gallery`.
 - [`content-migration-plan.md`](content-migration-plan.md) — how content is
   extracted from the current Next.js/Vite site and mapped to WordPress
   content types, and how it is imported.
-- [`open-items.md`](open-items.md) — access, credentials, and decisions still
-  needed before work can continue past the current point.
+- [`open-items.md`](open-items.md) — historical decisions and any remaining
+  operator follow-up; read dated entries alongside the progress log.
 - [`progress-log.md`](progress-log.md) — running log of what has been built,
   updated as work proceeds.
 - [`page-content.md`](page-content.md) — how the designed pages are stored
@@ -30,7 +37,7 @@ Current Patients implementation: theme 3.1.0, branch `codex/patients-gallery`.
 
 ## Source site
 
-- Current live demo: https://dralimoradi.moghadam.pro/
+- React design/demo reference: https://dralimoradi.moghadam.pro/
 - Production WordPress domain: https://dralimoradi.com/
-- Temporary WordPress site for the build: https://tmp.saveon.me/
+- Earlier temporary build site: https://tmp.saveon.me/
 - Source repository: `moghadam-pro/dr.ali.moradi-webiste`
