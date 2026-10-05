@@ -2,7 +2,44 @@
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 add_action( 'add_meta_boxes_patient', function() {
 	add_meta_box( 'dam-patient-gallery', dam_patient_label( 'Patient gallery', 'گالری بیمار', 'معرض المريض' ), 'dam_patient_gallery_metabox', 'patient', 'normal', 'high' );
+	add_meta_box( 'dam-patient-translations', 'English / فارسی / العربية', 'dam_patient_translations_metabox', 'patient', 'normal' );
 } );
+function dam_patient_translations_metabox( $post ) {
+	wp_nonce_field( 'dam_patient_translations', 'dam_patient_translations_nonce' );
+	$values = (array) get_post_meta( $post->ID, 'dam_patient_translations', true );
+	echo '<p>ترجمهٔ عنوان، توضیح کوتاه و شرح بیمار؛ فیلد خالی از محتوای اصلی استفاده می‌کند. رسانه‌ها مشترک هستند.</p>';
+	foreach ( array( 'en' => 'English', 'fa' => 'فارسی', 'ar' => 'العربية' ) as $lang => $label ) {
+		echo '<details><summary>' . esc_html( $label ) . '</summary>';
+		foreach ( array( 'title' => 'Title / عنوان', 'excerpt' => 'Short description / توضیح کوتاه', 'content' => 'Case and treatment / شرح و اقدامات' ) as $field => $name ) {
+			$key = 'dam-patient-' . $lang . '-' . $field;
+			echo '<p><label for="' . esc_attr( $key ) . '">' . esc_html( $name ) . '</label><textarea class="large-text" id="' . esc_attr( $key ) . '" dir="' . ( 'en' === $lang ? 'ltr' : 'rtl' ) . '" name="dam_patient_translations[' . esc_attr( $lang ) . '][' . esc_attr( $field ) . ']" rows="' . ( 'content' === $field ? '6' : '2' ) . '">' . esc_textarea( $values[ $lang ][ $field ] ?? '' ) . '</textarea></p>';
+		}
+		echo '</details>';
+	}
+}
+add_action( 'save_post_patient', function( $id ) {
+	if ( wp_is_post_revision( $id ) || wp_is_post_autosave( $id ) || ! current_user_can( 'edit_post', $id ) || empty( $_POST['dam_patient_translations_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['dam_patient_translations_nonce'] ) ), 'dam_patient_translations' ) ) { return; }
+	$values = array();
+	foreach ( array( 'en', 'fa', 'ar' ) as $lang ) {
+		foreach ( array( 'title', 'excerpt', 'content' ) as $field ) {
+			$value = wp_unslash( $_POST['dam_patient_translations'][ $lang ][ $field ] ?? '' );
+			if ( trim( $value ) ) { $values[ $lang ][ $field ] = 'content' === $field ? wp_kses_post( $value ) : sanitize_textarea_field( $value ); }
+		}
+	}
+	update_post_meta( $id, 'dam_patient_translations', $values );
+}, 20 );
+function dam_patient_term_translation_fields( $term ) {
+	wp_nonce_field( 'dam_patient_term_translation', 'dam_patient_term_translation_nonce' );
+	foreach ( array( 'en', 'fa', 'ar' ) as $lang ) {
+		echo '<tr class="form-field"><th><label for="dam-name-' . $lang . '">' . strtoupper( $lang ) . ' title</label></th><td><input id="dam-name-' . $lang . '" name="dam_patient_names[' . $lang . ']" value="' . esc_attr( get_term_meta( $term->term_id, 'dam_patient_name_' . $lang, true ) ) . '"></td></tr>';
+	}
+}
+foreach ( array( 'patient_category', 'patient_tag' ) as $taxonomy ) { add_action( $taxonomy . '_edit_form_fields', 'dam_patient_term_translation_fields' ); }
+function dam_patient_save_term_translations( $id ) {
+	if ( ! current_user_can( 'manage_categories' ) || empty( $_POST['dam_patient_term_translation_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['dam_patient_term_translation_nonce'] ) ), 'dam_patient_term_translation' ) ) { return; }
+	foreach ( array( 'en', 'fa', 'ar' ) as $lang ) { update_term_meta( $id, 'dam_patient_name_' . $lang, sanitize_text_field( wp_unslash( $_POST['dam_patient_names'][ $lang ] ?? '' ) ) ); }
+}
+foreach ( array( 'patient_category', 'patient_tag' ) as $taxonomy ) { add_action( 'edited_' . $taxonomy, 'dam_patient_save_term_translations' ); }
 function dam_patient_gallery_metabox( $post ) {
 	wp_nonce_field( 'dam_patient_gallery', 'dam_patient_gallery_nonce' );
 	$items = dam_sanitize_patient_gallery( get_post_meta( $post->ID, 'dam_patient_gallery', true ) );

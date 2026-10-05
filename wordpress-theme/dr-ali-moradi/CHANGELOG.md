@@ -6,6 +6,32 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [3.1.1] - 2026-10-06
+
+### Fixed
+
+- Replaced generated page kicker descriptions with authored introductions; filled
+  empty multilingual blog descriptions while preserving explicit SEO overrides.
+- Removed exact post/Page URL duplicates from XML sitemaps.
+- Added translated names to patient tags as well as categories.
+
+
+- Patient gallery pagination follows the visitor's language even when Persian
+  plugins localize WordPress numbers; route/query digits remain intact.
+- Shared patient views preserve language across case/category links and the
+  header switcher. Care-category labels and navigation follow that language.
+- Added editable EN/FA/AR case title/excerpt/body and category-name translations,
+  with original-content fallback and one shared media library.
+- Patient titles/descriptions/canonical metadata follow translated content;
+  existing custom Rank Math metadata remains respected. Gallery images are
+  included through Rank Math's sitemap image hook.
+- Added checksum-based reuse of existing Media Library originals, local staged
+  media import outside the web root, per-case media ordering and a private ZIP
+  packaging helper. Source IDs still make retries resumable.
+
+Production deployment and complete import verification are recorded separately
+in the progress log; this source version alone is not proof of deployment.
+
 ## [3.1.0] - 2026-10-05
 
 ### Added

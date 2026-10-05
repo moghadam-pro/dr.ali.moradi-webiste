@@ -27,6 +27,86 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/** Use authored page introductions instead of short section kickers. */
+function dam_authored_page_seo_description( $description ) {
+	if ( is_front_page() || ( ! is_page() && ! is_home() ) ) { return $description; }
+	$id = get_queried_object_id();
+	// Explicit Rank Math copy remains the operator's override.
+	if ( get_post_meta( $id, 'rank_math_description', true ) ) { return $description; }
+	if ( is_home() || is_page( 'blog' ) ) { return dam_blog_labels( dam_current_locale() )['intro']; }
+	$post = get_post( $id );
+	if ( ! $post ) { return $description; }
+	preg_match_all( '#<p\b[^>]*>(.*?)</p>#is', $post->post_content, $paragraphs );
+	foreach ( $paragraphs[1] as $paragraph ) {
+		$text = trim( preg_replace( '/\s+/u', ' ', html_entity_decode( wp_strip_all_tags( $paragraph ), ENT_QUOTES, 'UTF-8' ) ) );
+		// Count Unicode characters so short RTL kickers are skipped too.
+		if ( preg_match_all( '/./us', $text ) >= 50 ) { return wp_html_excerpt( $text, 160, '…' ); }
+	}
+	return $description;
+}
+
+// Migrated resource posts can share the same public URL as a maintained Page.
+// Keep the Page entry and omit only exact duplicate post URLs from XML.
+add_filter( 'rank_math/sitemap/entry', function( $entry, $type, $object ) {
+	if ( ! $entry || 'post' !== $type || ! isset( $object->post_type ) || 'post' !== $object->post_type ) { return $entry; }
+	static $page_urls = null;
+	if ( null === $page_urls ) {
+		$page_urls = array();
+		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'publish', 'numberposts' => -1, 'fields' => 'ids', 'suppress_filters' => true, 'lang' => '' ) ) as $id ) { $page_urls[ untrailingslashit( get_permalink( $id ) ) ] = true; }
+	}
+	return isset( $page_urls[ untrailingslashit( $entry['loc'] ?? '' ) ] ) ? false : $entry;
+}, 30, 3 );
+
+/** Case metadata follows the active gallery language, with no invented clinical text. */
+add_filter( 'rank_math/frontend/title', function( $title ) {
+	if ( ! function_exists( 'dam_patient_is_catalogue' ) || ! dam_patient_is_catalogue() ) { return $title; }
+	if ( is_singular( 'patient' ) && get_post_meta( get_the_ID(), 'rank_math_title', true ) ) { return $title; }
+	$name = is_singular( 'patient' ) ? get_the_title() : ( is_tax() ? dam_patient_term_name( get_queried_object() ) : dam_patient_label( 'Patients', 'بیماران', 'المرضى' ) );
+	$page = max( 1, (int) get_query_var( 'paged' ) );
+	return $name . ( $page > 1 ? ' — ' . dam_patient_label( 'Page', 'صفحه', 'صفحة' ) . ' ' . $page : '' ) . ' | Dr. Ali Moradi';
+}, 30 );
+function dam_patient_seo_description( $description ) {
+	$description = dam_authored_page_seo_description( $description );
+	if ( ! function_exists( 'dam_patient_is_catalogue' ) || ! dam_patient_is_catalogue() ) { return $description; }
+	if ( is_singular( 'patient' ) ) {
+		$custom = get_post_meta( get_the_ID(), 'rank_math_description', true );
+		if ( $custom && empty( get_post_meta( get_the_ID(), 'dam_patient_translations', true )[ dam_current_locale() ]['excerpt'] ) ) { return $description; }
+		$excerpt = wp_strip_all_tags( get_the_excerpt() );
+		if ( $excerpt ) { return wp_trim_words( $excerpt, 35, '…' ); }
+	}
+	if ( is_tax() && term_description() ) { return wp_strip_all_tags( term_description() ); }
+	return dam_patient_label( 'Clinical and hospital case galleries of Dr. Ali Moradi.', 'گالری پرونده‌های بیماران کلینیک و بیمارستان دکتر علی مرادی.', 'معارض الحالات السريرية وحالات المستشفى للدكتور علي مرادي.' );
+}
+add_filter( 'rank_math/frontend/description', 'dam_patient_seo_description', 30 );
+add_filter( 'rank_math/opengraph/facebook/description', 'dam_patient_seo_description', 30 );
+add_filter( 'rank_math/opengraph/twitter/description', 'dam_patient_seo_description', 30 );
+add_filter( 'rank_math/sitemap/urlimages', function( $images, $id ) {
+	if ( 'patient' !== get_post_type( $id ) ) { return $images; }
+	$known = array_column( $images, 'src' );
+	foreach ( dam_patient_media( $id ) as $item ) {
+		if ( 'image' === $item['type'] && ! in_array( $item['url'], $known, true ) ) { $images[] = array( 'src' => $item['url'], 'title' => $item['title'] ); $known[] = $item['url']; }
+	}
+	return $images;
+}, 20, 2 );
+// Sitemaps use one canonical case URL, independent of the language requesting XML.
+add_filter( 'rank_math/sitemap/xml_post_url', function( $url, $post ) { return 'patient' === $post->post_type ? remove_query_arg( 'patient_lang', $url ) : $url; }, 20, 2 );
+add_filter( 'rank_math/frontend/canonical', function( $url ) {
+	if ( ! function_exists( 'dam_patient_is_catalogue' ) || ! dam_patient_is_catalogue() ) { return $url; }
+	// Shared case records without translated copy canonicalize to their base URL.
+	$translations = is_singular( 'patient' ) ? get_post_meta( get_the_ID(), 'dam_patient_translations', true ) : array();
+	return ! empty( $translations[ dam_current_locale() ] ) ? dam_patient_language_url( $url ) : remove_query_arg( 'patient_lang', $url );
+}, 30 );
+add_action( 'wp_head', function() {
+	if ( ! is_singular( 'patient' ) ) { return; }
+	$translations = (array) get_post_meta( get_the_ID(), 'dam_patient_translations', true );
+	$base = remove_query_arg( 'patient_lang', get_permalink() );
+	echo '<link rel="alternate" hreflang="x-default" href="' . esc_url( $base ) . '">' . "\n";
+	echo '<link rel="alternate" hreflang="en" href="' . esc_url( $base ) . '">' . "\n";
+	foreach ( array( 'fa', 'ar' ) as $locale ) {
+		if ( ! empty( $translations[ $locale ] ) ) { echo '<link rel="alternate" hreflang="' . $locale . '" href="' . esc_url( dam_patient_language_url( $base, $locale ) ) . '">' . "\n"; }
+	}
+}, 5 );
+
 /**
  * The clean, canonical URL for a language's homepage -- `/`, `/fa/`,
  * `/ar/` -- never the internal front-page-placeholder permalink.

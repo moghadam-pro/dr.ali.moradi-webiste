@@ -1,5 +1,28 @@
 # Changelog
 
+## 2026-10-06 — Patient media, languages and SEO / theme 3.1.1
+
+- Added checksum-verified hosting imports and reusable private ZIP packaging.
+- Reuse exact existing Media Library originals and keep per-patient media order.
+- Added editable English/Persian/Arabic case copy and category names, shared media,
+  locale-preserving links, navigation and correct pagination digits/labels.
+- Added localized patient SEO metadata, canonical/alternate links and all gallery
+  images to Rank Math patient sitemaps.
+- Enabled patient-category XML sitemap on production, flushed permalink rules
+  to fix sitemap 404 responses, reviewed patient metadata and dismissed the
+  new-post-type notice after configuration.
+- Completed media ingestion: 314 actual media (305 images and nine videos) across
+  71 cases; excluded one AppleDouble metadata file and reused nine existing IDs.
+- Replaced Before/After Surgery content in six English/Persian/Arabic Pages with
+  the supplied guidance, no sidebar, working consent PDF and linked follow-up.
+- Added the preparation/recovery summary before Clinical Care's pathway cards
+  in all three language Pages.
+- Restored all 14 Innovation references (15 links) in the three Innovation Pages;
+  seven deleted old-domain project references now use their verified legacy archive.
+- Fixed missing Blog descriptions, page metadata reduced to section kickers and
+  duplicate resource URLs in post/Page sitemaps.
+- Validation: full npm test, WordPress behavior/release checks and PHP syntax.
+
 ## 2026-10-05 — Patients / theme 3.1.0
 
 - Reconciled the active production 3.0.0 theme with Git and upstream history.

@@ -44,7 +44,12 @@ $menu_icon_close = dam_icon( 'x', 24 );
 					$order = array( 'en' => 0, 'fa' => 1, 'ar' => 2 );
 					return ( $order[ $a['slug'] ] ?? 9 ) <=> ( $order[ $b['slug'] ] ?? 9 );
 				} );
-				if ( is_front_page() ) {
+				if ( function_exists( 'dam_patient_is_catalogue' ) && dam_patient_is_catalogue() ) {
+					foreach ( $languages as &$language ) {
+						$language['url'] = dam_patient_language_url( get_pagenum_link(), $language['slug'] );
+					}
+					unset( $language );
+				} elseif ( is_front_page() ) {
 					foreach ( $languages as &$language ) {
 						$language['url'] = dam_front_page_clean_url( $language['slug'] );
 					}

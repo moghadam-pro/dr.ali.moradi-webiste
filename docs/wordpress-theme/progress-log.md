@@ -1,9 +1,63 @@
 # Progress Log
 
-Running record of what has actually been built, in order. Each entry says
-what changed and where, so this file plus `git log` on
-`claude/wordpress-doctor-site-architecture-m4766g` is a complete record
-without needing to replay the chat.
+Running record of implemented changes and observed production results. Use this
+file together with Git history; the current delivery branch is
+`codex/patients-gallery` on upstream.
+
+## 2026-10-06 — Complete media import, multilingual SEO and Page restoration
+
+- Installed theme 3.1.1 through WordPress ZIP replacement. The deployed archive
+  matches every current theme source file. Deployed ZIP SHA256:
+  `f2826574371fed53d422cb6ee51bd466c27436ed87881ffd7983f75d61ebca8f`.
+- Completed all 314 actual media: 305 images and nine MP4 videos across 71
+  published cases and 64 categories. The initial 315-file inventory included
+  one AppleDouble metadata file (`._1.jpg`), excluded from import. Nine previously
+  registered source IDs were reused rather than duplicated.
+- Eight private host ZIP batches and the final raw 389,360,038-byte video were
+  uploaded beside `public_html`. WordPress registered originals/thumbnails,
+  gallery membership and featured images. Recovery ZIPs remain private outside
+  the web root. No patient originals or identifying manifests enter Git.
+- WXR audit before the final video: 313 source IDs matched 313 attachments,
+  every imported asset linked to its case, zero empty cases, zero invalid care
+  settings. The final video completed one/zero failures and Media Library
+  attachment 939 is linked to Distal Radius EF. Its public modal loaded 1080×1920
+  video metadata with a 226.62-second duration. A second video loaded normally;
+  closing its modal pauses and clears playback. Hospital remains the owner's
+  initial default; operators must reclassify Clinic cases.
+- Added source/checksum deduplication, ordered local media imports, private ZIP
+  helper, translated case/category/tag editing, locale-preserving shared URLs
+  and EN/FA/AR navigation, care labels and pagination. Public Arabic archive
+  reports `lang=ar`, `dir=rtl`, Arabic digits and localized controls; the tree
+  expands from categories to patient links.
+- Configured Rank Math Patients metadata and patient/category XML sitemaps,
+  saved permalink rules to repair XML 404s, then dismissed the CPT notice.
+  Refreshed sitemap cache by temporarily changing Links per Sitemap and
+  restoring 200. Final Page/Post sitemap intersection is empty: the three
+  duplicated Rehabilitation URLs now occur only in Pages.
+- Corrected empty Blog descriptions and page descriptions reduced to kickers.
+  Metadata uses authored introductions while retaining explicit operator SEO.
+  Final audit: 163 unique existing public Page/Post/team URLs, zero HTTP errors,
+  zero empty titles, descriptions or canonicals. Patient XML includes gallery
+  images. The index and patient/category sitemap endpoints return 200.
+- Saved the owner's surgery instructions in the six EN/FA/AR Before/After
+  Surgery Pages through the Page code editor, with full-width bodies and no
+  sidebar. Registered the existing consent PDF as attachment 940 (200,
+  `application/pdf`), and added corresponding language links. Added the summary
+  before Clinic/Hospital cards in all three Clinical Care Pages.
+- Restored fourteen Innovation records and fifteen references in all three
+  Innovation Pages. Seven old-domain project destinations use their verified
+  200-response legacy archives; supplied external references are retained.
+  Existing covers, authored sections, team and gallery query blocks remain.
+  Exact twelve Page bodies are tracked in the dated content-migration directory;
+  rendering still reads WordPress Page content.
+- Live content audit: all twelve changed Pages return 200, all six instruction
+  Pages have no aside and link to the working PDF, all Clinical Care summaries
+  precede pathway cards, all Innovation catalogues contain fourteen entries.
+  Screenshot of the final Persian Clinical Care summary is retained locally.
+- Validation: full `npm test` passes (build, five rendered tests, release,
+  Patients and SEO behaviors); all 61 theme PHP files pass syntax checks and
+  `git diff --check` passes. Updated README, both changelogs, Patients/content
+  workflows, reference inventory and this deployment log.
 
 ## 2026-10-05 — Patients catalogue and partial production import
 

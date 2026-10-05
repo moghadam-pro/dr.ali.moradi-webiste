@@ -58,6 +58,21 @@ function dam_patient_import_operation() {
 	if ( is_wp_error( $result ) ) { wp_send_json_error( $result->get_error_message(), 400 ); }
 	wp_send_json_success( $result );
 }
+/** Hash originals, including WordPress's pre-scaling original image. */
+function dam_patient_import_hash_index() {
+	$index = get_transient( 'dam_patient_media_hashes' );
+	if ( is_array( $index ) ) { return $index; }
+	$index = array();
+	foreach ( get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'numberposts' => -1, 'fields' => 'ids', 'suppress_filters' => true, 'lang' => '' ) ) as $id ) {
+		$file = get_attached_file( $id );
+		$meta = wp_get_attachment_metadata( $id );
+		$files = array( $file );
+		if ( $file && ! empty( $meta['original_image'] ) ) { $files[] = dirname( $file ) . '/' . $meta['original_image']; }
+		foreach ( $files as $path ) { if ( $path && is_file( $path ) && is_readable( $path ) ) { $index[ hash_file( 'sha256', $path ) ] = (int) $id; } }
+	}
+	set_transient( 'dam_patient_media_hashes', $index, HOUR_IN_SECONDS );
+	return $index;
+}
 function dam_patient_import_run( $op ) {
 	$key = $op['key'];
 	if ( 'category' === $op['kind'] ) {
@@ -89,7 +104,21 @@ function dam_patient_import_run( $op ) {
 	$patient = dam_patient_import_find( $op['patient'] ?? '', 'patient' );
 	if ( ! $patient ) { return new WP_Error( 'missing_patient', 'Patient has not been imported.' ); }
 	$id = dam_patient_import_find( $key, 'attachment' );
+	$hash = strtolower( $op['sha256'] ?? '' );
+	if ( $hash && ! preg_match( '/^[a-f0-9]{64}$/', $hash ) ) { return new WP_Error( 'invalid_hash', 'Invalid SHA256.' ); }
+	if ( ! $id && $hash ) { $index = dam_patient_import_hash_index(); $id = $index[ $hash ] ?? 0; }
 	if ( ! $id ) {
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+		require_once ABSPATH . 'wp-admin/includes/media.php';
+		require_once ABSPATH . 'wp-admin/includes/image.php';
+		if ( ! empty( $op['local'] ) ) {
+			// Staging is outside the web root; only flat, source-ID filenames allowed.
+			if ( ! preg_match( '/^[a-zA-Z0-9_-]+\.(jpg|jpeg|png|bmp|heif|heic|mp4)$/i', $op['local'] ) ) { return new WP_Error( 'invalid_path', 'Invalid staging filename.' ); }
+			$root = realpath( dirname( rtrim( ABSPATH, '/\\' ) ) . '/dam-patient-staging' );
+			$tmp = $root ? realpath( $root . '/' . $op['local'] ) : false;
+			if ( ! $tmp || dirname( $tmp ) !== $root || ! is_file( $tmp ) ) { return new WP_Error( 'missing_file', 'Staged file not found.' ); }
+			if ( ! $hash || ! hash_equals( $hash, hash_file( 'sha256', $tmp ) ) ) { return new WP_Error( 'hash_mismatch', 'Staged file SHA256 mismatch.' ); }
+		} else {
 		$url = esc_url_raw( $op['url'] ?? '' );
 		$host = wp_parse_url( $url, PHP_URL_HOST );
 		// Only streamed connector storage URLs; never publicize private Drive files.
@@ -100,18 +129,23 @@ function dam_patient_import_run( $op ) {
 		if ( function_exists( 'set_time_limit' ) ) { @set_time_limit( 300 ); }
 		$tmp = download_url( $url, 240 );
 		if ( is_wp_error( $tmp ) ) { return $tmp; }
+		if ( $hash && ! hash_equals( $hash, hash_file( 'sha256', $tmp ) ) ) { @unlink( $tmp ); return new WP_Error( 'hash_mismatch', 'Downloaded file SHA256 mismatch.' ); }
+		}
 		$name = sanitize_file_name( $op['filename'] ?? 'patient-image.jpg' );
 		$file = array( 'name' => 'patient-' . substr( md5( $key ), 0, 12 ) . '-' . $name, 'tmp_name' => $tmp );
 		$id = media_handle_sideload( $file, $patient, sanitize_text_field( $op['title'] ?? '' ) );
-		if ( is_wp_error( $id ) ) { @unlink( $tmp ); return $id; }
-		update_post_meta( $id, '_dam_drive_source_id', $key );
-		update_post_meta( $id, '_dam_patient_media_order', absint( $op['order'] ?? 0 ) );
+		if ( is_wp_error( $id ) ) { if ( empty( $op['local'] ) ) { @unlink( $tmp ); } return $id; }
+		if ( $hash ) { $index = dam_patient_import_hash_index(); $index[ $hash ] = (int) $id; set_transient( 'dam_patient_media_hashes', $index, HOUR_IN_SECONDS ); }
 	}
+	if ( ! in_array( $key, get_post_meta( $id, '_dam_drive_source_id', false ), true ) ) { add_post_meta( $id, '_dam_drive_source_id', $key, false ); }
 	$gallery = (array) get_post_meta( $patient, 'dam_patient_gallery', true );
+	$orders = (array) get_post_meta( $patient, '_dam_patient_import_orders', true );
+	$orders[ $id ] = absint( $op['order'] ?? 0 );
+	update_post_meta( $patient, '_dam_patient_import_orders', $orders );
 	$ids = array_column( $gallery, 'id' );
 	if ( ! in_array( (int) $id, array_map( 'intval', $ids ), true ) ) {
-		$gallery[] = array( 'id' => (int) $id, 'url' => wp_get_attachment_url( $id ), 'type' => str_starts_with( (string) get_post_mime_type( $id ), 'video/' ) ? 'video' : 'image', 'title' => '', 'description' => '' );
-		usort( $gallery, function( $a, $b ) { return (int) get_post_meta( $a['id'], '_dam_patient_media_order', true ) <=> (int) get_post_meta( $b['id'], '_dam_patient_media_order', true ); } );
+		$gallery[] = array( 'id' => (int) $id, 'url' => wp_get_attachment_url( $id ), 'type' => str_starts_with( (string) get_post_mime_type( $id ), 'video/' ) ? 'video' : 'image', 'title' => '', 'description' => '', 'order' => absint( $op['order'] ?? 0 ) );
+		usort( $gallery, function( $a, $b ) use ( $orders ) { return (int) ( $orders[ $a['id'] ] ?? get_post_meta( $a['id'], '_dam_patient_media_order', true ) ) <=> (int) ( $orders[ $b['id'] ] ?? get_post_meta( $b['id'], '_dam_patient_media_order', true ) ); } );
 		update_post_meta( $patient, 'dam_patient_gallery', $gallery );
 	}
 	if ( wp_attachment_is_image( $id ) && ! has_post_thumbnail( $patient ) ) { set_post_thumbnail( $patient, $id ); }

@@ -54,3 +54,28 @@ meta, delete `dam_page_content_version`, and load any admin screen.
 Blog posts, team-member profiles, the blog archive, and single posts are
 already WordPress content or query-driven and are unchanged. Education still has
 no source content and no page.
+
+## 2026-10-06 content updates
+
+The six Before/After Surgery Pages now contain the owner's reorganized surgical
+service instructions in English, Persian and Arabic. They retain their existing
+cover/template, use a full-width numbered body without an aside and link to each
+other. The existing consent PDF from `public/downloads` is registered as Media
+Library attachment 940; its active URL is
+`https://dralimoradi.com/wp-content/uploads/2026/10/pre-surgery-consent-form.pdf`.
+This is the existing acknowledgement document, not a newly authored hospital form.
+
+All three Clinical Care Pages include a short preparation/recovery section
+before the Clinic/Hospital pathway cards, linking to the matching language's two
+instruction Pages. Existing team and patient gallery blocks are preserved.
+
+The three Innovation Pages retain their existing cover, editorial sections and
+live blocks, with the 14-record reference catalogue restored below them. Seven
+archived Dr. Moradi project pages are served by `legacy.dralimoradi.com`; external
+product/research references retain their supplied destinations. H3 has two links
+and remains one record. See [reference inventory](../innovation-links.md).
+
+The exact twelve published Page bodies are tracked in
+`wordpress-theme/content-migration/page-updates-2026-10-06/` by production Page ID.
+They were saved through the WordPress Page code editor, not rendered from theme
+PHP or an automatic overwrite migration. Future edits belong in WordPress Pages.

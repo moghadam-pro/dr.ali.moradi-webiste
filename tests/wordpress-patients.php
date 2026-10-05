@@ -17,7 +17,9 @@ function sanitize_text_field( $value ) { return strip_tags( $value ); }
 function sanitize_textarea_field( $value ) { return strip_tags( $value ); }
 function wp_get_attachment_url( $id ) { return 'https://example.test/media/' . $id; }
 function get_post_mime_type( $id ) { return 3 === $id ? 'application/pdf' : ( 2 === $id ? 'video/mp4' : 'image/jpeg' ); }
-function is_admin() { return true; }
+function is_admin() { return $GLOBALS['test_admin'] ?? true; }
+function dam_current_locale() { return $GLOBALS['test_locale'] ?? 'en'; }
+function paginate_links( $args ) { return '<a href="/gallery/page/2/?id=123">۲</a><span>۳</span><a href="/gallery/page/4/">' . $args['next_text'] . '</a>'; }
 function determine_locale() { return 'fa_IR'; }
 class WP_Error { public function __construct( ...$args ) {} }
 require dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/inc/patients.php';
@@ -48,4 +50,14 @@ verify( count( $media ) === 3 && $media[0]['title'] === 'Case', 'Gallery must re
 verify( $media[1]['type'] === 'video', 'Attachment MIME must determine media type.' );
 verify( $media[0]['url'] === 'https://example.test/media/1', 'Attachment URL must come from WordPress.' );
 verify( dam_patient_label( 'Patients', 'بیماران' ) === 'بیماران', 'Persian admin labels must be localized.' );
+$GLOBALS['test_admin'] = false;
+foreach ( array( 'en' => array( '>2<', 'Next »' ), 'fa' => array( '>۲<', 'بعدی »' ), 'ar' => array( '>٢<', 'التالي »' ) ) as $locale => $expected ) {
+ $GLOBALS['test_locale'] = $locale;
+ $pagination = dam_patient_pagination( 4, 1 );
+ verify( str_contains( $pagination, $expected[0] ) && str_contains( $pagination, $expected[1] ), 'Pagination must follow visitor language despite Persian digit filters.' );
+ verify( str_contains( $pagination, '/gallery/page/2/?id=123' ), 'Pagination must not translate URL digits.' );
+}
+$meta[1]['dam_patient_translations'] = array( 'ar' => array( 'title' => 'حالة', 'excerpt' => 'وصف' ) );
+verify( dam_patient_translated_field( 'Original', 1, 'title' ) === 'حالة', 'Translated case field must follow locale.' );
+verify( dam_patient_translated_field( 'Original body', 1, 'content' ) === 'Original body', 'Missing translation must preserve source content.' );
 echo "Patient behavior checks passed.\n";

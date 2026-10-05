@@ -41,3 +41,16 @@ innovation.
   upgrade it only after the destination is verified to support HTTPS.
 - Product descriptions are concise editorial summaries, not clinical claims or
   patient-use instructions.
+
+## Production restoration, 2026-10-06
+
+All 14 records and 15 references were restored to the English, Persian and Arabic
+Innovation Pages. The seven historical Dr. Moradi paths above no longer resolve
+to their original project on the current site (six 404s and one homepage redirect).
+Their corresponding `https://legacy.dralimoradi.com/{original-path}/` references
+were checked and return 200 with the correct archived project pages. Production
+uses those archived destinations and labels them as archive references.
+
+The external Avisa/Orthop references retain the source URLs. Four responded 200
+during the audit; four timed out, so availability of those external destinations
+is not claimed. The HTTP Schanz Pins source is preserved as supplied.

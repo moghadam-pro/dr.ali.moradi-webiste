@@ -1,4 +1,4 @@
-# Patients catalogue — theme 3.1.0
+# Patients catalogue — theme 3.1.1
 
 ## Operator workflow
 
@@ -25,6 +25,48 @@ operators must reclassify Clinic cases after import.
 Case records and their category tree are shared between languages. English,
 Persian and Arabic pages render the same cases with locale-appropriate gallery
 controls. No duplicate patient records are created solely for translations.
+
+## Languages and SEO
+
+Patients share one case and one media gallery across English, Persian and Arabic.
+The case editor provides translated title, excerpt and body fields for each
+language; blank fields retain the original. Category and tag editing provide translated
+names. No clinical translation is generated automatically.
+
+Shared catalogue URLs use `?patient_lang=fa` or `?patient_lang=ar`; English uses
+the base URL. Language switching retains the case/archive and page. Navigation,
+RTL direction, care labels and pagination follow the selected locale, including
+ASCII numbers on English pages even with Persian date plugins installed.
+Existing translated Clinic/Hospital Pages retain their Polylang paths.
+
+Rank Math titles/descriptions follow translated copy. Untranslated shared cases
+canonicalize to their base URL; actual translated cases receive language
+alternates. The patient XML sitemap includes all gallery images, and category
+archives are enabled in their own sitemap. Preserve operator-set SEO text.
+
+## Bulk hosting import
+
+For large inventories, download originals locally and package them outside Git:
+
+```sh
+python3 wordpress-theme/content-migration/package-patient-media.py \
+  /private/inventory.json /private/originals /private/bundles --max-mb 150
+```
+
+Upload ZIPs with the hosting File Manager into the domain's
+`dam-patient-staging` folder, **beside** `public_html`, then extract there.
+Paste each matching JSON manifest in Tools → Import Patients and wait for its
+completed/failed count before the next manifest. This creates real WordPress
+attachments, thumbnails, gallery associations and featured images; uploading
+files alone does not register them in the Media Library.
+
+Local imports require flat source-ID filenames and SHA256 verification. The
+importer accepts files only within that fixed staging directory. It checks source
+IDs and hashes existing attachment originals (including pre-scaling originals)
+to reuse exact matches, preserving existing attachment parent/content. Gallery
+ordering is stored per patient. Newly registered files move into WordPress's
+normal uploads path; retained duplicate staged files and ZIPs can be moved to
+host Trash after verification. Use rolling batches to stay within hosting quota.
 
 ## Front end
 
@@ -56,7 +98,8 @@ copied into the case history; no diagnosis or treatment is inferred from photos.
 Apple metadata files are ignored. Operators can revise classification/nesting.
 
 The initial inventory contains 62 disease/procedure categories, 71 cases and
-315 media files (306 images, 9 MP4 videos). The two care categories are additional.
+315 listed files: 314 actual media (305 images, 9 MP4 videos) and one
+AppleDouble metadata file (`._1.jpg`) excluded from media import. The two care categories are additional.
 
 Tools → **درون‌ریزی بیماران** accepts a local JSON manifest, selected as a file
 or pasted into the JSON field:
@@ -79,23 +122,27 @@ References expire; generate fresh batches and retry only failed source IDs.
 Use small media batches (approximately 5–7 files) because server download and
 thumbnail generation can outlast the temporary connector URL validity.
 
-### Observed production state, 2026-10-05
+### Observed production state, 2026-10-06
 
-Theme 3.1.0 was uploaded and WordPress confirmed replacement. All 133 structure
-operations completed: 62 disease/procedure categories and 71 published cases,
-plus the two automatically created care categories. Hospital is the default.
-The first 60-media batch reported 9 completed and 51 failed (expired references,
-mostly Forbidden). Thus **306 of the 315 media remain unverified/unimported**.
-Resume by source ID; do not re-create patients or categories. Signed references
-must be refreshed immediately before each small batch.
+Theme 3.1.1 replaced the installed theme through WordPress ZIP upload. All 71
+cases and 64 categories are present. Eight private hosting batches registered
+313 media, and the final 389 MB MP4 was uploaded separately and registered with
+one completed/zero failed. Total: **314 media (305 images, nine videos)**.
+Nine previously imported source IDs were reused without duplicate attachments.
+The initial apparent 315th image was AppleDouble metadata, not a photograph.
 
-Final source fixes (gallery H2 and empty-media copy) have passed local tests but
-their production deployment is pending. The importer's paste-field source was
-saved through the Theme File Editor with a success notice; its active-page
-behavior could not be rechecked because browser control stopped loading its
-request-header policy. Final visual checks of populated galleries, video,
-mobile/RTL and modal interactions remain pending. Do not treat this inventory
-or successful local tests as confirmation of complete media ingestion.
+The WXR audit before the final video confirmed 313 expected source IDs, all
+linked to their correct case, zero empty cases and exactly one mandatory care
+category per case. The final video operation completed successfully. Hospital
+remains the owner-approved default; operators can reclassify Clinic cases.
+Originals are registered in normal WordPress uploads with thumbnails and patient
+links. Private ZIPs remain outside the public web root for recovery.
+
+Live checks confirm localized English/Persian/Arabic pagination, translated
+navigation, captioned image modals and an MP4 with loaded metadata (1080×1920,
+6.57 seconds). Closing its modal pauses playback and clears the source. Rank
+Math patient/category XML endpoints return 200 after permalink refresh; the
+new-post-type notice was dismissed after configuring the new content types.
 
 Store the inventory, clinical text and signed media manifests outside Git (for
 this run, `/tmp/dam-drive-inventory.json` and `/tmp/dam-patient-*.json`). Never commit

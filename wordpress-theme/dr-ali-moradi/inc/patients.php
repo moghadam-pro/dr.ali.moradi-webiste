@@ -7,6 +7,60 @@ function dam_patient_label( $en, $fa, $ar = '' ) {
 	return 'fa' === $locale ? $fa : ( 'ar' === $locale && $ar ? $ar : $en );
 }
 
+function dam_patient_is_catalogue() {
+	return is_singular( 'patient' ) || is_post_type_archive( 'patient' ) || is_tax( array( 'patient_category', 'patient_tag' ) );
+}
+function dam_patient_language_url( $url, $locale = '' ) {
+	$locale = $locale ?: dam_current_locale();
+	$url = remove_query_arg( 'patient_lang', $url );
+	return 'en' === $locale ? $url : add_query_arg( 'patient_lang', $locale, $url );
+}
+add_action( 'wp', function() {
+	if ( dam_patient_is_catalogue() && isset( $_GET['patient_lang'] ) && in_array( $_GET['patient_lang'], array( 'en', 'fa', 'ar' ), true ) ) {
+		$GLOBALS['dam_locale_override'] = $_GET['patient_lang'];
+	}
+} );
+add_filter( 'post_type_link', function( $url, $post ) { return ! is_admin() && 'patient' === $post->post_type ? dam_patient_language_url( $url ) : $url; }, 20, 2 );
+add_filter( 'term_link', function( $url, $term, $taxonomy ) { return ! is_admin() && in_array( $taxonomy, array( 'patient_category', 'patient_tag' ), true ) ? dam_patient_language_url( $url ) : $url; }, 20, 3 );
+add_filter( 'language_attributes', function( $attributes ) { return dam_patient_is_catalogue() ? 'lang="' . esc_attr( dam_current_locale() ) . '" dir="' . ( 'en' === dam_current_locale() ? 'ltr' : 'rtl' ) . '"' : $attributes; } );
+add_filter( 'wp_nav_menu_args', function( $args ) {
+	if ( is_admin() || ! dam_patient_is_catalogue() || empty( $args['theme_location'] ) ) { return $args; }
+	// Polylang stores translated locations in its own nav_menus option; the
+	// ___fa/___ar admin locations are virtual, not saved theme modifications.
+	$options = get_option( 'polylang', array() );
+	$menu = $options['nav_menus'][ get_stylesheet() ][ $args['theme_location'] ][ dam_current_locale() ] ?? 0;
+	if ( $menu ) { $args['menu'] = $menu; $args['theme_location'] = ''; }
+	return $args;
+}, 1000 );
+function dam_patient_translated_field( $value, $id, $field ) {
+	$translations = get_post_meta( $id, 'dam_patient_translations', true );
+	return $translations[ dam_current_locale() ][ $field ] ?? $value;
+}
+add_filter( 'the_title', function( $title, $id ) { return ! is_admin() && 'patient' === get_post_type( $id ) ? dam_patient_translated_field( $title, $id, 'title' ) : $title; }, 20, 2 );
+add_filter( 'get_the_excerpt', function( $excerpt, $post ) { return ! is_admin() && 'patient' === $post->post_type ? dam_patient_translated_field( $excerpt, $post->ID, 'excerpt' ) : $excerpt; }, 20, 2 );
+add_filter( 'the_content', function( $content ) { return ! is_admin() && is_singular( 'patient' ) && in_the_loop() ? dam_patient_translated_field( $content, get_the_ID(), 'content' ) : $content; }, 8 );
+function dam_patient_term_name( $term ) {
+	if ( 'clinic' === $term->slug ) { return dam_patient_label( 'Clinic', 'کلینیک', 'العيادة' ); }
+	if ( 'hospital' === $term->slug ) { return dam_patient_label( 'Hospital', 'بیمارستان', 'المستشفى' ); }
+	$translated = get_term_meta( $term->term_id, 'dam_patient_name_' . dam_current_locale(), true );
+	return $translated ?: $term->name;
+}
+add_filter( 'get_the_terms', function( $terms, $id, $taxonomy ) {
+	if ( is_admin() || ! is_array( $terms ) || ! in_array( $taxonomy, array( 'patient_category', 'patient_tag' ), true ) ) { return $terms; }
+	return array_map( function( $term ) { $copy = clone $term; $copy->name = dam_patient_term_name( $term ); return $copy; }, $terms );
+}, 20, 3 );
+/** Normalize after plugins convert digits, without changing numbers in URLs. */
+function dam_patient_pagination( $pages, $page ) {
+	$links = paginate_links( array( 'total' => $pages, 'current' => $page, 'prev_text' => dam_patient_label( '« Previous', '« قبلی', '« السابق' ), 'next_text' => dam_patient_label( 'Next »', 'بعدی »', 'التالي »' ) ) );
+	$ascii = array_combine( preg_split( '//u', '۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩', -1, PREG_SPLIT_NO_EMPTY ), str_split( '01234567890123456789' ) );
+	return preg_replace_callback( '/>([^<]*)</u', function( $match ) use ( $ascii ) {
+		$text = strtr( $match[1], $ascii );
+		$locale = dam_current_locale();
+		if ( 'en' !== $locale ) { $text = strtr( $text, array_combine( str_split( '0123456789' ), preg_split( '//u', 'fa' === $locale ? '۰۱۲۳۴۵۶۷۸۹' : '٠١٢٣٤٥٦٧٨٩', -1, PREG_SPLIT_NO_EMPTY ) ) ); }
+		return '>' . $text . '<';
+	}, (string) $links );
+}
+
 function dam_register_patients() {
 	register_post_type( 'patient', array(
 		'labels' => array(
@@ -177,12 +231,12 @@ function dam_render_patient_tree( $parent = 0, $depth = 0 ) {
 	if ( is_wp_error( $terms ) ) { return; }
 	echo '<ul>';
 	foreach ( $terms as $term ) {
-		echo '<li><details><summary><span class="patient-tree-toggle" aria-hidden="true"></span><a href="' . esc_url( get_term_link( $term ) ) . '">' . esc_html( $term->name ) . '</a></summary>';
+		echo '<li><details><summary><span class="patient-tree-toggle" aria-hidden="true"></span><a href="' . esc_url( get_term_link( $term ) ) . '">' . esc_html( dam_patient_term_name( $term ) ) . '</a></summary>';
 		dam_render_patient_tree( $term->term_id, $depth + 1 );
 		$patients = dam_patient_query( $term->term_id, true )->posts;
 		if ( $patients ) {
 			echo '<ul class="patient-tree-patients">';
-			foreach ( $patients as $patient ) { echo '<li><a href="' . esc_url( get_permalink( $patient ) ) . '">' . esc_html( $patient->post_title ) . '</a></li>'; }
+			foreach ( $patients as $patient ) { echo '<li><a href="' . esc_url( get_permalink( $patient ) ) . '">' . esc_html( get_the_title( $patient ) ) . '</a></li>'; }
 			echo '</ul>';
 		}
 		echo '</details></li>';
@@ -226,11 +280,11 @@ function dam_render_patient_archive( $term_id = 0, $title = '', $heading_level =
 		<div>
 		<?php if ( $children && ! is_wp_error( $children ) ) : ?><div class="patient-category-grid">
 			<?php foreach ( $children as $term ) : $image = dam_patient_term_image( $term->term_id ); ?>
-			<a class="patient-category-card" href="<?php echo esc_url( get_term_link( $term ) ); ?>"><?php if ( $image ) : ?><img loading="lazy" src="<?php echo esc_url( $image ); ?>" alt=""><?php endif; ?><span><?php echo esc_html( $term->name ); ?></span></a>
+			<a class="patient-category-card" href="<?php echo esc_url( get_term_link( $term ) ); ?>"><?php if ( $image ) : ?><img loading="lazy" src="<?php echo esc_url( $image ); ?>" alt=""><?php endif; ?><span><?php echo esc_html( dam_patient_term_name( $term ) ); ?></span></a>
 			<?php endforeach; ?>
 		</div><?php endif; ?>
 		<?php $items = array(); foreach ( $query->posts as $patient ) { $items = array_merge( $items, dam_patient_media( $patient->ID ) ); } dam_render_patient_gallery( $items ); ?>
-		<nav class="patient-pagination" aria-label="<?php echo esc_attr( dam_patient_label( 'Pagination', 'صفحه‌بندی', 'ترقيم الصفحات' ) ); ?>"><?php echo wp_kses_post( paginate_links( array( 'total' => $query->max_num_pages, 'current' => $page ) ) ); ?></nav>
+		<nav class="patient-pagination" aria-label="<?php echo esc_attr( dam_patient_label( 'Pagination', 'صفحه‌بندی', 'ترقيم الصفحات' ) ); ?>"><?php echo wp_kses_post( dam_patient_pagination( $query->max_num_pages, $page ) ); ?></nav>
 		</div>
 	</div></section>
 	<?php
