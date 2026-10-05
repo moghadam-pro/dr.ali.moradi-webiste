@@ -21,6 +21,7 @@ function dam_meta_field_definitions() {
 		'team_member' => array(
 			array( 'key' => 'dam_role', 'label' => __( 'Role', 'dr-ali-moradi' ), 'type' => 'text' ),
 			array( 'key' => 'dam_summary', 'label' => __( 'Short summary', 'dr-ali-moradi' ), 'type' => 'text' ),
+			array( 'key' => 'dam_related_links', 'label' => __( 'Related links', 'dr-ali-moradi' ), 'type' => 'links' ),
 		),
 		'post'        => array(
 			array( 'key' => 'dam_read_minutes', 'label' => __( 'Read time (minutes)', 'dr-ali-moradi' ), 'type' => 'number' ),
@@ -50,18 +51,45 @@ function dam_meta_field_definitions() {
 }
 
 function dam_register_post_meta() {
+	$auth_callback = function () {
+		return current_user_can( 'edit_posts' );
+	};
+
 	foreach ( dam_meta_field_definitions() as $post_type => $fields ) {
 		foreach ( $fields as $field ) {
+			if ( 'links' === $field['type'] ) {
+				register_post_meta(
+					$post_type,
+					$field['key'],
+					array(
+						'show_in_rest'  => array(
+							'schema' => array(
+								'type'  => 'array',
+								'items' => array(
+									'type'       => 'object',
+									'properties' => array(
+										'url'   => array( 'type' => 'string' ),
+										'title' => array( 'type' => 'string' ),
+									),
+								),
+							),
+						),
+						'single'        => true,
+						'type'          => 'array',
+						'auth_callback' => $auth_callback,
+					)
+				);
+				continue;
+			}
+
 			register_post_meta(
 				$post_type,
 				$field['key'],
 				array(
-					'show_in_rest' => true,
-					'single'       => true,
-					'type'         => 'number' === $field['type'] ? 'number' : 'string',
-					'auth_callback' => function () {
-						return current_user_can( 'edit_posts' );
-					},
+					'show_in_rest'  => true,
+					'single'        => true,
+					'type'          => 'number' === $field['type'] ? 'number' : 'string',
+					'auth_callback' => $auth_callback,
 				)
 			);
 		}

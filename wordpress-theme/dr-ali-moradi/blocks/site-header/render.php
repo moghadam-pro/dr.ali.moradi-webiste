@@ -7,7 +7,7 @@ $locale = dam_current_locale();
 $rtl    = 'en' !== $locale;
 $t      = dam_site_copy( $locale );
 $logo   = 'en' === $locale ? 'logo.en.svg' : 'logo.fa-ar.svg';
-$home   = function_exists( 'pll_home_url' ) ? pll_home_url( $locale ) : home_url( '/' );
+$home   = dam_front_page_clean_url( $locale );
 
 $menu_icon_open  = dam_icon( 'menu', 24 );
 $menu_icon_close = dam_icon( 'x', 24 );
@@ -44,6 +44,12 @@ $menu_icon_close = dam_icon( 'x', 24 );
 					$order = array( 'en' => 0, 'fa' => 1, 'ar' => 2 );
 					return ( $order[ $a['slug'] ] ?? 9 ) <=> ( $order[ $b['slug'] ] ?? 9 );
 				} );
+				if ( is_front_page() ) {
+					foreach ( $languages as &$language ) {
+						$language['url'] = dam_front_page_clean_url( $language['slug'] );
+					}
+					unset( $language );
+				}
 				?>
 				<div class="language-control">
 					<button type="button" class="language-button" data-language-toggle aria-expanded="false" aria-label="<?php echo esc_attr( $t['chooseLanguage'] ); ?>">

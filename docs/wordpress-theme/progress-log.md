@@ -1023,3 +1023,15 @@ repository copy instead had a `0.1.0` header and a separate `0.9.4` cache
 constant. Replacing the active theme from that older tree would cause a
 regression, so no production files or database records were changed in this
 stage.
+
+## 2026-10-05 — production 3.0.0 synchronized
+
+Exported the active theme through the WordPress Site Editor. Original archive:
+`~/Downloads/dr-ali-moradi.zip`, SHA-256
+`855e1588410b159f6e10614768f0b42da9d267b082177f7e5ccb6b886cb6403c`.
+The export includes PHP, assets, translations and the active template overrides.
+Scanned the source for configuration/credential files before copying it into Git;
+normalized text line endings. Preserved production page-content migrations,
+Customizer, Abar fonts, breadcrumbs, SEO, slug redirects, translation editing,
+team links and role cleanup. Production identifies itself as 3.0.0.
+The earlier production snapshot blocker is resolved by this export.

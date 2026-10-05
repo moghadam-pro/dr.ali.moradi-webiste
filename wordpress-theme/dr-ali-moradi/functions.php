@@ -23,8 +23,10 @@ define( 'DAM_THEME_VERSION', $dam_theme->get( 'Version' ) ? $dam_theme->get( 'Ve
 require_once DAM_THEME_DIR . '/inc/post-types.php';
 require_once DAM_THEME_DIR . '/inc/taxonomies.php';
 require_once DAM_THEME_DIR . '/inc/content-migrations.php';
+require_once DAM_THEME_DIR . '/inc/role-cleanup.php';
 require_once DAM_THEME_DIR . '/inc/meta-fields.php';
 require_once DAM_THEME_DIR . '/inc/theme-options.php';
+require_once DAM_THEME_DIR . '/inc/customizer.php';
 require_once DAM_THEME_DIR . '/inc/icons.php';
 require_once DAM_THEME_DIR . '/inc/homepage-content.php';
 require_once DAM_THEME_DIR . '/inc/interior-content.php';
@@ -33,9 +35,14 @@ require_once DAM_THEME_DIR . '/inc/about-content.php';
 require_once DAM_THEME_DIR . '/inc/clinic-content.php';
 require_once DAM_THEME_DIR . '/inc/blog-content.php';
 require_once DAM_THEME_DIR . '/inc/gallery.php';
+require_once DAM_THEME_DIR . '/inc/page-content.php';
 require_once DAM_THEME_DIR . '/inc/nav-walker.php';
 require_once DAM_THEME_DIR . '/inc/blocks.php';
 require_once DAM_THEME_DIR . '/inc/polylang.php';
+require_once DAM_THEME_DIR . '/inc/seo.php';
+require_once DAM_THEME_DIR . '/inc/i18n.php';
+require_once DAM_THEME_DIR . '/inc/slug-redirects.php';
+require_once DAM_THEME_DIR . '/inc/multilang-editor.php';
 
 /**
  * Theme setup: text domain, supports, nav menu locations.
@@ -57,8 +64,10 @@ function dam_setup() {
 
 	register_nav_menus(
 		array(
-			'primary' => __( 'Primary Navigation', 'dr-ali-moradi' ),
-			'footer'  => __( 'Footer Navigation', 'dr-ali-moradi' ),
+			'primary'          => __( 'Primary Navigation', 'dr-ali-moradi' ),
+			// `footer` keeps its original key so menus already assigned to it stay assigned.
+			'footer'           => __( 'Footer — Quick access', 'dr-ali-moradi' ),
+			'footer_resources' => __( 'Footer — Patient resources', 'dr-ali-moradi' ),
 		)
 	);
 }
@@ -73,21 +82,26 @@ function dam_enqueue_editor_assets() {
 add_action( 'after_setup_theme', 'dam_enqueue_editor_assets' );
 
 /**
+ * Cache-busting version string for a theme-bundled asset, based on the
+ * file's own last-modified time. This avoids serving stale CSS and JS after
+ * a deploy while keeping the theme header as the release-version source.
+ */
+function dam_asset_version( $relative_path ) {
+	$file = DAM_THEME_DIR . $relative_path;
+	return file_exists( $file ) ? (string) filemtime( $file ) : DAM_THEME_VERSION;
+}
+
+/**
  * Front-end stylesheet. theme.json/Global Styles cover most presentation;
  * this file only holds the handful of rules block support doesn't reach
  * (e.g. component-specific layout for the theme's own dynamic blocks).
  */
 function dam_enqueue_assets() {
-	wp_enqueue_style( 'dr-ali-moradi-style', DAM_THEME_URI . '/assets/css/style.css', array(), DAM_THEME_VERSION );
-	wp_enqueue_script( 'dr-ali-moradi-site', DAM_THEME_URI . '/assets/js/site.js', array(), DAM_THEME_VERSION, true );
+	wp_enqueue_style( 'dr-ali-moradi-style', DAM_THEME_URI . '/assets/css/style.css', array(), dam_asset_version( '/assets/css/style.css' ) );
+	wp_enqueue_script( 'dr-ali-moradi-site', DAM_THEME_URI . '/assets/js/site.js', array(), dam_asset_version( '/assets/js/site.js' ), true );
 }
 add_action( 'wp_enqueue_scripts', 'dam_enqueue_assets' );
 
-/**
- * Adds a `locale-{lang}` body class (matching the reference design's own
- * `.locale-fa` / `.locale-ar` selectors) so Persian/Arabic pages pick up
- * the Vazirmatn/Scheherazade font stack without per-template overrides.
- */
 /**
  * URL for a theme-bundled asset with the same `?ver=` cache-busting the
  * enqueued CSS/JS already use. Without this, a file that 404s once (e.g.
@@ -97,9 +111,13 @@ add_action( 'wp_enqueue_scripts', 'dam_enqueue_assets' );
  * never fixes it for anyone who already hit the 404. See progress-log.md.
  */
 function dam_theme_asset_url( $relative_path ) {
-	return DAM_THEME_URI . $relative_path . '?ver=' . DAM_THEME_VERSION;
+	return DAM_THEME_URI . $relative_path . '?ver=' . dam_asset_version( $relative_path );
 }
 
+/**
+ * Adds a `locale-{lang}` body class so Persian/Arabic pages pick up the
+ * Abar VF/Scheherazade font stack without per-template overrides.
+ */
 function dam_locale_body_class( $classes ) {
 	$locale     = dam_current_locale();
 	$classes[]  = 'locale-' . $locale;

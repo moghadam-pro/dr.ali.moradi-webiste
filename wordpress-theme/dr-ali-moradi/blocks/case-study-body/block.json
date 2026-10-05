@@ -1,0 +1,11 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dr-ali-moradi/case-study-body",
+	"title": "Condition / Innovation Detail",
+	"category": "dr-ali-moradi",
+	"icon": "welcome-learn-more",
+	"description": "A polished detail layout for Condition and Innovation entries.",
+	"supports": { "html": false },
+	"render": "file:./render.php"
+}
