@@ -8,6 +8,10 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Homepage Innovation cards follow the selected first three project Pages in
+  EN/FA/AR, including current titles, summaries, links and featured images
+  (editable Page covers are used when no featured image is assigned).
+
 - Physician/Person JSON-LD on the homepage and About page, with the confirmed
   Google Scholar profile and an extensible `dam_physician_same_as` filter.
 - `hreflang="x-default"` on language homepages.

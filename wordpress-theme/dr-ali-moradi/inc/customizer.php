@@ -103,23 +103,23 @@ function dam_customizer_defaults( $locale ) {
 		$d[ "appointment_{$i}_eyebrow" ] = $card[0]; $d[ "appointment_{$i}_title" ] = $card[1];
 		$d[ "appointment_{$i}_body" ] = $card[2];
 	}
-	// Fixed homepage cards preserve the three published stories at migration time.
-	// They are deliberately independent of Posts, dates and category assignments.
+	// Curated cards match the first three approved Innovation projects.
+	// Their initial images match the featured images observed on production.
 	$innovation_cards = array(
 		'en' => array(
-			array( 'Innovation', 'Magnetic distraction', 'A research-led approach to controlled joint distraction and tissue preservation.', 'https://dralimoradi.com/magnetic-distraction/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-magnetic-distraction-1024x576.png' ),
-			array( 'Innovation', 'Bionic hand control', 'Magnetic sensing and control research for more intuitive prosthetic-hand function.', 'https://dralimoradi.com/bionic-hand-control/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-bionic-hand-control-1024x683.png' ),
-			array( 'Innovation', 'External fixation systems', 'Fixation concepts informed by fracture biomechanics, surgical precision, and clinical workflow.', 'https://dralimoradi.com/external-fixation-systems/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-external-fixation-systems-1024x576.png' ),
+			array( 'Innovation', 'Magnetic control for an artificial limb', 'A research programme investigating magnetic sensing and control interfaces for more intuitive activation of an artificial upper limb.', 'https://dralimoradi.com/innovations/magnetic-control-artificial-limb/', 'https://dralimoradi.com/wp-content/uploads/2026/10/handv.jpg' ),
+			array( 'Innovation', 'Magnetic joint distraction', 'An implant-based research concept for sustained distraction at the thumb CMC joint.', 'https://dralimoradi.com/innovations/magnetic-joint-distraction/', 'https://dralimoradi.com/wp-content/uploads/2026/09/magnetic-distractor.png' ),
+			array( 'Innovation', 'Dynamic distal-radius external fixator', 'Adjustable external fixation designed around gradual distraction and the articular traction axis.', 'https://dralimoradi.com/innovations/dynamic-distal-radius-external-fixator/', 'https://dralimoradi.com/wp-content/uploads/2026/10/image-24.png' ),
 		),
 		'fa' => array(
-			array( 'نوآوری', 'دیستراکشن مغناطیسی', 'رویکردی پژوهش‌محور برای کشش کنترل‌شده مفصل و حفظ بافت.', 'https://dralimoradi.com/fa/magnetic-distraction/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-magnetic-distraction-1024x576.png' ),
-			array( 'نوآوری', 'کنترل دست بیونیک', 'پژوهش حسگرهای مغناطیسی برای کنترل طبیعی‌تر پروتز دست.', 'https://dralimoradi.com/fa/bionic-hand-control/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-bionic-hand-control-1024x683.png' ),
-			array( 'نوآوری', 'سامانه‌های فیکساتور خارجی', 'ایده‌های تثبیت بر پایه بیومکانیک شکستگی، دقت جراحی و روند واقعی درمان.', 'https://dralimoradi.com/fa/external-fixation-systems/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-external-fixation-systems-1024x576.png' ),
+			array( 'نوآوری', 'کنترل مغناطیسی اندام مصنوعی', 'برنامه پژوهشی برای بررسی حسگرهای مغناطیسی و رابط‌های کنترلی با هدف فعال‌سازی طبیعی‌تر اندام مصنوعی فوقانی.', 'https://dralimoradi.com/fa/innovations/magnetic-control-artificial-limb/', 'https://dralimoradi.com/wp-content/uploads/2026/10/handv.jpg' ),
+			array( 'نوآوری', 'دیسترکشن مغناطیسی مفصل', 'مفهوم ایمپلنتی پژوهشی برای ایجاد دیسترکشن پایدار در مفصل CMC شست.', 'https://dralimoradi.com/fa/innovations/magnetic-joint-distraction/', 'https://dralimoradi.com/wp-content/uploads/2026/09/magnetic-distractor.png' ),
+			array( 'نوآوری', 'فیکساتور خارجی دینامیک دیستال رادیوس', 'تثبیت خارجی قابل‌تنظیم با دیسترکشن تدریجی و محور کشش مفصلی.', 'https://dralimoradi.com/fa/innovations/dynamic-distal-radius-external-fixator/', 'https://dralimoradi.com/wp-content/uploads/2026/10/image-24.png' ),
 		),
 		'ar' => array(
-			array( 'الابتكار', 'الإلهاء المغناطيسي', 'نهج بحثي للإلهاء المفصلي المضبوط والحفاظ على الأنسجة.', 'https://dralimoradi.com/ar/magnetic-distraction/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-magnetic-distraction-1024x576.png' ),
-			array( 'الابتكار', 'التحكم باليد الإلكترونية', 'أبحاث الاستشعار المغناطيسي لتحكم أكثر طبيعية في اليد التعويضية.', 'https://dralimoradi.com/ar/bionic-hand-control/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-bionic-hand-control-1024x683.png' ),
-			array( 'الابتكار', 'أنظمة التثبيت الخارجي', 'مفاهيم تثبيت تستند إلى ميكانيكا الكسر والدقة الجراحية وسير العمل السريري.', 'https://dralimoradi.com/ar/external-fixation-systems/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-external-fixation-systems-1024x576.png' ),
+			array( 'الابتكار', 'التحكم المغناطيسي بالطرف الصناعي', 'برنامج بحثي في الاستشعار المغناطيسي وواجهات التحكم لتفعيل الطرف العلوي الصناعي بصورة أكثر بديهية.', 'https://dralimoradi.com/ar/innovations/magnetic-control-artificial-limb/', 'https://dralimoradi.com/wp-content/uploads/2026/10/handv.jpg' ),
+			array( 'الابتكار', 'إبعاد المفصل مغناطيسياً', 'مفهوم بحثي مزروع لإبعاد مستمر في مفصل قاعدة الإبهام.', 'https://dralimoradi.com/ar/innovations/magnetic-joint-distraction/', 'https://dralimoradi.com/wp-content/uploads/2026/09/magnetic-distractor.png' ),
+			array( 'الابتكار', 'المثبت الخارجي الديناميكي للكعبرة البعيدة', 'تثبيت قابل للضبط بإبعاد تدريجي ومحور شد مفصلي.', 'https://dralimoradi.com/ar/innovations/dynamic-distal-radius-external-fixator/', 'https://dralimoradi.com/wp-content/uploads/2026/10/image-24.png' ),
 		),
 	);
 	foreach ( $innovation_cards[ $locale ] ?? $innovation_cards['en'] as $index => $card ) {

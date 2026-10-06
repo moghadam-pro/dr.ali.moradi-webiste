@@ -64,6 +64,14 @@ so the theme enqueues it on `customize_controls_enqueue_scripts`.
 
 ## Compatibility and data storage
 
+As of 2026-10-06, the three Innovation cards follow the localized Pages for
+`magnetic-control-artificial-limb`, `magnetic-joint-distraction` and
+`dynamic-distal-radius-external-fixator`, in that order. Titles, descriptions,
+links and images come from those published Pages. Images use the featured image
+first, then the first image in the designed Page content. Edit those fields in
+Pages; Customizer card values are fallbacks when a project Page is unavailable.
+Small labels, button labels and grid settings remain Customizer controls.
+
 Settings are stored as locale-suffixed theme mods such as
 `dam_hero_background_image_fa`. Existing delimiter-based values for Connected
 Practice, Pathways, and Appointments are read as defaults after upgrade, but
