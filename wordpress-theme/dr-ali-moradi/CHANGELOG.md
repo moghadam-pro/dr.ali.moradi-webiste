@@ -6,6 +6,24 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [3.4.0] - 2026-10-06
+
+### Added
+
+- Three fixed homepage Innovation cards per language. Customizer controls edit
+  each card's image, label, title, description, destination and link label.
+- Per-media sensitivity control in the Patient editor. Existing clinical media
+  starts blurred; the visitor must choose Show in the lightbox. Category covers
+  and gallery thumbnails are protected too.
+
+### Changed
+
+- Homepage Innovation no longer queries Posts or categories, so publishing a
+  Post cannot displace its three curated cards.
+- Only operator-reviewed non-sensitive Patient images enter the image sitemap.
+- Innovation Page link reconciliation matches project slugs after a catalogue
+  reorder instead of assuming the original numerical order.
+
 ## [3.3.0] - 2026-10-06
 
 ### Added

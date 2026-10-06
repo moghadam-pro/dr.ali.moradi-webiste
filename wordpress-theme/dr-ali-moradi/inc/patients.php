@@ -92,6 +92,7 @@ function dam_register_patients() {
 				'id' => array( 'type' => 'integer' ), 'url' => array( 'type' => 'string' ),
 				'type' => array( 'type' => 'string', 'enum' => array( 'image', 'video', 'link' ) ),
 				'title' => array( 'type' => 'string' ), 'description' => array( 'type' => 'string' ),
+				'sensitive' => array( 'type' => 'boolean' ),
 			),
 		) ) ),
 	) );
@@ -111,7 +112,10 @@ function dam_sanitize_patient_gallery( $items ) {
 			if ( ! preg_match( '#^(image|video)/#', (string) $mime ) ) { continue; }
 			$type = str_starts_with( $mime, 'video/' ) ? 'video' : 'image';
 		}
-		$out[] = array( 'id' => $id, 'url' => $url, 'type' => in_array( $type, array( 'image', 'video', 'link' ), true ) ? $type : 'link', 'title' => sanitize_text_field( $item['title'] ?? '' ), 'description' => sanitize_textarea_field( $item['description'] ?? '' ) );
+		$type = in_array( $type, array( 'image', 'video', 'link' ), true ) ? $type : 'link';
+		// Existing clinical media is hidden by default until each item is reviewed.
+		$sensitive = 'link' !== $type && ( ! array_key_exists( 'sensitive', $item ) || filter_var( $item['sensitive'], FILTER_VALIDATE_BOOLEAN ) );
+		$out[] = array( 'id' => $id, 'url' => $url, 'type' => $type, 'title' => sanitize_text_field( $item['title'] ?? '' ), 'description' => sanitize_textarea_field( $item['description'] ?? '' ), 'sensitive' => $sensitive );
 	}
 	return $out;
 }
@@ -197,7 +201,7 @@ function dam_patient_query( $term_id = 0, $direct = false, $limit = -1, $page = 
 
 function dam_patient_media( $patient_id ) {
 	$items = dam_sanitize_patient_gallery( get_post_meta( $patient_id, 'dam_patient_gallery', true ) );
-	if ( ! $items && has_post_thumbnail( $patient_id ) ) { $items = array( array( 'id' => get_post_thumbnail_id( $patient_id ), 'url' => get_the_post_thumbnail_url( $patient_id, 'large' ), 'type' => 'image', 'title' => '', 'description' => '' ) ); }
+	if ( ! $items && has_post_thumbnail( $patient_id ) ) { $items = array( array( 'id' => get_post_thumbnail_id( $patient_id ), 'url' => get_the_post_thumbnail_url( $patient_id, 'large' ), 'type' => 'image', 'title' => '', 'description' => '', 'sensitive' => true ) ); }
 	foreach ( $items as &$item ) {
 		$item['title'] = $item['title'] ?: get_the_title( $patient_id );
 		$item['description'] = $item['description'] ?: wp_strip_all_tags( get_the_excerpt( $patient_id ) );
@@ -220,9 +224,9 @@ function dam_patient_gallery_items( $term_id, $limit = -1 ) {
 
 function dam_patient_term_image( $term_id ) {
 	foreach ( dam_patient_query( $term_id )->posts as $patient ) {
-		foreach ( dam_patient_media( $patient->ID ) as $item ) { if ( 'image' === $item['type'] ) { return $item['preview'] ?: $item['url']; } }
+		foreach ( dam_patient_media( $patient->ID ) as $item ) { if ( 'image' === $item['type'] ) { return $item; } }
 	}
-	return '';
+	return array();
 }
 
 function dam_render_patient_tree( $parent = 0, $depth = 0 ) {
@@ -252,8 +256,9 @@ function dam_render_patient_gallery( $items, $preview = false ) {
 		<?php if ( $preview ) : ?><button class="gallery-nav gallery-prev" data-gallery-prev aria-label="<?php echo esc_attr( $hub['previous'] ); ?>"><?php echo dam_icon( 'chevron-left', 20 ); ?></button><?php endif; ?>
 		<div class="<?php echo $preview ? 'gallery-strip-track' : 'gallery-full-track'; ?>">
 			<?php foreach ( $preview ? array_slice( $items, 0, 4 ) : $items as $i => $item ) : ?>
-			<button type="button" class="gallery-thumb" data-gallery-thumb data-index="<?php echo (int) $i; ?>" aria-label="<?php echo esc_attr( $item['title'] ); ?>">
+			<button type="button" class="gallery-thumb<?php echo ! empty( $item['sensitive'] ) ? ' is-sensitive' : ''; ?>" data-gallery-thumb data-index="<?php echo (int) $i; ?>" aria-label="<?php echo esc_attr( $item['title'] ); ?>">
 				<?php if ( $item['preview'] ) : ?><img class="fill-img" loading="lazy" src="<?php echo esc_url( $item['preview'] ); ?>" alt="<?php echo esc_attr( $item['title'] ); ?>"><?php endif; ?>
+				<span class="gallery-sensitive-warning" aria-hidden="true"><?php echo esc_html( dam_patient_label( 'Sensitive image · View', 'تصویر حساس · نمایش', 'صورة حساسة · عرض' ) ); ?></span>
 				<span><?php echo 'image' === $item['type'] ? esc_html( $item['title'] ) : '▶ ' . esc_html( $item['title'] ); ?></span>
 			</button>
 			<?php endforeach; ?>
@@ -280,7 +285,7 @@ function dam_render_patient_archive( $term_id = 0, $title = '', $heading_level =
 		<div>
 		<?php if ( $children && ! is_wp_error( $children ) ) : ?><div class="patient-category-grid">
 			<?php foreach ( $children as $term ) : $image = dam_patient_term_image( $term->term_id ); ?>
-			<a class="patient-category-card" href="<?php echo esc_url( get_term_link( $term ) ); ?>"><?php if ( $image ) : ?><img loading="lazy" src="<?php echo esc_url( $image ); ?>" alt=""><?php endif; ?><span><?php echo esc_html( dam_patient_term_name( $term ) ); ?></span></a>
+			<a class="patient-category-card<?php echo ! empty( $image['sensitive'] ) ? ' is-sensitive' : ''; ?>" href="<?php echo esc_url( get_term_link( $term ) ); ?>"><?php if ( $image ) : ?><img loading="lazy" src="<?php echo esc_url( $image['preview'] ?: $image['url'] ); ?>" alt=""><?php endif; ?><span><?php echo esc_html( dam_patient_term_name( $term ) ); ?></span><?php if ( ! empty( $image['sensitive'] ) ) : ?><small><?php echo esc_html( dam_patient_label( 'Sensitive image', 'تصویر حساس', 'صورة حساسة' ) ); ?></small><?php endif; ?></a>
 			<?php endforeach; ?>
 		</div><?php endif; ?>
 		<?php $items = array(); foreach ( $query->posts as $patient ) { $items = array_merge( $items, dam_patient_media( $patient->ID ) ); } dam_render_patient_gallery( $items ); ?>

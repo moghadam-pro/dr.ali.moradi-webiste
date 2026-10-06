@@ -24,10 +24,15 @@ $ops = dam_innovation_page_operations(); verify( count( array_filter( $ops, fn( 
 $urls = array_map( fn( $p ) => 'https://example.test/innovations/' . $p['key'] . '/', $projects );
 foreach ( array(164,165,166) as $id ) {
  $original = file_get_contents( dirname(__DIR__) . '/wordpress-theme/content-migration/page-updates-2026-10-06/' . $id . '.html' );
+ verify( str_contains( $original, '<div class="content-sections">' ) && substr_count( $original, 'class="content-section"' ) === 14, 'Hub layout needs one container and fourteen cards.' );
+ verify( 1 === substr_count( $original, '<span class="section-count">11</span>' ), 'Eleventh project must have the correct count.' );
  $changed = dam_innovation_hub_links( $original, $urls, 'Read project' );
  verify( ! is_wp_error( $changed ), 'Current hub structure must migrate.' );
  verify( substr_count( $changed, '>Read project</a>' ) === 14, 'H3 must have only one internal destination.' );
  verify( substr_count( $changed, 'href="#section-' ) === 14, 'Sidebar anchors must be preserved.' );
+ preg_match( '~<h2 id="section-0">.*?<a class="button" href="([^"]+)"~s', $changed, $first_link );
+ preg_match( '~<h2 id="section-10">.*?<a class="button" href="([^"]+)"~s', $changed, $eleventh_link );
+ verify( str_ends_with( $first_link[1] ?? '', '/magnetic-control-artificial-limb/' ) && str_ends_with( $eleventh_link[1] ?? '', '/dynamometer/' ), 'Reordered projects must retain their own Page URLs.' );
  verify( ! str_contains( $changed, 'legacy.dralimoradi.com' ), 'Hub must have no archive references.' );
  verify( dam_innovation_hub_links( $changed, $urls, 'Read project' ) === $changed, 'Hub update must be idempotent.' );
 }

@@ -89,12 +89,18 @@ function dam_innovation_pages_run( $op ) {
 }
 /** Replace only catalogue buttons; covers, sidebar anchors and operator prose are retained. */
 function dam_innovation_hub_links( $content, $urls, $label ) {
- foreach ( $urls as $index => $url ) {
-  $pattern = '~(<h2 id="section-' . $index . '">[\s\S]*?</p>)(?:\s*<a class="button"[^>]*>[\s\S]*?</a>)+~';
-  $content = preg_replace_callback( $pattern, function( $match ) use ( $url, $label ) { return $match[1] . '<a class="button" href="' . esc_url( $url ) . '">' . esc_html( $label ) . '</a>'; }, $content, 1, $count );
-  if ( 1 !== $count ) { return new WP_Error( 'hub_structure', 'Catalogue section not found: ' . $index ); }
- }
- return $content;
+ $projects = dam_innovation_page_seed();
+ if ( count( $urls ) !== count( $projects ) ) { return new WP_Error( 'hub_structure', 'Project URL count mismatch.' ); }
+ $targets = array_combine( array_column( $projects, 'key' ), array_values( $urls ) );
+ $seen = array(); $invalid = false;
+ $updated = preg_replace_callback( '~(<h2 id="section-\d+">[\s\S]*?</p>)\s*<a class="button" href="([^"]+)">[\s\S]*?</a>~', function( $match ) use ( $targets, $label, &$seen, &$invalid ) {
+  $path = parse_url( html_entity_decode( $match[2], ENT_QUOTES, 'UTF-8' ), PHP_URL_PATH );
+  $key = basename( rtrim( (string) $path, '/' ) );
+  if ( ! isset( $targets[ $key ] ) || isset( $seen[ $key ] ) ) { $invalid = true; return $match[0]; }
+  $seen[ $key ] = true;
+  return $match[1] . '<a class="button" href="' . esc_url( $targets[ $key ] ) . '">' . esc_html( $label ) . '</a>';
+ }, $content );
+ return $invalid || count( $seen ) !== count( $projects ) ? new WP_Error( 'hub_structure', 'Catalogue projects missing or duplicated.' ) : $updated;
 }
 function dam_innovation_pages_finalize( $projects ) {
  $all = array(); $labels = array( 'en' => 'Read the project page', 'fa' => 'مشاهده صفحه پروژه', 'ar' => 'عرض صفحة المشروع' );

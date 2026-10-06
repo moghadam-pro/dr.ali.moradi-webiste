@@ -86,7 +86,7 @@
 
 		// Shared patient lightbox; strings are supported for legacy gallery markup.
         var modal = document.querySelector('[data-gallery-modal]');
-        var activeImages = [], activeIndex = 0, returnFocus, previousOverflow;
+        var activeImages = [], activeIndex = 0, returnFocus, previousOverflow, revealedImages = new Set();
         function mediaItem(item) { return typeof item === 'string' ? {url: item, preview: item, type: 'image', title: '', description: ''} : item; }
         function safeUrl(url) { try { var parsed = new URL(url, location.href); return /^https?:$/.test(parsed.protocol) ? parsed.href : ''; } catch (e) { return ''; } }
         function showModalImage() {
@@ -95,12 +95,16 @@
             var image = modal.querySelector('[data-gallery-modal-image]');
             var video = modal.querySelector('[data-gallery-modal-video]');
             var link = modal.querySelector('[data-gallery-modal-video-link]');
+            var sensitive = Boolean(item.sensitive) && !revealedImages.has(activeIndex);
+            var warning = modal.querySelector('[data-gallery-modal-sensitive]');
             video.pause(); video.removeAttribute('src'); video.load();
             image.hidden = item.type !== 'image'; video.hidden = item.type !== 'video'; link.hidden = item.type !== 'link';
             image.removeAttribute('src');
             if (item.type === 'image') { image.src = safeUrl(item.url); image.alt = item.title || ''; }
-            if (item.type === 'video') { video.src = safeUrl(item.url); }
+            image.classList.toggle('is-sensitive', sensitive);
+            if (item.type === 'video' && !sensitive) { video.src = safeUrl(item.url); }
             if (item.type === 'link') { link.href = safeUrl(item.url); }
+            if (warning) warning.hidden = !sensitive;
             modal.querySelector('[data-gallery-modal-title]').textContent = item.title || '';
             modal.querySelector('[data-gallery-modal-description]').textContent = item.description || '';
             var patientLink = modal.querySelector('[data-gallery-modal-patient]');
@@ -109,7 +113,7 @@
         }
         function openModal(images, index, trigger) {
             if (!modal || !images.length) return;
-            activeImages = images; activeIndex = index; returnFocus = trigger; previousOverflow = document.body.style.overflow;
+            activeImages = images; activeIndex = index; revealedImages = new Set(); returnFocus = trigger; previousOverflow = document.body.style.overflow;
             showModalImage(); modal.hidden = false; document.body.style.overflow = 'hidden'; modal.querySelector('[data-gallery-close]').focus();
         }
         function closeModal() {
@@ -119,6 +123,7 @@
         }
         function stepModal(direction) { if (!activeImages.length) return; activeIndex = (activeIndex + direction + activeImages.length) % activeImages.length; showModalImage(); }
         if (modal) {
+            modal.querySelector('[data-gallery-modal-reveal]').addEventListener('click', function () { revealedImages.add(activeIndex); showModalImage(); modal.querySelector('[data-gallery-close]').focus(); });
             modal.querySelector('[data-gallery-close]').addEventListener('click', closeModal);
             modal.querySelector('[data-gallery-modal-prev]').addEventListener('click', function () { stepModal(-1); });
             modal.querySelector('[data-gallery-modal-next]').addEventListener('click', function () { stepModal(1); });
@@ -146,7 +151,8 @@
                     var img = thumb.querySelector('img');
                     if (!img && item.preview) { img = document.createElement('img'); img.className = 'fill-img'; thumb.prepend(img); }
                     if (img) { img.hidden = !item.preview; if(item.preview) img.src = safeUrl(item.preview); img.alt = item.title || ''; }
-                    var badge = thumb.querySelector('span'); if (badge) badge.textContent = (item.type === 'image' ? '' : '▶ ') + (item.title || String(index+1));
+                    thumb.classList.toggle('is-sensitive', Boolean(item.sensitive));
+                    var badge = thumb.querySelector('span:last-child'); if (badge) badge.textContent = (item.type === 'image' ? '' : '▶ ') + (item.title || String(index+1));
                     thumb.setAttribute('aria-label', item.title || String(index+1)); thumb.setAttribute('data-index', String(index));
                 });
             }

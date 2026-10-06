@@ -1,8 +1,31 @@
 # Progress Log
 
 Running record of implemented changes and observed production results. Use this
-file together with Git history; the current delivery branch is
-`codex/patients-gallery` on upstream.
+file together with Git history; `main` and the historical
+`codex/patients-gallery` delivery branch were synchronized at `29de031`
+before theme 3.4.0 work began.
+
+## 2026-10-06 — Innovation reorder, curated homepage and gallery protection / theme 3.4.0
+
+- Repaired live English Innovation Page 164 after an operator moved project 11
+  into the first slot. Restored the missing `.content-sections` wrapper, changed
+  sidebar titles/targets and corrected the eleventh count. Pages 165 (Persian)
+  and 166 (Arabic) now use the same project order. The first project is magnetic
+  control for an artificial limb; the eleventh is Dynamometer. Checked all 14
+  cards, numbers, headings and sidebar anchors in the three live routes.
+- Updated the tracked editable Page snapshots. The project-page reconciliation
+  now matches existing project slugs, so a later explicit re-run cannot swap
+  the first and eleventh destinations back.
+- Replaced the live-content Post query in the homepage Innovation block with
+  three fixed per-language card definitions matching the currently displayed
+  stories, images and links. Appearance → Customize exposes image, small label,
+  title, description, destination and button label for every card.
+- Added a per-gallery-item sensitivity checkbox, protective defaults for all
+  existing case images/videos, localized thumbnail/lightbox warnings and explicit
+  visitor reveal. Category cover images also blur if sensitive. Rank Math's
+  patient image sitemap now lists only images cleared by an operator.
+- Patient identities and media originals remain outside Git. Production theme
+  deployment, final checksum and live verification are recorded after release.
 
 ## 2026-10-06 — Documentation reconciliation and branch integration
 

@@ -1,5 +1,20 @@
 # Changelog
 
+## 2026-10-06 — Curated Innovation and sensitive case media / theme 3.4.0
+
+- Repaired the English Innovation Page's missing card container, sidebar and
+  numbering after items 1 and 11 were swapped. Applied the same order to the
+  Persian and Arabic Pages, preserving their editable Page content.
+- Replaced the homepage's latest-Innovation-Posts query with three fixed cards
+  in each language. Their images, labels, titles, descriptions, links and button
+  labels are editable in the corresponding Homepage Customizer section.
+- Blur clinical case photos/videos by default on gallery thumbnails, category
+  covers and lightbox; visitors can explicitly reveal each item. Operators can
+  mark reviewed media safe in the Patient editor. Sensitive images are excluded
+  from the image sitemap.
+- Made project-link reconciliation follow project keys so reordering cannot
+  route a card to another project's Page.
+
 ## 2026-10-06 — Project design and content completion / theme 3.3.0
 
 - Redesigned all fourteen innovation projects across 42 EN/FA/AR editable Pages.

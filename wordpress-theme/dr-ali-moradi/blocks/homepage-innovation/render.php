@@ -4,12 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $locale = dam_current_locale();
-$t      = dam_site_copy( $locale );
-
-$posts = dam_customizer_section_posts( 'innovation', $locale );
-if ( empty( $posts ) ) {
-	return;
-}
 $kicker   = dam_theme_mod( 'innovation_kicker', $locale );
 $title    = dam_theme_mod( 'innovation_title', $locale );
 $subtitle = dam_theme_mod( 'innovation_subtitle', $locale );
@@ -21,22 +15,25 @@ $columns  = max( 1, min( 3, (int) dam_theme_mod( 'innovation_columns', $locale )
 		<p><?php echo esc_html( $title ); ?>. <?php echo esc_html( $subtitle ); ?></p>
 	</div>
 	<div class="innovation-grid card-grid-columns-<?php echo esc_attr( $columns ); ?>">
-		<?php foreach ( $posts as $post ) :
-			$categories = get_the_category( $post->ID );
-			$category   = $categories ? $categories[0]->name : '';
-			$link       = get_permalink( $post );
+		<?php for ( $i = 1; $i <= 3; $i++ ) :
+			$tag         = dam_theme_mod( "innovation_card_{$i}_tag", $locale );
+			$card_title  = dam_theme_mod( "innovation_card_{$i}_title", $locale );
+			$body        = dam_theme_mod( "innovation_card_{$i}_body", $locale );
+			$link        = dam_theme_mod( "innovation_card_{$i}_url", $locale );
+			$image       = dam_theme_mod( "innovation_card_{$i}_image", $locale );
+			$link_label  = dam_theme_mod( "innovation_card_{$i}_button_label", $locale );
 			?>
 			<div class="innovation-card reveal">
 				<div class="innovation-art">
-					<?php if ( has_post_thumbnail( $post ) ) : ?>
-						<?php echo get_the_post_thumbnail( $post, 'large', array( 'class' => 'fill-img', 'alt' => get_the_title( $post ) ) ); ?>
+					<?php if ( $image ) : ?>
+						<img class="fill-img" src="<?php echo esc_url( $image ); ?>" alt="<?php echo esc_attr( $card_title ); ?>" loading="lazy">
 					<?php endif; ?>
 				</div>
-				<?php if ( $category ) : ?><p class="card-tag"><?php echo esc_html( $category ); ?></p><?php endif; ?>
-				<h3><a href="<?php echo esc_url( $link ); ?>"><?php echo esc_html( get_the_title( $post ) ); ?></a></h3>
-				<p><?php echo esc_html( get_the_excerpt( $post ) ); ?></p>
-				<a href="<?php echo esc_url( $link ); ?>"><?php echo esc_html( $t['readStory'] ); ?><?php echo dam_icon( 'arrow-right', 16 ); ?></a>
+				<?php if ( $tag ) : ?><p class="card-tag"><?php echo esc_html( $tag ); ?></p><?php endif; ?>
+				<h3><a href="<?php echo esc_url( $link ); ?>"><?php echo esc_html( $card_title ); ?></a></h3>
+				<p><?php echo esc_html( $body ); ?></p>
+				<a href="<?php echo esc_url( $link ); ?>"><?php echo esc_html( $link_label ); ?><?php echo dam_icon( 'arrow-right', 16 ); ?></a>
 			</div>
-		<?php endforeach; ?>
+		<?php endfor; ?>
 	</div>
 </section>

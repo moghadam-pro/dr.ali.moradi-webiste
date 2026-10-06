@@ -623,6 +623,18 @@ header.wp-block-template-part:has(.site-header) { position: sticky; top: 0; z-in
 .gallery-modal-caption p { margin:8px 0; font-size:14px; }
 .gallery-modal-caption a { color:#ffbb87; }
 .gallery-modal-caption [data-gallery-modal-count] { float:inline-end; font-size:13px; }
+.gallery-thumb.is-sensitive img, .patient-category-card.is-sensitive img, .gallery-modal-image img.is-sensitive { filter:blur(22px) brightness(.65); transform:scale(1.08); }
+.gallery-thumb.is-sensitive:hover img, .gallery-thumb.is-sensitive:focus-visible img { transform:scale(1.08); }
+.gallery-thumb .gallery-sensitive-warning { display:none; position:absolute; z-index:2; inset:0; align-items:center; justify-content:center; padding:18px; color:#fff; background:rgba(3,29,42,.52); font-size:14px; font-weight:750; text-align:center; line-height:1.5; }
+.gallery-thumb.is-sensitive .gallery-sensitive-warning { display:flex; }
+.gallery-thumb.is-sensitive > span:last-child { display:none; }
+.gallery-modal-sensitive { position:absolute; z-index:2; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; padding:24px; color:#fff; background:rgba(3,29,42,.44); text-align:center; }
+.gallery-modal-sensitive[hidden] { display:none; }
+.gallery-modal-sensitive p { margin:0; font-weight:750; font-size:clamp(16px,2vw,23px); }
+.gallery-modal-sensitive button { padding:11px 20px; border:1px solid #fff; border-radius:99px; background:#fff; color:#083344; font:inherit; font-weight:750; cursor:pointer; }
+.gallery-modal-sensitive button:focus-visible { outline:3px solid #ffbb87; outline-offset:3px; }
+.patient-category-card.is-sensitive img { transform:scale(1.08); }
+.patient-category-card small { position:absolute; top:12px; inset-inline-end:12px; padding:5px 8px; border-radius:99px; background:rgba(3,29,42,.8); color:#fff; font-size:11px; }
 @media(max-width:820px) { .patient-archive-layout { grid-template-columns:1fr; gap:24px; } .patient-sidebar { position:static; max-height:360px; } .patient-category-grid,.patient-archive .gallery-full-track { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:520px) { .patient-category-grid,.patient-archive .gallery-full-track { grid-template-columns:1fr; } .gallery-modal-panel { width:fit-content; height:auto; } }
 

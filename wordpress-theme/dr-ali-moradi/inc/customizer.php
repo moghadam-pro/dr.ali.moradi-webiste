@@ -50,9 +50,7 @@ function dam_customizer_defaults( $locale ) {
 		'pathways_body' => $t['pathsBody'],
 
 		'innovation_kicker' => $t['innovationIndex'], 'innovation_title' => $t['innovationTitle'],
-		'innovation_subtitle' => $t['innovationIntro'], 'innovation_source' => 'dynamic',
-		'innovation_category' => function_exists( 'dam_innovation_category_id' ) ? dam_innovation_category_id( $locale ) : 0,
-		'innovation_count' => 3, 'innovation_columns' => 3,
+		'innovation_subtitle' => $t['innovationIntro'], 'innovation_columns' => 3,
 
 		'impact_kicker' => $t['impactIndex'], 'impact_title' => $t['impactTitle'],
 		'impact_subtitle' => $t['figuresNote'],
@@ -105,6 +103,32 @@ function dam_customizer_defaults( $locale ) {
 		$d[ "appointment_{$i}_eyebrow" ] = $card[0]; $d[ "appointment_{$i}_title" ] = $card[1];
 		$d[ "appointment_{$i}_body" ] = $card[2];
 	}
+	// Fixed homepage cards preserve the three published stories at migration time.
+	// They are deliberately independent of Posts, dates and category assignments.
+	$innovation_cards = array(
+		'en' => array(
+			array( 'Innovation', 'Magnetic distraction', 'A research-led approach to controlled joint distraction and tissue preservation.', 'https://dralimoradi.com/magnetic-distraction/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-magnetic-distraction-1024x576.png' ),
+			array( 'Innovation', 'Bionic hand control', 'Magnetic sensing and control research for more intuitive prosthetic-hand function.', 'https://dralimoradi.com/bionic-hand-control/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-bionic-hand-control-1024x683.png' ),
+			array( 'Innovation', 'External fixation systems', 'Fixation concepts informed by fracture biomechanics, surgical precision, and clinical workflow.', 'https://dralimoradi.com/external-fixation-systems/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-external-fixation-systems-1024x576.png' ),
+		),
+		'fa' => array(
+			array( 'نوآوری', 'دیستراکشن مغناطیسی', 'رویکردی پژوهش‌محور برای کشش کنترل‌شده مفصل و حفظ بافت.', 'https://dralimoradi.com/fa/magnetic-distraction/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-magnetic-distraction-1024x576.png' ),
+			array( 'نوآوری', 'کنترل دست بیونیک', 'پژوهش حسگرهای مغناطیسی برای کنترل طبیعی‌تر پروتز دست.', 'https://dralimoradi.com/fa/bionic-hand-control/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-bionic-hand-control-1024x683.png' ),
+			array( 'نوآوری', 'سامانه‌های فیکساتور خارجی', 'ایده‌های تثبیت بر پایه بیومکانیک شکستگی، دقت جراحی و روند واقعی درمان.', 'https://dralimoradi.com/fa/external-fixation-systems/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-external-fixation-systems-1024x576.png' ),
+		),
+		'ar' => array(
+			array( 'الابتكار', 'الإلهاء المغناطيسي', 'نهج بحثي للإلهاء المفصلي المضبوط والحفاظ على الأنسجة.', 'https://dralimoradi.com/ar/magnetic-distraction/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-magnetic-distraction-1024x576.png' ),
+			array( 'الابتكار', 'التحكم باليد الإلكترونية', 'أبحاث الاستشعار المغناطيسي لتحكم أكثر طبيعية في اليد التعويضية.', 'https://dralimoradi.com/ar/bionic-hand-control/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-bionic-hand-control-1024x683.png' ),
+			array( 'الابتكار', 'أنظمة التثبيت الخارجي', 'مفاهيم تثبيت تستند إلى ميكانيكا الكسر والدقة الجراحية وسير العمل السريري.', 'https://dralimoradi.com/ar/external-fixation-systems/', 'https://dralimoradi.com/wp-content/uploads/2026/10/dam-editorial-external-fixation-systems-1024x576.png' ),
+		),
+	);
+	foreach ( $innovation_cards[ $locale ] ?? $innovation_cards['en'] as $index => $card ) {
+		$i = $index + 1;
+		foreach ( array( 'tag', 'title', 'body', 'url', 'image' ) as $field_index => $field ) {
+			$d[ "innovation_card_{$i}_{$field}" ] = $card[ $field_index ];
+		}
+		$d[ "innovation_card_{$i}_button_label" ] = $t['readStory'];
+	}
 
 	// Keep previously saved delimiter-based settings visible after upgrading.
 	$legacy_journey = dam_customizer_text_to_rows( get_theme_mod( 'dam_journey_steps_' . $locale, '' ) );
@@ -127,9 +151,7 @@ function dam_customizer_defaults( $locale ) {
 		$d[ "appointment_{$i}_title" ] = $card[1] ?? $d[ "appointment_{$i}_title" ];
 		$d[ "appointment_{$i}_body" ] = $card[2] ?? $d[ "appointment_{$i}_body" ];
 	}
-	foreach ( array( 'innovation', 'recognition' ) as $prefix ) {
-		for ( $i = 1; $i <= 3; $i++ ) { $d[ "{$prefix}_post_{$i}" ] = 0; }
-	}
+	for ( $i = 1; $i <= 3; $i++ ) { $d[ "recognition_post_{$i}" ] = 0; }
 	foreach ( array(
 		'instagram' => array( 'Instagram', 'https://www.instagram.com/dr_ali_moradi_handsurgeon' ),
 		'telegram' => array( 'Telegram', 'https://t.me/DrAliMoradi' ),
@@ -341,8 +363,28 @@ function dam_customize_register( $wp_customize ) {
 			) );
 		}
 
-		// 4 and 7. Innovation and Recognition share one card-source layout.
-		foreach ( array( 'innovation', 'recognition' ) as $prefix ) {
+		// 4. Fixed, fully editable Innovation cards.
+		$p = 10;
+		dam_customizer_add_fields( $wp_customize, $sections['innovation'], $locale, $p, array(
+			array( 'innovation_kicker', __( 'Section label', 'dr-ali-moradi' ), 'text' ),
+			array( 'innovation_title', __( 'Title', 'dr-ali-moradi' ), 'text' ),
+			array( 'innovation_subtitle', __( 'Subtitle', 'dr-ali-moradi' ), 'textarea' ),
+			array( 'innovation_columns', __( 'Grid columns', 'dr-ali-moradi' ), 'select', $numbers ),
+		) );
+		for ( $i = 1; $i <= 3; $i++ ) {
+			dam_customizer_heading( $wp_customize, $sections['innovation'], "dam_heading_innovation_{$locale}_{$i}", sprintf( __( 'Innovation card %d', 'dr-ali-moradi' ), $i ), $p++ );
+			dam_customizer_add_fields( $wp_customize, $sections['innovation'], $locale, $p, array(
+				array( "innovation_card_{$i}_image", __( 'Image', 'dr-ali-moradi' ), 'image' ),
+				array( "innovation_card_{$i}_tag", __( 'Small label', 'dr-ali-moradi' ), 'text' ),
+				array( "innovation_card_{$i}_title", __( 'Title', 'dr-ali-moradi' ), 'text' ),
+				array( "innovation_card_{$i}_body", __( 'Description', 'dr-ali-moradi' ), 'textarea' ),
+				array( "innovation_card_{$i}_url", __( 'Link URL', 'dr-ali-moradi' ), 'url' ),
+				array( "innovation_card_{$i}_button_label", __( 'Link label', 'dr-ali-moradi' ), 'text' ),
+			) );
+		}
+
+		// 7. Recognition keeps its category/manual Post selection.
+		foreach ( array( 'recognition' ) as $prefix ) {
 			$p = 10;
 			$section_fields = array(
 				array( "{$prefix}_kicker", __( 'Section label', 'dr-ali-moradi' ), 'text' ), array( "{$prefix}_title", __( 'Title', 'dr-ali-moradi' ), 'text' ),

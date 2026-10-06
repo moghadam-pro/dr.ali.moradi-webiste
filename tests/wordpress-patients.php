@@ -53,6 +53,9 @@ $media = dam_sanitize_patient_gallery( array(
 verify( count( $media ) === 3 && $media[0]['title'] === 'Case', 'Gallery must reject unsafe URLs and non-media attachments.' );
 verify( $media[1]['type'] === 'video', 'Attachment MIME must determine media type.' );
 verify( $media[0]['url'] === 'https://example.test/media/1', 'Attachment URL must come from WordPress.' );
+verify( $media[0]['sensitive'] && $media[1]['sensitive'] && ! $media[2]['sensitive'], 'Existing clinical images and videos must default to protected; links do not need blur.' );
+$reviewed = dam_sanitize_patient_gallery( array( array( 'id' => 1, 'sensitive' => false ) ) );
+verify( false === $reviewed[0]['sensitive'], 'An operator-reviewed safe image must remain visible.' );
 verify( dam_patient_label( 'Patients', 'بیماران' ) === 'بیماران', 'Persian admin labels must be localized.' );
 $GLOBALS['test_admin'] = false;
 foreach ( array( 'en' => array( '>2<', 'Next »' ), 'fa' => array( '>۲<', 'بعدی »' ), 'ar' => array( '>٢<', 'التالي »' ) ) as $locale => $expected ) {

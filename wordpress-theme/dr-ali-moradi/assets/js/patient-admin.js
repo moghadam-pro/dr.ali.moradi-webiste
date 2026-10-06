@@ -19,6 +19,12 @@
     if (item.type === 'image') { var img = document.createElement('img'); img.src = item.url; img.style.cssText = 'max-width:160px;max-height:120px'; row.appendChild(img); }
     field(row, item, 'title', damPatientEditor.title);
     field(row, item, 'description', damPatientEditor.description, 'textarea');
+    if (item.type !== 'link') {
+     var sensitiveLabel = document.createElement('label'); sensitiveLabel.style.cssText = 'display:flex;align-items:center;gap:8px;margin:10px 0';
+     var sensitiveCheck = document.createElement('input'); sensitiveCheck.type = 'checkbox'; sensitiveCheck.checked = item.sensitive !== false;
+     sensitiveCheck.addEventListener('change', function () { item.sensitive = sensitiveCheck.checked; save(); });
+     sensitiveLabel.appendChild(sensitiveCheck); sensitiveLabel.appendChild(document.createTextNode(damPatientEditor.sensitive)); row.appendChild(sensitiveLabel);
+    }
     if (!item.id) field(row, item, 'url', damPatientEditor.url);
     button(row, damPatientEditor.up, function () { if(index > 0) { var previous = items[index-1]; items[index-1] = item; items[index] = previous; save(); render(); } });
     button(row, damPatientEditor.down, function () { if(index < items.length-1) { var next = items[index+1]; items[index+1] = item; items[index] = next; save(); render(); } });
@@ -29,7 +35,7 @@
    var frame = wp.media({multiple: true, library: {type: ['image', 'video']}});
    frame.on('select', function () {
     frame.state().get('selection').toJSON().forEach(function (media) {
-     items.push({id: media.id, url: media.url, type: media.type === 'video' ? 'video' : 'image', title: media.title || '', description: media.caption || ''});
+     items.push({id: media.id, url: media.url, type: media.type === 'video' ? 'video' : 'image', title: media.title || '', description: media.caption || '', sensitive: true});
     }); save(); render();
    }); frame.open();
   });

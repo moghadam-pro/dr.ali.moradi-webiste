@@ -1,4 +1,4 @@
-# Patients catalogue — implemented in 3.1.1, updated in 3.3.0
+# Patients catalogue — implemented in 3.1.1, updated in 3.4.0
 
 ## Operator workflow
 
@@ -13,6 +13,10 @@ are `patient_category` (hierarchical) and `patient_tag`.
 - Patient gallery: ordered Media Library images/videos or external video links,
   each with an optional title and description. Add/remove/reorder in the native
   metabox. External links open in a new tab; they are not arbitrary HTML embeds.
+- Every image/video has a **sensitive media** checkbox. Existing media is treated
+  as sensitive until reviewed. Clear the checkbox only after confirming that an
+  individual image is suitable to show without warning; this applies across
+  English, Persian and Arabic galleries.
 
 Exactly one care category is mandatory: **کلینیک** (`clinic`) or **بیمارستان**
 (`hospital`). Disease categories and tags are additional. REST saves with an
@@ -41,7 +45,8 @@ Existing translated Clinic/Hospital Pages retain their Polylang paths.
 
 Rank Math titles/descriptions follow translated copy. Untranslated shared cases
 canonicalize to their base URL; actual translated cases receive language
-alternates. The patient XML sitemap includes all gallery images, and category
+alternates. The patient XML sitemap includes only reviewed, non-sensitive gallery
+images, and category
 archives are enabled in their own sitemap. Preserve operator-set SEO text.
 
 ## Bulk hosting import
@@ -87,6 +92,9 @@ host Trash after verification. Use rolling batches to stay within hosting quota.
 - Shared lightbox preserves image aspect ratio within viewport bounds and shows
   title, description and patient link. Video playback stops on navigation/close;
   Escape, arrows, focus trapping and focus restoration are supported.
+- Sensitive media thumbnails and category covers are blurred with a localized
+  warning. The lightbox stays blurred until the visitor chooses **Show image**;
+  each newly opened gallery starts protected. External video links are unchanged.
 
 ## Drive import
 

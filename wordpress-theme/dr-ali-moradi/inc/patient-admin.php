@@ -58,6 +58,7 @@ add_action( 'admin_enqueue_scripts', function() {
 	wp_enqueue_script( 'dam-patient-admin', DAM_THEME_URI . '/assets/js/patient-admin.js', array( 'jquery', 'media-views' ), DAM_THEME_VERSION, true );
 	wp_localize_script( 'dam-patient-admin', 'damPatientEditor', array(
 		'title' => dam_patient_label( 'Title', 'عنوان', 'العنوان' ), 'description' => dam_patient_label( 'Description', 'توضیح', 'الوصف' ),
+		'sensitive' => dam_patient_label( 'Blur sensitive media until the visitor chooses to view it', 'تاری رسانهٔ حساس تا وقتی بازدیدکننده نمایش را انتخاب کند', 'طمس الوسائط الحساسة حتى يختار الزائر عرضها' ),
 		'url' => dam_patient_label( 'Video URL', 'لینک ویدیو', 'رابط الفيديو' ), 'remove' => dam_patient_label( 'Remove', 'حذف', 'حذف' ),
 		'up' => dam_patient_label( 'Move up', 'انتقال به بالا', 'نقل للأعلى' ), 'down' => dam_patient_label( 'Move down', 'انتقال به پایین', 'نقل للأسفل' ),
 	) );

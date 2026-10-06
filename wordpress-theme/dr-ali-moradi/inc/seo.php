@@ -82,9 +82,13 @@ add_filter( 'rank_math/opengraph/facebook/description', 'dam_patient_seo_descrip
 add_filter( 'rank_math/opengraph/twitter/description', 'dam_patient_seo_description', 30 );
 add_filter( 'rank_math/sitemap/urlimages', function( $images, $id ) {
 	if ( 'patient' !== get_post_type( $id ) ) { return $images; }
-	$known = array_column( $images, 'src' );
+	// Rank Math may already add the featured image. Publish only photos the
+	// operator has explicitly marked safe for unblurred viewing.
+	$images = array();
 	foreach ( dam_patient_media( $id ) as $item ) {
-		if ( 'image' === $item['type'] && ! in_array( $item['url'], $known, true ) ) { $images[] = array( 'src' => $item['url'], 'title' => $item['title'] ); $known[] = $item['url']; }
+		if ( 'image' === $item['type'] && empty( $item['sensitive'] ) && ! in_array( $item['url'], array_column( $images, 'src' ), true ) ) {
+			$images[] = array( 'src' => $item['url'], 'title' => $item['title'] );
+		}
 	}
 	return $images;
 }, 20, 2 );

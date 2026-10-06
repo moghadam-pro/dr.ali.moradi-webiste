@@ -4,7 +4,7 @@ A multilingual personal-brand website for Dr. Ali Moradi, bringing his clinical,
 scientific, innovation, rehabilitation-robotics, and entrepreneurial work into one
 coherent digital presence.
 
-## Innovation detail Pages — theme 3.3.0
+## Innovation detail Pages — theme 3.4.0
 
 The approved fourteen-project catalogue now has 42 published EN/FA/AR WordPress
 Pages and a reviewed Page-content manifest. Tools → Innovation Pages explicitly imports 42 editable WordPress
@@ -19,6 +19,12 @@ project sections, contained image cards, separate certificates and reference lin
 The 42 localized bodies remain normal editable Pages. Tools → Content updates
 applies reviewed manifests only after checking the previous body hash and keeps
 backups; it never rewrites content during frontend requests.
+
+The Innovation Page lists the magnetic-control project first and Dynamometer
+eleventh in all three languages, with synchronized sidebar anchors and numbers.
+Homepage Innovation uses three curated cards in each language; edit their image,
+label, title, description, link and button text in Appearance → Customize →
+Homepage → Innovation. Publishing or recategorizing a Post does not change them.
 
 Nine generated educational covers and 27 EN/FA/AR Post expansions complete the
 Posts that previously lacked featured images. Original introductions remain.
@@ -45,7 +51,7 @@ Design source: [Dr. AliMoradi — website v1.0.0 on Figma](https://www.figma.com
 ## WordPress production
 
 The active production site is [dralimoradi.com](https://dralimoradi.com/),
-running theme **3.3.0**. The theme source is in
+running theme **3.4.0**. The theme source is in
 `wordpress-theme/dr-ali-moradi/`; production 3.0.0 was exported and reconciled
 before the Patients feature in 3.1.0. Designed pages
 remain editable WordPress Pages; team profiles and Patients are separate catalogues.
@@ -54,6 +60,9 @@ Patients provide disease categories/tags, one mandatory Clinic/Hospital category
 case history, and ordered image/video/link galleries. Clinical Care and the
 existing gallery destinations read those published case records. Category
 archives include descendant cases and an expandable category-to-patient sidebar.
+Case media begins blurred in thumbnails, category covers and the lightbox; each
+visitor can choose to reveal it. Editors can clear the sensitive checkbox for
+reviewed safe media, which can then appear in the image sitemap.
 Theme 3.1.1 adds checksum-based hosting imports, reuse of existing media, editable
 English/Persian/Arabic patient copy and category names, localized pagination, and
 Rank Math sitemap/metadata integration. Before/after surgery and Clinical Care
