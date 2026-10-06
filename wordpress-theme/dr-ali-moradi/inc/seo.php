@@ -219,8 +219,56 @@ function dam_front_page_rewrite_placeholder_urls( $html ) {
 		);
 	}
 
+	// x-default points search engines at the English (default-language) homepage.
+	if ( false === strpos( $html, 'hreflang="x-default"' ) ) {
+		$html = preg_replace(
+			'#(<link rel="alternate" href=")[^"]*(" hreflang="en")#',
+			'<link rel="alternate" href="' . dam_front_page_clean_url( 'en' ) . '" hreflang="x-default" />' . "\n" . '${0}',
+			$html,
+			1
+		);
+	}
+
 	return $html;
 }
+
+/**
+ * Physician structured data (Schema.org) for the homepage and About page.
+ *
+ * Only verifiable facts already published on the site are included. The
+ * sameAs list holds only profiles confirmed in the theme (Google Scholar);
+ * add ORCID, PubMed, university, LinkedIn or ResearchGate URLs through the
+ * `dam_physician_same_as` filter once the operator confirms them.
+ */
+function dam_physician_schema() {
+	$home = trailingslashit( get_option( 'home' ) );
+	$same = apply_filters( 'dam_physician_same_as', array( 'https://scholar.google.com/citations?user=UhXLjGEAAAAJ' ) );
+	return array(
+		'@context'        => 'https://schema.org',
+		'@type'           => array( 'Physician', 'Person' ),
+		'@id'             => $home . '#physician',
+		'name'            => 'Ali Moradi, MD, PhD',
+		'honorificPrefix' => 'Dr.',
+		'jobTitle'        => 'Hand & Upper Extremity Surgeon; Associate Professor of Orthopedic Surgery',
+		'description'     => 'Hand and upper-extremity surgeon and Associate Professor of Orthopedics at Mashhad University of Medical Sciences, Mashhad, Iran, working across clinical care, research, medical innovation, and education.',
+		'url'             => $home,
+		'image'           => get_site_icon_url( 512 ) ? get_site_icon_url( 512 ) : null,
+		'medicalSpecialty' => array( 'Orthopedic', 'Surgical' ),
+		'worksFor'        => array( '@type' => 'CollegeOrUniversity', 'name' => 'Mashhad University of Medical Sciences' ),
+		'workLocation'    => array( '@type' => 'City', 'name' => 'Mashhad', 'containedInPlace' => array( '@type' => 'Country', 'name' => 'Iran' ) ),
+		'knowsAbout'      => array( 'Hand surgery', 'Upper extremity surgery', 'Wrist surgery', 'Peripheral nerve surgery', 'Tendon injuries', 'Hand and wrist fractures', 'Prosthetics and bionic hand research', 'Rehabilitation robotics', 'Biomechanics' ),
+		'sameAs'          => array_values( array_filter( $same ) ),
+	);
+}
+
+function dam_output_physician_schema() {
+	if ( ! is_front_page() && 'about' !== dam_current_page_key() ) {
+		return;
+	}
+	$schema = array_filter( dam_physician_schema() );
+	echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . '</script>' . "\n";
+}
+add_action( 'wp_head', 'dam_output_physician_schema', 20 );
 
 /**
  * Custom breadcrumb trail, replacing rank_math_the_breadcrumbs().

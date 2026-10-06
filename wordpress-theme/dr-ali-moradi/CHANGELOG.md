@@ -6,6 +6,19 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Physician/Person JSON-LD on the homepage and About page, with the confirmed
+  Google Scholar profile and an extensible `dam_physician_same_as` filter.
+- `hreflang="x-default"` on language homepages.
+
+### Changed
+
+- Homepage hero credentials show the practice location in all three languages;
+  the MGH clinical research fellowship remains described on the About page.
+- Integrated the independent SEO branch while preserving the 3.5.1 GUID repair.
+  These additions are unreleased and do not change existing release tags.
+
 ## [3.5.1] - 2026-10-06
 
 ### Fixed
