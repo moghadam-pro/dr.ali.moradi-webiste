@@ -24,8 +24,22 @@ before theme 3.4.0 work began.
   existing case images/videos, localized thumbnail/lightbox warnings and explicit
   visitor reveal. Category cover images also blur if sensitive. Rank Math's
   patient image sitemap now lists only images cleared by an operator.
-- Patient identities and media originals remain outside Git. Production theme
-  deployment, final checksum and live verification are recorded after release.
+- Release commit `12915fc`, tag `theme-v3.4.0`. ZIP was built from that exact
+  commit with SHA-256
+  `17514fa48d99fb6ca8d60fef7dd3084278721a0ea4dea5bfeef888675c435d49`.
+  The active production theme was confirmed as 3.3.0 before replacement; the
+  standard WordPress theme upload screen confirmed the 3.3.0 → 3.4.0 update
+  succeeded and Appearance → Themes reports active 3.4.0.
+- `npm test` passed (build, rendered routes, WordPress release/patient/SEO/
+  innovation/Arabic/content-update checks). PHP and JavaScript syntax passed.
+  Live EN/FA/AR homepages each show three stable cards and all three Customizer
+  panels expose card image/text/link controls without a category source.
+  On `/patients/`, 87 first-page thumbnails and 14 category covers were
+  protected. The modal warning, explicit reveal, next-image reset, localized
+  FA/AR warning text and per-media editor checkboxes were checked on production.
+  The browser extension blocked direct XML navigation, so the sitemap filter
+  was verified by source/tests rather than a live XML response in this release.
+- Patient identities and media originals remain outside Git.
 
 ## 2026-10-06 — Documentation reconciliation and branch integration
 
