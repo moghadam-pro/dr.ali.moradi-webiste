@@ -22,6 +22,11 @@ before theme 3.4.0 work began.
   The browser security review rejected selecting this ZIP for the WordPress
   theme upload, so 3.5.1 is **not deployed** and the GUID repair has **not**
   run on production. This remains the one outstanding privacy item.
+- All local privacy/code/documentation commits and both release tags were
+  pushed to the canonical `upstream` GitHub repository. `main` and the
+  historical `codex/patients-gallery` delivery branch advanced together by
+  fast-forward; no force push or conflicting merge was needed. The original
+  unavailable `origin` remote was not used.
 
 ## 2026-10-06 — Patient name privacy / theme 3.5.0
 
