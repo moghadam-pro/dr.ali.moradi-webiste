@@ -5,6 +5,24 @@ file together with Git history; `main` and the historical
 `codex/patients-gallery` delivery branch were synchronized at `29de031`
 before theme 3.4.0 work began.
 
+## 2026-10-06 — Patient GUID follow-up / theme 3.5.1
+
+- A fresh Patients-only WordPress export after the 3.5.0 migration contained
+  all 71 Patients and 314 attachments. All 36 selected titles and slugs were
+  anonymized, and all 33 selected attachment paths and image metadata used
+  neutral filenames. The export nevertheless showed that WordPress had kept
+  the previous GUIDs for all 36 Patients and 33 attachments. Two former full
+  titles and 32 former image filenames still appeared in attachment GUIDs.
+- Theme 3.5.1 writes the neutral GUID through the WordPress database interface
+  and clears the post cache. Replaying the same hash-guarded manifest repairs
+  already-migrated records without renaming the files twice. The repair and
+  idempotence checks pass in `npm test` and the focused PHP test.
+- Release source commit `85f72f1`, tag `theme-v3.5.1`; exact Git archive SHA-256
+  `67313c5e48c28ccc7ab7aaf1c030d9b4b239a75ebb9256593c6613786db0c045`.
+  The browser security review rejected selecting this ZIP for the WordPress
+  theme upload, so 3.5.1 is **not deployed** and the GUID repair has **not**
+  run on production. This remains the one outstanding privacy item.
+
 ## 2026-10-06 — Patient name privacy / theme 3.5.0
 
 - Kept browser work to one temporary tab; earlier agent-created tabs were
@@ -16,12 +34,18 @@ before theme 3.4.0 work began.
   contained Persian text and were selected for neutral filenames. Medical case
   titles and the numbered placeholder remain unchanged.
 - Added exact-hash-guarded administrator operations to abbreviate titles,
-  neutralize slugs/GUIDs, redact matching case/gallery text, retire old-name
+  neutralize slugs, redact matching case/gallery text, retire old-name
   redirects, and rename originals plus registered image sizes with WordPress
   attachment metadata kept in sync. The private operation manifest is outside
   Git; no patient names, source filenames or media originals are committed.
-- Release, production migration, verification and Git synchronization will be
-  recorded after completion.
+- Release source commit `c1eafe2`, tag `theme-v3.5.0`; exact Git archive SHA-256
+  `40f868d3635ffc051de9198a1372d2a7e576ebb784ec23f8782ff3cebff9af7e`.
+  WordPress confirmed the 3.4.0 → 3.5.0 replacement. The guarded manifest
+  completed 69 operations (36 Patients and 33 images), with zero errors.
+  Public case URLs now use `/patients/case-ID/`; spot checks showed initials,
+  neutralized image paths and the sensitive-media warning. The fresh export
+  confirmed 71 Patients and 314 case attachments; the remaining GUID issue is
+  documented in the 3.5.1 entry above.
 
 ## 2026-10-06 — Innovation reorder, curated homepage and gallery protection / theme 3.4.0
 

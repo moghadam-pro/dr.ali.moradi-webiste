@@ -1,4 +1,4 @@
-# Patients catalogue — implemented in 3.1.1, updated in 3.5.0
+# Patients catalogue — implemented in 3.1.1, updated in 3.5.1
 
 ## Operator workflow
 
@@ -32,6 +32,12 @@ and update WordPress attachment metadata and gallery URLs. The private manifest
 and raw WXR export must stay outside Git. Keep a private pre-migration export
 until verification; WordPress revisions preserve previous text for authorized
 editors. Old full-name URLs are intentionally retired rather than redirected.
+Theme 3.5.1 also repairs WordPress GUIDs on a retry, because the initial
+3.5.0 migration left old GUID values in exports and feeds. Once 3.5.1 is
+deployed, replay the same private manifest and confirm 69 completed operations
+with zero errors; no image file is renamed a second time. Do not expose or
+commit the manifest or either Patients-only export. See the progress log for
+the current production status before treating this repair as complete.
 
 Exactly one care category is mandatory: **کلینیک** (`clinic`) or **بیمارستان**
 (`hospital`). Disease categories and tags are additional. REST saves with an
