@@ -39,6 +39,10 @@ before theme 3.4.0 work began.
   FA/AR warning text and per-media editor checkboxes were checked on production.
   The browser extension blocked direct XML navigation, so the sitemap filter
   was verified by source/tests rather than a live XML response in this release.
+- Deployment notes and the focused sitemap test were committed as `8ef1779`.
+  Both `upstream/main` and `upstream/codex/patients-gallery` were advanced by
+  fast-forward to that commit; release tag `theme-v3.4.0` points to the exact
+  archive source commit `12915fc`. No force push or conflicting merge occurred.
 - Patient identities and media originals remain outside Git.
 
 ## 2026-10-06 — Documentation reconciliation and branch integration
