@@ -98,12 +98,14 @@
             var sensitive = Boolean(item.sensitive) && !revealedImages.has(activeIndex);
             var warning = modal.querySelector('[data-gallery-modal-sensitive]');
             video.pause(); video.removeAttribute('src'); video.load();
-            image.hidden = item.type !== 'image'; video.hidden = item.type !== 'video'; link.hidden = item.type !== 'link';
+            image.hidden = item.type !== 'image'; video.hidden = item.type !== 'video'; link.hidden = item.type !== 'link' || sensitive;
             image.removeAttribute('src');
             if (item.type === 'image') { image.src = safeUrl(item.url); image.alt = item.title || ''; }
             image.classList.toggle('is-sensitive', sensitive);
             if (item.type === 'video' && !sensitive) { video.src = safeUrl(item.url); }
             if (item.type === 'link') { link.href = safeUrl(item.url); }
+            if (!link.dataset.defaultLabel) link.dataset.defaultLabel = link.textContent;
+            link.textContent = item.mediaLabel || link.dataset.defaultLabel;
             if (warning) warning.hidden = !sensitive;
             modal.querySelector('[data-gallery-modal-title]').textContent = item.title || '';
             modal.querySelector('[data-gallery-modal-description]').textContent = item.description || '';
@@ -152,7 +154,7 @@
                     if (!img && item.preview) { img = document.createElement('img'); img.className = 'fill-img'; thumb.prepend(img); }
                     if (img) { img.hidden = !item.preview; if(item.preview) img.src = safeUrl(item.preview); img.alt = item.title || ''; }
                     thumb.classList.toggle('is-sensitive', Boolean(item.sensitive));
-                    var badge = thumb.querySelector('span:last-child'); if (badge) badge.textContent = (item.type === 'image' ? '' : '▶ ') + (item.title || String(index+1));
+                    var badge = thumb.querySelector(':scope > span:last-child'); if (badge) badge.textContent = (item.type === 'image' ? '' : '▶ ') + (item.title || String(index+1));
                     thumb.setAttribute('aria-label', item.title || String(index+1)); thumb.setAttribute('data-index', String(index));
                 });
             }

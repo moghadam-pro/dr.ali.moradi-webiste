@@ -207,6 +207,12 @@ function dam_patient_media( $patient_id ) {
 		$item['description'] = $item['description'] ?: wp_strip_all_tags( get_the_excerpt( $patient_id ) );
 		$item['patientUrl'] = get_permalink( $patient_id );
 		$item['preview'] = 'image' === $item['type'] ? ( $item['id'] ? wp_get_attachment_image_url( $item['id'], 'medium_large' ) : $item['url'] ) : get_the_post_thumbnail_url( $patient_id, 'medium_large' );
+		// HEIC originals without a generated browser-compatible preview are files,
+		// not broken <img> elements. Retain the original and the reveal protection.
+		if ( 'image' === $item['type'] && preg_match( '/\.(heic|heif|tiff?)(?:\?|$)/i', (string) $item['preview'] ) ) {
+			$item['type'] = 'link'; $item['preview'] = '';
+			$item['mediaLabel'] = dam_patient_label( 'Open original file', 'باز کردن فایل اصلی', 'فتح الملف الأصلي' );
+		}
 	}
 	return $items;
 }
@@ -229,18 +235,38 @@ function dam_patient_term_image( $term_id ) {
 	return array();
 }
 
-function dam_render_patient_tree( $parent = 0, $depth = 0 ) {
+function dam_render_patient_tree( $parent = 0, $depth = 0, $active = null ) {
 	if ( $depth > 30 ) { return; }
+	if ( null === $active ) {
+		$active = array();
+		if ( is_tax( 'patient_category' ) ) { $active[] = get_queried_object_id(); }
+		elseif ( is_singular( 'patient' ) ) { $active = wp_get_object_terms( get_the_ID(), 'patient_category', array( 'fields' => 'ids' ) ); }
+		if ( is_wp_error( $active ) ) { $active = array(); }
+		foreach ( $active as $id ) { $active = array_merge( $active, get_ancestors( $id, 'patient_category', 'taxonomy' ) ); }
+		$active = array_map( 'intval', $active );
+	}
 	$terms = get_terms( array( 'taxonomy' => 'patient_category', 'parent' => $parent, 'hide_empty' => false ) );
 	if ( is_wp_error( $terms ) ) { return; }
 	echo '<ul>';
 	foreach ( $terms as $term ) {
-		echo '<li><details><summary><span class="patient-tree-toggle" aria-hidden="true"></span><a href="' . esc_url( get_term_link( $term ) ) . '">' . esc_html( dam_patient_term_name( $term ) ) . '</a></summary>';
-		dam_render_patient_tree( $term->term_id, $depth + 1 );
-		$patients = dam_patient_query( $term->term_id, true )->posts;
+		$patients = array_filter( dam_patient_query( $term->term_id, true )->posts, function( $patient ) use ( $term ) {
+			$assigned = wp_get_object_terms( $patient->ID, 'patient_category', array( 'fields' => 'ids' ) );
+			if ( is_wp_error( $assigned ) ) { return true; }
+			$locations = array_values( dam_patient_location_ids() );
+			if ( in_array( (int) $term->term_id, $locations, true ) && array_diff( $assigned, $locations ) ) { return false; }
+			foreach ( $assigned as $id ) { if ( in_array( (int) $term->term_id, array_map( 'intval', get_ancestors( $id, 'patient_category', 'taxonomy' ) ), true ) ) { return false; } }
+			return true;
+		} );
+		$children = get_terms( array( 'taxonomy' => 'patient_category', 'parent' => $term->term_id, 'hide_empty' => false ) );
+		$expandable = $patients || ( $children && ! is_wp_error( $children ) );
+		$current = is_tax( 'patient_category' ) && (int) get_queried_object_id() === (int) $term->term_id;
+		echo '<li class="patient-tree-node"><a class="patient-tree-category"' . ( $current ? ' aria-current="page"' : '' ) . ' href="' . esc_url( get_term_link( $term ) ) . '">' . esc_html( dam_patient_term_name( $term ) ) . '</a>';
+		if ( ! $expandable ) { echo '</li>'; continue; }
+		echo '<details' . ( in_array( (int) $term->term_id, $active, true ) ? ' open' : '' ) . '><summary aria-label="' . esc_attr( dam_patient_label( 'Expand category: ', 'باز و بسته کردن دسته: ', 'توسيع التصنيف: ' ) . dam_patient_term_name( $term ) ) . '"><span class="patient-tree-toggle" aria-hidden="true"></span></summary>';
+		dam_render_patient_tree( $term->term_id, $depth + 1, $active );
 		if ( $patients ) {
 			echo '<ul class="patient-tree-patients">';
-			foreach ( $patients as $patient ) { echo '<li><a href="' . esc_url( get_permalink( $patient ) ) . '">' . esc_html( get_the_title( $patient ) ) . '</a></li>'; }
+			foreach ( $patients as $patient ) { echo '<li><a' . ( is_singular( 'patient' ) && (int) get_the_ID() === (int) $patient->ID ? ' aria-current="page"' : '' ) . ' href="' . esc_url( get_permalink( $patient ) ) . '">' . esc_html( get_the_title( $patient ) ) . '</a></li>'; }
 			echo '</ul>';
 		}
 		echo '</details></li>';
@@ -248,14 +274,14 @@ function dam_render_patient_tree( $parent = 0, $depth = 0 ) {
 	echo '</ul>';
 }
 
-function dam_render_patient_gallery( $items, $preview = false ) {
+function dam_render_patient_gallery( $items, $preview = false, $visible_limit = 0 ) {
 	if ( ! $items ) { echo '<p class="patient-empty">' . esc_html( dam_patient_label( 'No case media available yet.', 'هنوز رسانه‌ای برای نمایش وجود ندارد.', 'لا توجد وسائط للحالات بعد.' ) ) . '</p>'; return; }
 	$hub = dam_clinic_hub_copy( dam_current_locale() );
 	?>
 	<div class="<?php echo $preview ? 'gallery-strip' : 'gallery-full-grid'; ?>" data-gallery-strip data-images="<?php echo esc_attr( wp_json_encode( $items ) ); ?>">
 		<?php if ( $preview ) : ?><button class="gallery-nav gallery-prev" data-gallery-prev aria-label="<?php echo esc_attr( $hub['previous'] ); ?>"><?php echo dam_icon( 'chevron-left', 20 ); ?></button><?php endif; ?>
 		<div class="<?php echo $preview ? 'gallery-strip-track' : 'gallery-full-track'; ?>">
-			<?php foreach ( $preview ? array_slice( $items, 0, 4 ) : $items as $i => $item ) : ?>
+			<?php foreach ( $visible_limit ? array_slice( $items, 0, $visible_limit ) : ( $preview ? array_slice( $items, 0, 4 ) : $items ) as $i => $item ) : ?>
 			<button type="button" class="gallery-thumb<?php echo ! empty( $item['sensitive'] ) ? ' is-sensitive' : ''; ?>" data-gallery-thumb data-index="<?php echo (int) $i; ?>" aria-label="<?php echo esc_attr( $item['title'] ); ?>">
 				<?php if ( $item['preview'] ) : ?><img class="fill-img" loading="lazy" src="<?php echo esc_url( $item['preview'] ); ?>" alt="<?php echo esc_attr( $item['title'] ); ?>"><?php endif; ?>
 				<span class="gallery-sensitive-warning" aria-hidden="true">
@@ -271,8 +297,54 @@ function dam_render_patient_gallery( $items, $preview = false ) {
 	<?php
 }
 
+/** Shared cover and complete category trail for taxonomy and case pages. */
+function dam_render_patient_cover( $title, $term_id = 0, $patient_id = 0 ) {
+	$locale = dam_current_locale();
+	$area = $patient_id ? get_post_meta( $patient_id, '_dam_patient_location', true ) : 'hospital';
+	if ( 'clinic' !== $area ) { $area = 'hospital'; }
+	if ( $patient_id ) {
+		$terms = wp_get_object_terms( $patient_id, 'patient_category' );
+		if ( ! is_wp_error( $terms ) ) {
+			$best_depth = -1;
+			foreach ( $terms as $term ) {
+				if ( in_array( $term->slug, array( 'clinic', 'hospital' ), true ) ) { $area = $term->slug; continue; }
+				$depth = count( get_ancestors( $term->term_id, 'patient_category', 'taxonomy' ) );
+				if ( $depth > $best_depth ) { $term_id = $term->term_id; $best_depth = $depth; }
+			}
+		}
+	} elseif ( $term_id ) {
+		$term = get_term( $term_id, 'patient_category' );
+		if ( $term && ! is_wp_error( $term ) && 'clinic' === $term->slug ) { $area = 'clinic'; }
+	}
+	$hub = dam_clinic_hub_copy( $locale );
+	$items = array(
+		array( 'label' => dam_breadcrumb_home_label( $locale ), 'url' => dam_front_page_clean_url( $locale ) ),
+		array( 'label' => dam_patient_label( 'Clinic', 'کلینیک', 'العيادة' ), 'url' => dam_localized_page_url( 'clinical-care', $locale ) ),
+		array( 'label' => $hub[ 'clinic' === $area ? 'clinicGalleryTitle' : 'hospitalGalleryTitle' ], 'url' => dam_localized_page_url( $area . '-gallery', $locale ) ),
+	);
+	if ( $term_id ) {
+		foreach ( array_merge( array_reverse( get_ancestors( $term_id, 'patient_category', 'taxonomy' ) ), array( $term_id ) ) as $id ) {
+			$term = get_term( $id, 'patient_category' );
+			if ( $term && ! is_wp_error( $term ) ) { $items[] = array( 'label' => dam_patient_term_name( $term ), 'url' => get_term_link( $term ) ); }
+		}
+	}
+	if ( $patient_id || ! $term_id ) { $items[] = array( 'label' => $title, 'url' => null ); }
+	$items[ count( $items ) - 1 ]['url'] = null;
+	?>
+	<section class="interior-cover">
+		<img class="fill-img" src="<?php echo esc_url( dam_media_url( 'clinic' === $area ? 'clinic-08' : 'hospital-14' ) ); ?>" alt="">
+		<div class="interior-cover-gradient" aria-hidden="true"></div>
+		<div class="interior-cover-content section-shell"><p class="section-index light"><?php echo esc_html( $hub['pathwaysKicker'] ); ?></p><h1><?php echo esc_html( $title ); ?></h1></div>
+	</section>
+	<nav class="site-breadcrumbs" aria-label="<?php echo esc_attr( dam_patient_label( 'Breadcrumb', 'مسیر صفحه', 'مسار التنقل' ) ); ?>"><div class="section-shell"><ol class="dam-breadcrumb-list">
+	<?php foreach ( $items as $i => $item ) : ?><li><?php if ( $item['url'] ) : ?><a href="<?php echo esc_url( $item['url'] ); ?>"><?php echo esc_html( $item['label'] ); ?></a><?php else : ?><span aria-current="page"><?php echo esc_html( $item['label'] ); ?></span><?php endif; ?><?php if ( $i < count( $items ) - 1 ) : ?><span class="dam-breadcrumb-sep" aria-hidden="true"><?php echo esc_html( dam_breadcrumb_separator( $locale ) ); ?></span><?php endif; ?></li><?php endforeach; ?>
+	</ol></div></nav>
+	<?php
+}
+
 function dam_render_patient_archive( $term_id = 0, $title = '', $heading_level = 1 ) {
 	if ( ! $title ) { $title = dam_patient_label( 'Patients', 'بیماران', 'المرضى' ); }
+	if ( 1 === $heading_level ) { dam_render_patient_cover( $title, $term_id ); $heading_level = 2; }
 	$parent = $term_id;
 	$children = get_terms( array( 'taxonomy' => 'patient_category', 'parent' => $parent, 'hide_empty' => false ) );
 	$page = max( 1, (int) get_query_var( 'paged' ), (int) get_query_var( 'page' ) );
@@ -291,7 +363,15 @@ function dam_render_patient_archive( $term_id = 0, $title = '', $heading_level =
 			<a class="patient-category-card<?php echo ! empty( $image['sensitive'] ) ? ' is-sensitive' : ''; ?>" href="<?php echo esc_url( get_term_link( $term ) ); ?>"><?php if ( $image ) : ?><img loading="lazy" src="<?php echo esc_url( $image['preview'] ?: $image['url'] ); ?>" alt=""><?php endif; ?><span><?php echo esc_html( dam_patient_term_name( $term ) ); ?></span><?php if ( ! empty( $image['sensitive'] ) ) : ?><small><?php echo esc_html( dam_patient_label( 'Sensitive image', 'تصویر حساس', 'صورة حساسة' ) ); ?></small><?php endif; ?></a>
 			<?php endforeach; ?>
 		</div><?php endif; ?>
-		<?php $items = array(); foreach ( $query->posts as $patient ) { $items = array_merge( $items, dam_patient_media( $patient->ID ) ); } dam_render_patient_gallery( $items ); ?>
+		<div class="patient-albums">
+		<?php foreach ( $query->posts as $patient ) : $items = dam_patient_media( $patient->ID ); ?>
+		<article class="patient-album">
+		<?php dam_render_patient_gallery( $items, true, 1 ); ?>
+		<h3><a href="<?php echo esc_url( get_permalink( $patient ) ); ?>"><?php echo esc_html( get_the_title( $patient ) ); ?></a></h3>
+		<p><?php echo esc_html( count( $items ) . ' ' . dam_patient_label( 'media items', 'رسانه', 'وسائط' ) ); ?></p>
+		</article>
+		<?php endforeach; ?>
+		</div>
 		<nav class="patient-pagination" aria-label="<?php echo esc_attr( dam_patient_label( 'Pagination', 'صفحه‌بندی', 'ترقيم الصفحات' ) ); ?>"><?php echo wp_kses_post( dam_patient_pagination( $query->max_num_pages, $page ) ); ?></nav>
 		</div>
 	</div></section>

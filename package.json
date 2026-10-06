@@ -11,7 +11,7 @@
     "build": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
     "test": "npm run build && node --test tests/rendered-html.test.mjs && npm run test:wordpress",
-    "test:wordpress": "php tests/wordpress-theme-release.php && php tests/wordpress-patients.php && php tests/wordpress-patient-privacy.php && php tests/wordpress-seo.php && php tests/wordpress-innovation-pages.php && php tests/wordpress-homepage-innovation.php && php tests/wordpress-arabic-characters.php && php tests/wordpress-content-updates.php",
+    "test:wordpress": "php tests/wordpress-theme-release.php && php tests/wordpress-patient-navigation.php && php tests/wordpress-patient-privacy.php && php tests/wordpress-seo.php && php tests/wordpress-innovation-pages.php && php tests/wordpress-homepage-innovation.php && php tests/wordpress-arabic-characters.php && php tests/wordpress-content-updates.php",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },
   "dependencies": {

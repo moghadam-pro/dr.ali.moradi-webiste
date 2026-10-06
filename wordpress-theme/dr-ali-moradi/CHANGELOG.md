@@ -8,6 +8,13 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Restored covers and category breadcrumbs on patient taxonomy and case pages.
+  Category disclosure controls and links are separate, the current path opens
+  automatically, and cases appear under their most specific category.
+- Grouped archive media by case with one initial preview per gallery and
+  navigation through the remaining media. Preserved warning text while cycling
+  thumbnails and supported protected file links for unsupported image formats.
+
 - Made the sensitive gallery warning cover the complete thumbnail frame and
   centered its icon and text. Caption width limits now exclude the warning;
   its background is transparent to remove the visible edge stripe.

@@ -17,9 +17,9 @@ function sanitize_text_field( $value ) { return strip_tags( $value ); }
 function sanitize_textarea_field( $value ) { return strip_tags( $value ); }
 function wp_get_attachment_url( $id ) { return 'https://example.test/media/' . $id; }
 function get_post_mime_type( $id ) { return 3 === $id ? 'application/pdf' : ( 2 === $id ? 'video/mp4' : 'image/jpeg' ); }
-function is_singular( $type ) { return false; }
+function is_singular( $type ) { return ( $GLOBALS['test_context'] ?? '' ) === $type; }
 function is_post_type_archive( $type ) { return true; }
-function is_tax( $taxonomies ) { return false; }
+function is_tax( $taxonomies ) { return ( $GLOBALS['test_context'] ?? '' ) === $taxonomies; }
 function esc_attr( $s ) { return $s; }
 function is_admin() { return $GLOBALS['test_admin'] ?? true; }
 function dam_current_locale() { return $GLOBALS['test_locale'] ?? 'en'; }

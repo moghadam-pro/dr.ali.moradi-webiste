@@ -601,6 +601,23 @@ header.wp-block-template-part:has(.site-header) { position: sticky; top: 0; z-in
 .patient-sidebar a { text-decoration:none; overflow-wrap:anywhere; }
 .patient-tree-patients { font-size:13px; }
 .patient-tree-patients li { margin-block:6px; }
+.patient-tree-node { position:relative; margin-block:4px; }
+.patient-sidebar .patient-tree-category { display:block; margin-inline-start:32px; padding:7px 8px; border-radius:7px; font-size:14px; line-height:1.5; }
+.patient-sidebar .patient-tree-node > details > summary { position:absolute; inset-inline-start:0; top:2px; width:28px; height:32px; padding:0; align-items:center; justify-content:center; border-radius:6px; color:var(--blue-dark); }
+.patient-sidebar summary:hover, .patient-sidebar summary:focus-visible { background:#e8f2f6; }
+.patient-sidebar a:hover { background:#f0f6f8; }
+.patient-sidebar a[aria-current="page"] { background:#e2f0f6; color:var(--blue-dark); font-weight:700; box-shadow:inset 0 -2px var(--blue); }
+.patient-sidebar details > ul { margin-block:4px; margin-inline-start:14px; padding-inline-start:12px; border-inline-start:1px solid var(--line); }
+.patient-sidebar .patient-tree-patients a { display:block; padding:7px 8px; border-radius:7px; }
+.patient-albums { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; }
+.patient-album { min-width:0; border:1px solid var(--line); border-radius:16px; padding:12px; }
+.patient-album h3 { margin:14px 0 4px; font-size:18px; }
+.patient-album p { margin:0; font-size:13px; }
+.patient-album .gallery-strip-track, .patient-profile .gallery-strip-track { grid-template-columns:minmax(0,1fr); }
+.patient-album .gallery-nav { width:34px; height:34px; }
+.patient-album .gallery-thumb { background:#315161; }
+.patient-profile .gallery-strip { max-width:680px; margin-inline:auto; }
+@media(max-width:600px) { .patient-albums { grid-template-columns:minmax(0,1fr); } }
 .patient-category-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin-bottom:32px; }
 .patient-category-card { position:relative; isolation:isolate; display:grid; place-items:center; min-height:160px; overflow:hidden; border-radius:16px; background:#083344; color:white; text-decoration:none; }
 .patient-category-card img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-2; }
