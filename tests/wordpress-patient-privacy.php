@@ -1,5 +1,5 @@
 <?php
-/** Guarded name redaction and image filename plan without a WordPress install. */
+/** Guarded privacy checks with explicitly synthetic names; no real patient fixtures. */
 define( 'ABSPATH', __DIR__ );
 class WP_Error { public function __construct( public $code, public $message ) {} }
 function is_wp_error( $value ) { return $value instanceof WP_Error; }
@@ -29,18 +29,18 @@ $GLOBALS['wpdb'] = new PrivacyWpdb();
 require dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/inc/patient-privacy.php';
 function verify_privacy( $condition, $message ) { if ( ! $condition ) { throw new RuntimeException( $message ); } }
 
-verify_privacy( dam_patient_privacy_initials( 'راضیه غلامیان' ) === 'ر. غ.', 'Persian first and last names must become initials.' );
-verify_privacy( dam_patient_privacy_initials( 'علی اکبر ملانیا' ) === 'ع. ا. م.', 'All name components must be abbreviated.' );
-verify_privacy( dam_patient_privacy_initials( 'تقدیسی' ) === 'ت.', 'Single surnames must be abbreviated.' );
-$GLOBALS['posts'][621] = (object) array( 'ID' => 621, 'post_type' => 'patient', 'post_title' => 'راضیه غلامیان', 'post_content' => 'گزارش راضیه غلامیان', 'post_excerpt' => '', 'post_name' => 'راضیه-غلامیان', 'guid' => 'https://example.test/patients/راضیه-غلامیان/' );
-$GLOBALS['meta'][621] = array( 'dam_patient_gallery' => array( array( 'title' => 'راضیه غلامیان', 'description' => '' ) ), '_wp_old_slug' => 'راضیه-غلامیان' );
-$op = array( 'kind' => 'anonymize_patient', 'id' => 621, 'expected_title_sha256' => hash( 'sha256', 'راضیه غلامیان' ) );
+verify_privacy( dam_patient_privacy_initials( 'نام آزمایشی' ) === 'ن. آ.', 'Persian first and last names must become initials.' );
+verify_privacy( dam_patient_privacy_initials( 'نام دوم آزمایشی' ) === 'ن. د. آ.', 'All name components must be abbreviated.' );
+verify_privacy( dam_patient_privacy_initials( 'نمونه' ) === 'ن.', 'Single surnames must be abbreviated.' );
+$GLOBALS['posts'][621] = (object) array( 'ID' => 621, 'post_type' => 'patient', 'post_title' => 'نام آزمایشی', 'post_content' => 'گزارش نام آزمایشی', 'post_excerpt' => '', 'post_name' => 'نام-آزمایشی', 'guid' => 'https://example.test/patients/نام-آزمایشی/' );
+$GLOBALS['meta'][621] = array( 'dam_patient_gallery' => array( array( 'title' => 'نام آزمایشی', 'description' => '' ) ), '_wp_old_slug' => 'نام-آزمایشی' );
+$op = array( 'kind' => 'anonymize_patient', 'id' => 621, 'expected_title_sha256' => hash( 'sha256', 'نام آزمایشی' ) );
 verify_privacy( is_wp_error( dam_patient_privacy_run( array_replace( $op, array( 'expected_title_sha256' => str_repeat( '0', 64 ) ) ) ) ), 'Stale title must be rejected.' );
 $result = dam_patient_privacy_run( $op );
 verify_privacy( ! is_wp_error( $result ) && $result['status'] === 'redacted', 'Reviewed title must be redacted.' );
-verify_privacy( $GLOBALS['posts'][621]->post_title === 'ر. غ.' && $GLOBALS['posts'][621]->post_name === 'case-621', 'Public name and slug must be anonymous.' );
+verify_privacy( $GLOBALS['posts'][621]->post_title === 'ن. آ.' && $GLOBALS['posts'][621]->post_name === 'case-621', 'Public name and slug must be anonymous.' );
 verify_privacy( $GLOBALS['posts'][621]->guid === 'urn:dralimoradi:patient:621', 'Feed GUID must not retain the original name URL.' );
-verify_privacy( $GLOBALS['posts'][621]->post_content === 'گزارش ر. غ.' && $GLOBALS['meta'][621]['dam_patient_gallery'][0]['title'] === 'ر. غ.', 'Case body and gallery caption must lose the full name.' );
+verify_privacy( $GLOBALS['posts'][621]->post_content === 'گزارش ن. آ.' && $GLOBALS['meta'][621]['dam_patient_gallery'][0]['title'] === 'ن. آ.', 'Case body and gallery caption must lose the full name.' );
 verify_privacy( ! isset( $GLOBALS['meta'][621]['_wp_old_slug'] ), 'Old personal-name URLs must not redirect.' );
 verify_privacy( dam_patient_privacy_run( $op )['status'] === 'already-redacted', 'Retry must be idempotent.' );
 $GLOBALS['posts'][621]->guid = 'https://example.test/patients/old-name/';
