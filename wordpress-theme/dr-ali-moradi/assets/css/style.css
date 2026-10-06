@@ -665,3 +665,26 @@ header.wp-block-template-part:has(.site-header) { position: sticky; top: 0; z-in
 .dam-editorial-body p,.dam-editorial-body li{line-height:1.9}
 .dam-editorial-body aside{padding:1.25rem 1.5rem;border-inline-start:3px solid #b38d39;background:#f2f6f7;border-radius:8px}
 .dam-editorial-image-note{color:#60737b}
+
+/* Editable clinical service and preparation pages, shared across EN/FA/AR. */
+.care-editorial{max-width:1120px;line-height:1.95}
+.care-section{margin-block:0 3rem}
+.care-section>h2{font-size:clamp(24px,3vw,36px);line-height:1.5;margin-block:0 1.25rem}
+.care-section>p{max-width:85ch}
+.care-service-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.care-service{display:flex;gap:14px;padding:24px;border:1px solid #dce7eb;border-radius:12px;background:#f6fafb}
+.care-service>span{color:#3683a7;font-size:22px;flex-shrink:0}
+.care-service p{margin:0}
+.care-guide{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;margin-block:28px}
+.care-phase{padding:28px;border-block-start:3px solid #438fac;background:#f5f9fa;border-radius:0 0 12px 12px}
+.care-phase h2{font-size:26px;margin-block:8px 20px}
+.care-phase-label{font-size:14px;letter-spacing:.08em;color:#438fac}
+.care-phase .care-section{margin-block:24px 0}
+.care-phase .care-section h2{font-size:21px}
+.care-callout{padding:16px;border-inline-start:3px solid #b58e48;background:#fff}
+.care-meta,.care-photo-credit{font-size:13px;color:#60737b}
+.care-location{padding:28px;background:#edf5f8;border-radius:12px;margin-block:24px 36px}
+.care-guide-links{display:flex;flex-wrap:wrap;gap:24px;margin-block:24px}
+.care-photo-credit a,.care-guide-links a{text-decoration:underline;text-underline-offset:4px}
+.care-cover .interior-cover-content>p:last-child{max-width:65ch}
+@media(max-width:760px){.care-guide,.care-service-grid{grid-template-columns:1fr}.care-phase,.care-service,.care-location{padding:20px}.care-section{margin-block-end:2rem}}

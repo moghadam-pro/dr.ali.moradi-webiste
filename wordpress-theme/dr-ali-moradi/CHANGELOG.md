@@ -6,6 +6,13 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Three-language editorial clinic/hospital services and preparation/recovery
+  Pages, with location galleries, appointment links and a licensed Razavi cover.
+- Guarded Page title/slug updates, old-path redirects and sitemap cache refresh.
+- Current-page breadcrumb on the homepage and clinical parents for renamed guides.
+
 ### Fixed
 
 - Restored covers and category breadcrumbs on patient taxonomy and case pages.

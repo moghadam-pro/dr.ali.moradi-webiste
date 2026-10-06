@@ -332,6 +332,8 @@ function dam_interior_page_parent_key( $page_key ) {
 		'hospital-services' => 'clinical-care',
 		'before-surgery'    => 'clinical-care',
 		'after-surgery'     => 'clinical-care',
+		'hospital-surgery-care' => 'clinical-care',
+		'clinic-surgery-care' => 'clinical-care',
 		'faq'               => 'clinical-care',
 		'rehabilitation'    => 'clinical-care',
 		'clinic-gallery'    => 'clinical-care',
@@ -343,11 +345,14 @@ function dam_interior_page_parent_key( $page_key ) {
 /**
  * Builds the ordered crumb list ( array of ['label' => ..., 'url' => ...
  * or null for the current, non-linked page] ) for whatever WordPress is
- * currently rendering. Empty on the front page and on 404s -- neither has
- * a real trail to show.
+ * currently rendering. The front page shows a single current-page crumb;
+ * 404 responses have no published-page trail.
  */
 function dam_get_breadcrumb_items() {
-	if ( is_front_page() || is_404() ) {
+	if ( is_front_page() ) {
+		return array( array( 'label' => dam_breadcrumb_home_label( dam_current_locale() ), 'url' => null ) );
+	}
+	if ( is_404() ) {
 		return array();
 	}
 
@@ -396,6 +401,13 @@ function dam_get_breadcrumb_items() {
 	} elseif ( is_page() ) {
 		$page_key   = dam_current_page_key();
 		$parent_key = dam_interior_page_parent_key( $page_key );
+		if ( ! $parent_key ) {
+			$page = get_post( get_queried_object_id() );
+			if ( $page && ! empty( $page->post_parent ) ) {
+				$parent = get_post( $page->post_parent );
+				$parent_key = $parent ? $parent->post_name : null;
+			}
+		}
 		if ( $parent_key ) {
 			$parent = dam_localized_page( $parent_key, $locale );
 			if ( $parent ) {
@@ -410,6 +422,16 @@ function dam_get_breadcrumb_items() {
 	return $items;
 }
 
+/** Authored innovation project HTML has its own hero, outside the cover block. */
+function dam_project_breadcrumb_content( $content ) {
+	if ( ! is_page() || ! empty( $GLOBALS['dam_seed_mode'] ) || strpos( $content, 'class="dam-project"' ) === false || strpos( $content, 'site-breadcrumbs' ) !== false ) { return $content; }
+	ob_start();
+	dam_render_breadcrumbs();
+	$trail = ob_get_clean();
+	return preg_replace_callback( '#</header>#', function() use ( $trail ) { return '</header>' . $trail; }, $content, 1 );
+}
+add_filter( 'render_block_core/post-content', 'dam_project_breadcrumb_content', 20 );
+
 /**
  * Renders the crumb list built above. Placed just under each page's cover
  * image (interior-cover/team-profile/single-post-body/archive-content/
@@ -423,7 +445,7 @@ function dam_render_breadcrumbs() {
 		return;
 	}
 	$items = dam_get_breadcrumb_items();
-	if ( count( $items ) < 2 ) {
+	if ( count( $items ) < 1 ) {
 		return;
 	}
 	$locale    = dam_current_locale();

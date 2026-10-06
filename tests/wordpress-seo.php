@@ -3,7 +3,9 @@
 define( 'ABSPATH', __DIR__ );
 function add_filter( $name, $callback, ...$args ) { $GLOBALS['seo_filters'][ $name ][] = $callback; }
 function add_action( ...$args ) {}
-function is_front_page() { return false; }
+function esc_attr_e($text,$domain){echo htmlspecialchars($text,ENT_QUOTES);}
+function esc_html($text){return htmlspecialchars($text,ENT_QUOTES);}
+function is_front_page() { return $GLOBALS['front'] ?? false; }
 function is_page( $slug = null ) { return null === $slug || $slug === ( $GLOBALS['slug'] ?? 'clinical-care' ); }
 function is_home() { return false; }
 function get_queried_object_id() { return 1; }
@@ -33,4 +35,12 @@ verify_seo( dam_authored_page_seo_description( '' ), 'Approved blog introduction
 $image_filter = $GLOBALS['seo_filters']['rank_math/sitemap/urlimages'][0];
 $gallery_images = $image_filter( array( array( 'src' => 'https://example.test/sensitive.jpg' ) ), 7 );
 if ( count( $gallery_images ) !== 1 || $gallery_images[0]['src'] !== 'https://example.test/safe.jpg' ) { throw new RuntimeException( 'Sensitive media leaked into patient image sitemap.' ); }
+$front = true;
+$home_crumbs = dam_get_breadcrumb_items();
+if ( count( $home_crumbs ) !== 1 || $home_crumbs[0]['url'] !== null ) { throw new RuntimeException( 'Home must expose one current-page breadcrumb.' ); }
+if ( dam_interior_page_parent_key( 'hospital-surgery-care' ) !== 'clinical-care' || dam_interior_page_parent_key( 'clinic-surgery-care' ) !== 'clinical-care' ) { throw new RuntimeException( 'Renamed guides must keep their clinical parent.' ); }
+$project='<div class="dam-project"><header>Hero</header><nav>Project sections</nav></div>';
+$with_trail=dam_project_breadcrumb_content($project);
+if (strpos($with_trail,'</header>')>strpos($with_trail,'site-breadcrumbs') || strpos($with_trail,'site-breadcrumbs')>strpos($with_trail,'<nav>Project sections')) { throw new RuntimeException('Project trail must follow the hero and precede section navigation.'); }
+if (dam_project_breadcrumb_content($with_trail)!==$with_trail || dam_project_breadcrumb_content('<p>Ordinary page</p>')!=='<p>Ordinary page</p>') { throw new RuntimeException('Breadcrumb filter must not duplicate trails or modify ordinary content.'); }
 echo "WordPress SEO behavior checks passed.\n";

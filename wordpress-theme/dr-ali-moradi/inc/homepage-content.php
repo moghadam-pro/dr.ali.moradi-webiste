@@ -327,6 +327,8 @@ function dam_media_url( $slug, $fallback = '' ) {
  * to the English page itself when no translation exists yet.
  */
 function dam_localized_page( $slug, $locale = null ) {
+	$aliases = array( 'before-surgery' => 'hospital-surgery-care', 'after-surgery' => 'clinic-surgery-care' );
+	$slug = $aliases[ $slug ] ?? $slug;
 	$locale = $locale ? $locale : dam_current_locale();
 	$page   = get_page_by_path( $slug );
 	if ( ! $page ) {

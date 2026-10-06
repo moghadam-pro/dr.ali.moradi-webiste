@@ -59,3 +59,4 @@ $check_list  = array_filter( array_map( 'trim', explode( "\n", dam_theme_mod( 'h
 		</div>
 	</div>
 </section>
+<?php dam_render_breadcrumbs(); ?>
