@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-06 — Patient GUID privacy / theme 3.5.1
+
+- Removed legacy Patient and attachment GUIDs left in WordPress after the first
+  privacy pass. The guarded manifest can be replayed to repair existing records
+  without renaming files a second time.
+
 ## 2026-10-06 — Patient name privacy / theme 3.5.0
 
 - Abbreviated identifiable patient names to initials and assigned neutral case

@@ -18,11 +18,27 @@ function dam_patient_privacy_replace( $value, $original, $abbreviated ) {
 	return $value;
 }
 
+/** WordPress retains the original GUID when an existing post is updated. */
+function dam_patient_privacy_guid( $id, $guid ) {
+	global $wpdb;
+	$post = get_post( $id );
+	if ( ! $post ) { return new WP_Error( 'invalid_post', 'Post no longer exists.' ); }
+	if ( $post->guid === $guid ) { return true; }
+	$updated = $wpdb->update( $wpdb->posts, array( 'guid' => $guid ), array( 'ID' => $id ), array( '%s' ), array( '%d' ) );
+	if ( false === $updated ) { return new WP_Error( 'guid_failed', 'Could not neutralize the original GUID.' ); }
+	clean_post_cache( $id );
+	return true;
+}
+
 function dam_patient_privacy_patient( $op ) {
 	$id = absint( $op['id'] ?? 0 );
 	$post = $id ? get_post( $id ) : null;
 	if ( ! $post || 'patient' !== $post->post_type || ! current_user_can( 'edit_post', $id ) ) { return new WP_Error( 'invalid_patient', 'Editable Patient required.' ); }
-	if ( get_post_meta( $id, '_dam_patient_privacy_version', true ) ) { return array( 'id' => $id, 'status' => 'already-redacted' ); }
+	$guid = 'urn:dralimoradi:patient:' . $id;
+	if ( get_post_meta( $id, '_dam_patient_privacy_version', true ) ) {
+		$updated = dam_patient_privacy_guid( $id, $guid );
+		return is_wp_error( $updated ) ? $updated : array( 'id' => $id, 'status' => 'already-redacted' );
+	}
 	$expected = $op['expected_title_sha256'] ?? '';
 	if ( ! preg_match( '/^[a-f0-9]{64}$/', $expected ) || ! hash_equals( $expected, hash( 'sha256', trim( $post->post_title ) ) ) ) { return new WP_Error( 'changed_title', 'Patient title changed since private export.' ); }
 	$original = trim( $post->post_title );
@@ -33,7 +49,6 @@ function dam_patient_privacy_patient( $op ) {
 		'ID' => $id,
 		'post_title' => $abbreviated,
 		'post_name' => 'case-' . $id,
-		'guid' => 'urn:dralimoradi:patient:' . $id,
 		'post_content' => dam_patient_privacy_replace( $post->post_content, $original, $abbreviated ),
 		'post_excerpt' => dam_patient_privacy_replace( $post->post_excerpt, $original, $abbreviated ),
 	) ), true );
@@ -46,6 +61,8 @@ function dam_patient_privacy_patient( $op ) {
 	// WordPress otherwise exposes the old full-name path through old-slug redirects.
 	delete_post_meta( $id, '_wp_old_slug' );
 	update_post_meta( $id, '_dam_patient_privacy_version', 1 );
+	$updated = dam_patient_privacy_guid( $id, $guid );
+	if ( is_wp_error( $updated ) ) { return $updated; }
 	if ( class_exists( '\\RankMath\\Sitemap\\Cache' ) ) { \RankMath\Sitemap\Cache::invalidate_storage(); }
 	return array( 'id' => $id, 'status' => 'redacted', 'title' => $abbreviated, 'slug' => 'case-' . $id );
 }
@@ -82,7 +99,10 @@ function dam_patient_privacy_media( $op ) {
 	$id = absint( $op['id'] ?? 0 );
 	$post = $id ? get_post( $id ) : null;
 	if ( ! $post || 'attachment' !== $post->post_type || 'patient' !== get_post_type( $post->post_parent ) || ! wp_attachment_is_image( $id ) || ! current_user_can( 'edit_post', $id ) ) { return new WP_Error( 'invalid_media', 'Patient image attachment required.' ); }
-	if ( get_post_meta( $id, '_dam_patient_privacy_media_version', true ) ) { return array( 'id' => $id, 'status' => 'already-redacted' ); }
+	if ( get_post_meta( $id, '_dam_patient_privacy_media_version', true ) ) {
+		$updated = dam_patient_privacy_guid( $id, wp_get_attachment_url( $id ) );
+		return is_wp_error( $updated ) ? $updated : array( 'id' => $id, 'status' => 'already-redacted' );
+	}
 	$relative = get_post_meta( $id, '_wp_attached_file', true );
 	$expected = $op['expected_path_sha256'] ?? '';
 	if ( ! preg_match( '/^[a-f0-9]{64}$/', $expected ) || ! hash_equals( $expected, hash( 'sha256', $relative ) ) ) { return new WP_Error( 'changed_path', 'Attachment path changed since private export.' ); }
@@ -112,7 +132,7 @@ function dam_patient_privacy_media( $op ) {
 		return new WP_Error( 'metadata_failed', 'Attachment metadata failed; files were restored.' );
 	}
 	$url = wp_get_attachment_url( $id );
-	wp_update_post( array( 'ID' => $id, 'post_title' => 'Patient media ' . $id, 'post_name' => 'case-media-' . $id, 'guid' => $url, 'post_excerpt' => '', 'post_content' => '' ) );
+	wp_update_post( array( 'ID' => $id, 'post_title' => 'Patient media ' . $id, 'post_name' => 'case-media-' . $id, 'post_excerpt' => '', 'post_content' => '' ) );
 	update_post_meta( $id, '_wp_attachment_image_alt', '' );
 	delete_post_meta( $id, '_wp_old_slug' );
 	$gallery = get_post_meta( $post->post_parent, 'dam_patient_gallery', true );
@@ -122,6 +142,8 @@ function dam_patient_privacy_media( $op ) {
 		update_post_meta( $post->post_parent, 'dam_patient_gallery', $gallery );
 	}
 	update_post_meta( $id, '_dam_patient_privacy_media_version', 1 );
+	$updated = dam_patient_privacy_guid( $id, $url );
+	if ( is_wp_error( $updated ) ) { return $updated; }
 	return array( 'id' => $id, 'status' => 'redacted', 'file' => basename( $plan['new_path'] ) );
 }
 

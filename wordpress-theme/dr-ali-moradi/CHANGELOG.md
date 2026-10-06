@@ -6,6 +6,15 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [3.5.1] - 2026-10-06
+
+### Fixed
+
+- Rewrite existing Patient and image GUIDs directly in WordPress storage, since
+  updating those fields through `wp_update_post()` leaves their old values in
+  exports and feeds. Replaying the privacy manifest repairs already-redacted
+  records without moving image files again.
+
 ## [3.5.0] - 2026-10-06
 
 ### Added
@@ -18,8 +27,7 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
-- Remove old personal-name slug redirects and replace Patient GUIDs with neutral
-  identifiers, avoiding full names in public links and feeds.
+- Remove old personal-name slug redirects and assign neutral Patient slugs.
 
 ## [3.4.0] - 2026-10-06
 

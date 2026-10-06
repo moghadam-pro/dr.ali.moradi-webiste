@@ -20,13 +20,19 @@ function wp_update_attachment_metadata( $id, $metadata ) { $GLOBALS['meta'][ $id
 function wp_upload_dir() { return array( 'basedir' => $GLOBALS['upload_root'] ); }
 function wp_get_attachment_url( $id ) { return 'https://example.test/uploads/' . basename( $GLOBALS['attached'][ $id ] ); }
 function wp_update_post( $data, $wp_error = false ) { foreach ( $data as $key => $value ) { if ( 'ID' !== $key ) { $GLOBALS['posts'][ $data['ID'] ]->$key = $value; } } return $data['ID']; }
+function clean_post_cache( $id ) {}
+class PrivacyWpdb {
+ public $posts = 'wp_posts';
+ public function update( $table, $data, $where, $formats, $where_formats ) { $GLOBALS['posts'][ $where['ID'] ]->guid = $data['guid']; return 1; }
+}
+$GLOBALS['wpdb'] = new PrivacyWpdb();
 require dirname( __DIR__ ) . '/wordpress-theme/dr-ali-moradi/inc/patient-privacy.php';
 function verify_privacy( $condition, $message ) { if ( ! $condition ) { throw new RuntimeException( $message ); } }
 
 verify_privacy( dam_patient_privacy_initials( 'راضیه غلامیان' ) === 'ر. غ.', 'Persian first and last names must become initials.' );
 verify_privacy( dam_patient_privacy_initials( 'علی اکبر ملانیا' ) === 'ع. ا. م.', 'All name components must be abbreviated.' );
 verify_privacy( dam_patient_privacy_initials( 'تقدیسی' ) === 'ت.', 'Single surnames must be abbreviated.' );
-$GLOBALS['posts'][621] = (object) array( 'ID' => 621, 'post_type' => 'patient', 'post_title' => 'راضیه غلامیان', 'post_content' => 'گزارش راضیه غلامیان', 'post_excerpt' => '', 'post_name' => 'راضیه-غلامیان' );
+$GLOBALS['posts'][621] = (object) array( 'ID' => 621, 'post_type' => 'patient', 'post_title' => 'راضیه غلامیان', 'post_content' => 'گزارش راضیه غلامیان', 'post_excerpt' => '', 'post_name' => 'راضیه-غلامیان', 'guid' => 'https://example.test/patients/راضیه-غلامیان/' );
 $GLOBALS['meta'][621] = array( 'dam_patient_gallery' => array( array( 'title' => 'راضیه غلامیان', 'description' => '' ) ), '_wp_old_slug' => 'راضیه-غلامیان' );
 $op = array( 'kind' => 'anonymize_patient', 'id' => 621, 'expected_title_sha256' => hash( 'sha256', 'راضیه غلامیان' ) );
 verify_privacy( is_wp_error( dam_patient_privacy_run( array_replace( $op, array( 'expected_title_sha256' => str_repeat( '0', 64 ) ) ) ) ), 'Stale title must be rejected.' );
@@ -37,6 +43,8 @@ verify_privacy( $GLOBALS['posts'][621]->guid === 'urn:dralimoradi:patient:621', 
 verify_privacy( $GLOBALS['posts'][621]->post_content === 'گزارش ر. غ.' && $GLOBALS['meta'][621]['dam_patient_gallery'][0]['title'] === 'ر. غ.', 'Case body and gallery caption must lose the full name.' );
 verify_privacy( ! isset( $GLOBALS['meta'][621]['_wp_old_slug'] ), 'Old personal-name URLs must not redirect.' );
 verify_privacy( dam_patient_privacy_run( $op )['status'] === 'already-redacted', 'Retry must be idempotent.' );
+$GLOBALS['posts'][621]->guid = 'https://example.test/patients/old-name/';
+verify_privacy( dam_patient_privacy_run( $op )['status'] === 'already-redacted' && $GLOBALS['posts'][621]->guid === 'urn:dralimoradi:patient:621', 'Retry must repair a legacy patient GUID.' );
 
 $meta = array( 'file' => '2026/10/original-name-scaled.jpg', 'sizes' => array( 'thumbnail' => array( 'file' => 'original-name-scaled-150x150.jpg' ) ), 'original_image' => 'original-name.jpg' );
 $plan = dam_patient_privacy_media_plan( 853, '2026/10/original-name-scaled.jpg', $meta, '/tmp/original-name-scaled.jpg' );
@@ -46,7 +54,7 @@ $root = sys_get_temp_dir() . '/dam-patient-privacy-test-' . getmypid();
 mkdir( $root . '/2026/10', 0777, true );
 $GLOBALS['upload_root'] = $root;
 $GLOBALS['attached'][853] = $root . '/2026/10/original-name-scaled.jpg';
-$GLOBALS['posts'][853] = (object) array( 'ID' => 853, 'post_type' => 'attachment', 'post_parent' => 621, 'post_title' => 'original-name' );
+$GLOBALS['posts'][853] = (object) array( 'ID' => 853, 'post_type' => 'attachment', 'post_parent' => 621, 'post_title' => 'original-name', 'guid' => 'https://example.test/uploads/original-name-scaled.jpg' );
 $GLOBALS['meta'][853] = array( '_wp_attached_file' => '2026/10/original-name-scaled.jpg', '_wp_attachment_metadata' => $meta );
 $GLOBALS['meta'][621]['dam_patient_gallery'] = array( array( 'id' => 853, 'url' => 'https://example.test/uploads/original-name-scaled.jpg' ) );
 foreach ( array_keys( $plan['moves'] ) as $path ) { file_put_contents( $root . '/2026/10/' . basename( $path ), 'test-image' ); }
@@ -58,6 +66,8 @@ foreach ( $plan['moves'] as $from => $to ) {
 }
 verify_privacy( $GLOBALS['meta'][853]['_wp_attachment_metadata']['file'] === '2026/10/case-media-853.jpg' && $GLOBALS['meta'][621]['dam_patient_gallery'][0]['url'] === 'https://example.test/uploads/case-media-853.jpg', 'Attachment and gallery metadata must use the new URL.' );
 verify_privacy( dam_patient_privacy_run( $media_op )['status'] === 'already-redacted', 'Image rename retry must be idempotent.' );
+$GLOBALS['posts'][853]->guid = 'https://example.test/uploads/original-name-scaled.jpg';
+verify_privacy( dam_patient_privacy_run( $media_op )['status'] === 'already-redacted' && $GLOBALS['posts'][853]->guid === 'https://example.test/uploads/case-media-853.jpg', 'Retry must repair a legacy image GUID.' );
 foreach ( $plan['moves'] as $to ) { unlink( $root . '/2026/10/' . basename( $to ) ); }
 rmdir( $root . '/2026/10' ); rmdir( $root . '/2026' ); rmdir( $root );
 echo "Patient privacy checks passed.\n";
