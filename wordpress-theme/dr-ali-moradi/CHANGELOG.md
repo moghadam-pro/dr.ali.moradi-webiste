@@ -6,6 +6,13 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Reduced sensitive gallery thumbnail blur from 22px to 8px and removed the
+  inherited backdrop blur and pill styling from the warning layer. Added the
+  supplied eye-off icon and underlined View/نمایش/عرض above the existing gallery
+  interaction; full-size media still requires explicit reveal.
+
 ### Added
 
 - Homepage Innovation cards follow the selected first three project Pages in
