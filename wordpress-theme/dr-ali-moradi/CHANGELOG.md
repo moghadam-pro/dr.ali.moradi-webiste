@@ -8,6 +8,10 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Made the sensitive gallery warning cover the complete thumbnail frame and
+  centered its icon and text. Caption width limits now exclude the warning;
+  its background is transparent to remove the visible edge stripe.
+
 - Reduced sensitive gallery thumbnail blur from 22px to 8px and removed the
   inherited backdrop blur and pill styling from the warning layer. Added the
   supplied eye-off icon and underlined View/نمایش/عرض above the existing gallery
