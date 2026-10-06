@@ -4,7 +4,7 @@ This folder documents the WordPress conversion of the Dr. Ali Moradi website.
 Documentation and source are maintained together in the main repository.
 The theme source lives under `wordpress-theme/dr-ali-moradi/`.
 
-Current production theme: **3.4.0**. The canonical repository is
+Current production theme: **3.5.0**. The canonical repository is
 `moghadam-pro/dr.ali.moradi-webiste`; release commits are integrated into
 `main`, with `codex/patients-gallery` retained as the delivery branch.
 

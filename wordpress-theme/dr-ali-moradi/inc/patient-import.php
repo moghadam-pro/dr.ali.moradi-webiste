@@ -8,7 +8,7 @@ function dam_patient_import_screen() {
 	if ( ! current_user_can( 'manage_options' ) ) { return; }
 	?>
 	<div class="wrap"><h1>درون‌ریزی بیماران / Import Patients</h1>
-	<p>Manifest JSON: categories, cases, then media. Re-importing the same source IDs resumes without duplicates. Existing operator edits are preserved. Keep this page open until completed.</p>
+	<p>Manifest JSON: categories, cases, then media; guarded privacy operations can abbreviate names and sanitize patient-media filenames. Re-importing the same source IDs resumes without duplicates. Existing operator edits are preserved. Keep this page open until completed.</p>
 	<p><label for="dam-import-json">Manifest JSON (paste or choose a file)</label></p><textarea id="dam-import-json" rows="8" class="large-text code"></textarea><br>
 	<input type="file" id="dam-import-manifest" accept="application/json,.json"><button class="button button-primary" id="dam-import-start">Start / شروع</button>
 	<p id="dam-import-progress" role="status"></p><pre id="dam-import-errors" style="white-space:pre-wrap"></pre></div>
@@ -75,6 +75,7 @@ function dam_patient_import_hash_index() {
 }
 function dam_patient_import_run( $op ) {
 	$key = $op['key'];
+	if ( in_array( $op['kind'] ?? '', array( 'anonymize_patient', 'anonymize_media' ), true ) ) { return dam_patient_privacy_run( $op ); }
 	if ( 'category' === $op['kind'] ) {
 		$id = dam_patient_import_term( $key );
 		if ( $id ) { return array( 'id' => $id, 'existing' => true ); }

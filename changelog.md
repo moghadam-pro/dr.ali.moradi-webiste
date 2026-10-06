@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-10-06 — Patient name privacy / theme 3.5.0
+
+- Abbreviated identifiable patient names to initials and assigned neutral case
+  slugs. Matching full names were removed from case text and gallery captions.
+- Renamed patient-owned media whose filenames contained Persian text so public
+  image URLs no longer expose those names. The private export and operation
+  manifest remain outside Git.
+- Added guarded, repeatable privacy operations to the existing Patient import
+  tool and tests for title-hash protection, anonymized URLs and media metadata.
+
 ## 2026-10-06 — Curated Innovation and sensitive case media / theme 3.4.0
 
 - Repaired the English Innovation Page's missing card container, sidebar and

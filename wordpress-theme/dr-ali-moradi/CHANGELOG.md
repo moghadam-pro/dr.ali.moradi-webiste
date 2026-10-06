@@ -6,6 +6,21 @@ follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [3.5.0] - 2026-10-06
+
+### Added
+
+- Guarded administrator privacy operations for existing Patients and their
+  attachments, using a private manifest and exact previous-value hashes.
+- Name initials, neutral case slugs and media filenames for identifiable case
+  records. Case descriptions and gallery captions lose matching full names;
+  revisions remain available to authorized editors.
+
+### Fixed
+
+- Remove old personal-name slug redirects and replace Patient GUIDs with neutral
+  identifiers, avoiding full names in public links and feeds.
+
 ## [3.4.0] - 2026-10-06
 
 ### Added

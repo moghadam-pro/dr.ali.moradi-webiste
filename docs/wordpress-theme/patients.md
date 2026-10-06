@@ -1,4 +1,4 @@
-# Patients catalogue — implemented in 3.1.1, updated in 3.4.0
+# Patients catalogue — implemented in 3.1.1, updated in 3.5.0
 
 ## Operator workflow
 
@@ -6,7 +6,8 @@ The Persian admin menu is **بیماران** with **همه بیماران**, **�
 **دسته بندی**, and **برچسب ها**. The post type is `patient`; its taxonomy keys
 are `patient_category` (hierarchical) and `patient_tag`.
 
-- Title: patient name or case title.
+- Title: patient initials or a non-identifying case title. Never publish a
+  person's full name in the title, body, gallery caption, Media filename or slug.
 - Excerpt: short description shown in the patient page and lightbox.
 - Editor: case history and actions/treatment performed.
 - Featured image: optional cover; the importer selects the first image.
@@ -17,6 +18,20 @@ are `patient_category` (hierarchical) and `patient_tag`.
   as sensitive until reviewed. Clear the checkbox only after confirming that an
   individual image is suitable to show without warning; this applies across
   English, Persian and Arabic galleries.
+
+### Existing-name privacy migration
+
+Tools → Import Patients accepts explicit `anonymize_patient` and
+`anonymize_media` operations alongside its import operations. Each operation
+requires the target ID and SHA-256 of its *current* title or attached-file path;
+it refuses stale data and is safe to retry. Only administrators can run it.
+Patient names become initials, slugs become `case-{id}`, matching names in case
+text/gallery captions are replaced, and old-name redirects are removed. Media
+operations rename the original and registered thumbnails to `case-media-{id}`
+and update WordPress attachment metadata and gallery URLs. The private manifest
+and raw WXR export must stay outside Git. Keep a private pre-migration export
+until verification; WordPress revisions preserve previous text for authorized
+editors. Old full-name URLs are intentionally retired rather than redirected.
 
 Exactly one care category is mandatory: **کلینیک** (`clinic`) or **بیمارستان**
 (`hospital`). Disease categories and tags are additional. REST saves with an

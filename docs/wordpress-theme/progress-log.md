@@ -5,6 +5,24 @@ file together with Git history; `main` and the historical
 `codex/patients-gallery` delivery branch were synchronized at `29de031`
 before theme 3.4.0 work began.
 
+## 2026-10-06 — Patient name privacy / theme 3.5.0
+
+- Kept browser work to one temporary tab; earlier agent-created tabs were
+  already closed after the interrupted turn. User-owned Chrome tabs were left
+  untouched.
+- Audited a private WordPress Patients-only export outside Git. Among 71 cases,
+  36 titles were identifiable person names; five case bodies and two gallery
+  records repeated a full title. Thirty-three patient-owned image filenames
+  contained Persian text and were selected for neutral filenames. Medical case
+  titles and the numbered placeholder remain unchanged.
+- Added exact-hash-guarded administrator operations to abbreviate titles,
+  neutralize slugs/GUIDs, redact matching case/gallery text, retire old-name
+  redirects, and rename originals plus registered image sizes with WordPress
+  attachment metadata kept in sync. The private operation manifest is outside
+  Git; no patient names, source filenames or media originals are committed.
+- Release, production migration, verification and Git synchronization will be
+  recorded after completion.
+
 ## 2026-10-06 — Innovation reorder, curated homepage and gallery protection / theme 3.4.0
 
 - Repaired live English Innovation Page 164 after an operator moved project 11
