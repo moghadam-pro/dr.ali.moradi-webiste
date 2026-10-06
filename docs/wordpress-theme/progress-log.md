@@ -5,6 +5,32 @@ file together with Git history; `main` and the historical
 `codex/patients-gallery` delivery branch were synchronized at `29de031`
 before theme 3.4.0 work began.
 
+## 2026-10-06 — Conversation archive and cross-machine handoff
+
+- Added [the Persian handoff](handoff-2026-10-06-fa.md) at the owner's request
+  to continue editing on another computer. It records all request groups and
+  clarifications from this conversation, durable operator preferences, completed
+  content/media work, release/test evidence and the exact remaining GUID repair.
+- Recorded canonical Git remotes/branches, private local artifacts that Git
+  does not transfer, reproducible ZIP packaging and a manifest recovery recipe
+  using existing privacy markers in a fresh private WordPress export.
+- Linked the handoff from the project/source READMEs and documentation indexes;
+  marked the September handoff and older open items as historical. Clarified
+  that 3.5.1 is implemented and pushed but not installed. No production action
+  was attempted during this documentation handoff.
+- A transfer audit found three real patient names in the earlier privacy-test
+  fixtures. Replaced them and their sample slugs with explicitly synthetic
+  Persian text and reran the privacy test successfully. Other title matches
+  were a shared surname in public team profiles, not patient fixtures.
+  Earlier commits/tags still retain the old fixture text; recorded history
+  remediation as a separate open privacy task. No history was rewritten. The
+  tests are outside the theme ZIP, whose source and checksum are unchanged.
+- Validated the handoff's manifest recovery recipe against the post-migration
+  private export: 69 ID/hash-only operations. Checked relative documentation
+  links and the privacy test. Rebuilt the 3.5.1 ZIP with the original fixed
+  timestamp/timezone and matched the recorded SHA-256; documented why a plain
+  tree archive otherwise receives a different timestamp and checksum.
+
 ## 2026-10-06 — Patient GUID follow-up / theme 3.5.1
 
 - A fresh Patients-only WordPress export after the 3.5.0 migration contained
@@ -24,7 +50,8 @@ before theme 3.4.0 work began.
   run on production. After the owner explicitly approved this exact upload and
   the 69-operation replay again, the browser security review still rejected
   selecting the ZIP with the same permission-denied reason. No alternate
-  upload route was used. This remains the one outstanding privacy item.
+  upload route was used. This remains the outstanding production privacy item;
+  the later handoff audit records the separate historical-test-fixture issue.
 - All local privacy/code/documentation commits and both release tags were
   pushed to the canonical `upstream` GitHub repository. `main` and the
   historical `codex/patients-gallery` delivery branch advanced together by
@@ -45,7 +72,9 @@ before theme 3.4.0 work began.
   neutralize slugs, redact matching case/gallery text, retire old-name
   redirects, and rename originals plus registered image sizes with WordPress
   attachment metadata kept in sync. The private operation manifest is outside
-  Git; no patient names, source filenames or media originals are committed.
+  Git; no private exports or media originals were committed. The later handoff
+  audit above corrects this entry's earlier claim about names: three names had
+  been copied into test fixtures, which are now synthetic in the current tree.
 - Release source commit `c1eafe2`, tag `theme-v3.5.0`; exact Git archive SHA-256
   `40f868d3635ffc051de9198a1372d2a7e576ebb784ec23f8782ff3cebff9af7e`.
   WordPress confirmed the 3.4.0 → 3.5.0 replacement. The guarded manifest

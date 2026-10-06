@@ -11,6 +11,8 @@ awaits production upload and migration replay. The canonical repository is
 
 ## Contents
 
+- [`handoff-2026-10-06-fa.md`](handoff-2026-10-06-fa.md) — complete conversation
+  decisions, current production/Git state and cross-machine continuation steps.
 - [`patients.md`](patients.md) — Patients content model, galleries, operator workflow and resumable Drive import.
 - [`content-completion.md`](content-completion.md) — the 42 designed Innovation
   Pages, 27 completed Posts, nine generated covers, the patient admin correction,

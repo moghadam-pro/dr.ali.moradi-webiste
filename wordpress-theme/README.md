@@ -5,6 +5,8 @@ documentation is maintained in the same repository under `docs/wordpress-theme/`
 [documentation index](../docs/wordpress-theme/README.md),
 [current content and verification](../docs/wordpress-theme/content-completion.md),
 and [deployment log](../docs/wordpress-theme/progress-log.md).
+For work on another computer, begin with the
+[current Persian handoff](../docs/wordpress-theme/handoff-2026-10-06-fa.md).
 
 ## Layout
 
@@ -40,7 +42,11 @@ and [deployment log](../docs/wordpress-theme/progress-log.md).
 See `docs/wordpress-theme/progress-log.md` for deployment state and
 `docs/wordpress-theme/versioning.md` for the release policy.
 
-## Production state (3.3.0)
+## Production state (3.5.0; 3.5.1 pending)
+
+Theme 3.5.0 is installed. Version 3.5.1 and its tag are in GitHub; production
+upload and the GUID repair replay remain pending. The handoff records the
+browser permission failure and the exact steps and private inputs for resuming.
 
 See [operator workflow and import](../docs/wordpress-theme/patients.md). Patients
 include hierarchical categories, tags and ordered multimedia. Clinical Care and

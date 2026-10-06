@@ -3,6 +3,20 @@
 Things that block further progress, or decisions still needed from the
 operator. Updated as items are resolved.
 
+## Current handoff — 2026-10-06
+
+Production is on 3.5.0. The tested 3.5.1 release is in GitHub but its upload
+was rejected by the browser permission review, even after renewed owner
+authorization. Deploying it and replaying the 69 Patient/media privacy
+operations to repair old GUIDs remains open. Start with the
+[current handoff](handoff-2026-10-06-fa.md) and [progress log](progress-log.md).
+The handoff audit also found three real names in earlier privacy-test fixtures.
+Current fixtures are synthetic; earlier commits and tags still retain the
+original fixture text. History remediation remains a separate coordinated
+privacy task; no history rewrite or force push was performed.
+The older entries below are historical context, not a fresh site audit or
+current platform instructions.
+
 ## Resolved (2026-09-02, continued)
 
 1. ~~**WordPress site access for `tmp.saveon.me`.**~~ Resolved without

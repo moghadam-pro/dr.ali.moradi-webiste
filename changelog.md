@@ -1,10 +1,24 @@
 # Changelog
 
+## 2026-10-06 — Cross-machine conversation handoff
+
+- Archived this conversation's requests, owner decisions, completed migrations,
+  tests, release commits, browser interruptions and remaining GUID work in a
+  Persian handoff. Added new-machine setup, reproducible release packaging and
+  private-manifest recovery instructions without committing patient exports.
+- Linked the handoff from the root README and documentation indexes, marked
+  older handoff notes as historical, and clarified 3.5.0 production versus
+  3.5.1 source/deployment status.
+- Replaced three real names in earlier privacy-test fixtures with synthetic
+  text. Historical commits/tags still contain the previous fixtures; the
+  handoff records that separate open privacy issue without rewriting history.
+
 ## 2026-10-06 — Patient GUID privacy / theme 3.5.1
 
-- Removed legacy Patient and attachment GUIDs left in WordPress after the first
-  privacy pass. The guarded manifest can be replayed to repair existing records
-  without renaming files a second time.
+- Implemented repair of legacy Patient and attachment GUIDs left in WordPress
+  after the first privacy pass. The guarded manifest can be replayed without
+  renaming files a second time. This code is tested and pushed; production
+  deployment and the repair replay are still pending.
 
 ## 2026-10-06 — Patient name privacy / theme 3.5.0
 

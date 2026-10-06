@@ -4,6 +4,11 @@ A multilingual personal-brand website for Dr. Ali Moradi, bringing his clinical,
 scientific, innovation, rehabilitation-robotics, and entrepreneurial work into one
 coherent digital presence.
 
+For continuation on another computer, start with the
+[Persian conversation and handoff record — 2026-10-06](docs/wordpress-theme/handoff-2026-10-06-fa.md).
+It records the complete request history, verified production state, private-file
+dependencies and the remaining 3.5.1 GUID repair.
+
 ## Innovation detail Pages and Patients
 
 The approved fourteen-project catalogue now has 42 published EN/FA/AR WordPress
@@ -67,8 +72,10 @@ visitor can choose to reveal it. Editors can clear the sensitive checkbox for
 reviewed safe media, which can then appear in the image sitemap.
 Identifiable Patient titles are abbreviated to initials and use neutral case
 URLs; image filenames containing names are neutralized. New case entries should
-use initials and neutral slugs before publication. The private migration
-manifest and medical source content are never stored in Git.
+use initials and neutral slugs before publication. Private migration manifests,
+exports and media originals stay outside Git. Current privacy tests use synthetic
+names; the [handoff](docs/wordpress-theme/handoff-2026-10-06-fa.md) records the
+separate need to address real-name fixtures retained in earlier Git history.
 Theme 3.1.1 adds checksum-based hosting imports, reuse of existing media, editable
 English/Persian/Arabic patient copy and category names, localized pagination, and
 Rank Math sitemap/metadata integration. Before/after surgery and Clinical Care
