@@ -95,7 +95,7 @@ function dam_patient_privacy_media( $op ) {
 	$plan = dam_patient_privacy_media_plan( $id, $relative, $original_meta, $file );
 	if ( is_wp_error( $plan ) ) { return $plan; }
 	foreach ( $plan['moves'] as $from => $to ) {
-		if ( ! is_file( $from ) || file_exists( $to ) || dirname( $from ) !== $dir || dirname( $to ) !== $dir ) { return new WP_Error( 'file_conflict', 'Original or derived file missing, or destination exists.' ); }
+		if ( ! is_file( $from ) || file_exists( $to ) || realpath( dirname( $from ) ) !== $dir || realpath( dirname( $to ) ) !== $dir ) { return new WP_Error( 'file_conflict', 'Original or derived file missing, or destination exists.' ); }
 	}
 	$moved = array();
 	foreach ( $plan['moves'] as $from => $to ) {
