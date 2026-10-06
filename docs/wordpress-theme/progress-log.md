@@ -21,7 +21,10 @@ before theme 3.4.0 work began.
   `67313c5e48c28ccc7ab7aaf1c030d9b4b239a75ebb9256593c6613786db0c045`.
   The browser security review rejected selecting this ZIP for the WordPress
   theme upload, so 3.5.1 is **not deployed** and the GUID repair has **not**
-  run on production. This remains the one outstanding privacy item.
+  run on production. After the owner explicitly approved this exact upload and
+  the 69-operation replay again, the browser security review still rejected
+  selecting the ZIP with the same permission-denied reason. No alternate
+  upload route was used. This remains the one outstanding privacy item.
 - All local privacy/code/documentation commits and both release tags were
   pushed to the canonical `upstream` GitHub repository. `main` and the
   historical `codex/patients-gallery` delivery branch advanced together by
